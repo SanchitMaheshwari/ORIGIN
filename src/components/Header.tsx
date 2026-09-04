@@ -180,19 +180,6 @@ export const Header: React.FC<HeaderProps> = ({
           </button>
 
           <button
-            id="tab-employee"
-            onClick={() => onSelectRole('employee')}
-            className={`role-tab flex items-center space-x-2 px-3 py-1.5 rounded-md text-xs font-semibold tracking-wide transition-all ${
-              currentRole === 'employee'
-                ? 'bg-emerald-600 text-white shadow-sm'
-                : 'text-emerald-100 hover:bg-white/10'
-            }`}
-          >
-            <MapPin className="w-3.5 h-3.5" />
-            <span>2. Employee / SDLC Officer (GIS)</span>
-          </button>
-
-          <button
             id="tab-state"
             onClick={() => onSelectRole('state')}
             className={`role-tab flex items-center space-x-2 px-3 py-1.5 rounded-md text-xs font-semibold tracking-wide transition-all ${
@@ -202,7 +189,7 @@ export const Header: React.FC<HeaderProps> = ({
             }`}
           >
             <Landmark className="w-3.5 h-3.5" />
-            <span>3. State Govt (Odisha / MP)</span>
+            <span>2. State Govt (Odisha / MP &amp; SDLC GIS)</span>
           </button>
 
           <button
@@ -215,7 +202,7 @@ export const Header: React.FC<HeaderProps> = ({
             }`}
           >
             <Network className="w-3.5 h-3.5" />
-            <span>4. Central Govt (MoTA India)</span>
+            <span>3. Central Govt (MoTA India)</span>
           </button>
         </nav>
       </div>

@@ -1,4 +1,4 @@
-export type RoleKey = 'claimant' | 'employee' | 'state' | 'central';
+export type RoleKey = 'claimant' | 'state' | 'central';
 
 export interface ClaimRecord {
   id: string;
