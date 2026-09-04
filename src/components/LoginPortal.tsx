@@ -21,7 +21,7 @@ import {
 import { RoleKey } from '../types';
 
 interface LoginPortalProps {
-  onLogin: (role: RoleKey) => void;
+  onLogin: (role: RoleKey, stateCode?: 'karnataka' | 'telangana') => void;
   onOpenRegisterClaim?: () => void;
 }
 
@@ -33,6 +33,7 @@ export const LoginPortal: React.FC<LoginPortalProps> = ({
 }) => {
   const [activeTab, setActiveTab] = useState<LoginTab>('claimant');
   const [selectedState, setSelectedState] = useState('Telangana');
+  const [stateOfficialChoice, setStateOfficialChoice] = useState<'karnataka' | 'telangana'>('karnataka');
   const [identifier, setIdentifier] = useState('9876543210');
   const [password, setPassword] = useState('••••••••••');
   const [showPassword, setShowPassword] = useState(false);
@@ -43,6 +44,19 @@ export const LoginPortal: React.FC<LoginPortalProps> = ({
   const [showForgotModal, setShowForgotModal] = useState(false);
   const [loginSuccessMessage, setLoginSuccessMessage] = useState<string | null>(null);
 
+  const handleStateOfficialChoice = (choice: 'karnataka' | 'telangana') => {
+    setStateOfficialChoice(choice);
+    if (choice === 'karnataka') {
+      setSelectedState('Karnataka');
+      setIdentifier('SDLC-KA-2026-884');
+      setPassword('KAGov@2026');
+    } else {
+      setSelectedState('Telangana');
+      setIdentifier('SDLC-TG-2026-441');
+      setPassword('TGGov@2026');
+    }
+  };
+
   // Switch role tab and prefill demo credentials
   const handleTabChange = (tab: LoginTab) => {
     setActiveTab(tab);
@@ -51,9 +65,15 @@ export const LoginPortal: React.FC<LoginPortalProps> = ({
       setIdentifier('9876543210');
       setPassword('OTP-2026');
     } else if (tab === 'state') {
-      setSelectedState('Karnataka');
-      setIdentifier('SDLC-KA-2026-884');
-      setPassword('KAGov@2026');
+      if (stateOfficialChoice === 'telangana') {
+        setSelectedState('Telangana');
+        setIdentifier('SDLC-TG-2026-441');
+        setPassword('TGGov@2026');
+      } else {
+        setSelectedState('Karnataka');
+        setIdentifier('SDLC-KA-2026-884');
+        setPassword('KAGov@2026');
+      }
     } else if (tab === 'national') {
       setSelectedState('All States (National)');
       setIdentifier('MOTA-HQ-9901');
@@ -72,18 +92,27 @@ export const LoginPortal: React.FC<LoginPortalProps> = ({
         ? 'state'
         : 'central';
 
+    const resolvedState: 'karnataka' | 'telangana' =
+      stateOfficialChoice === 'telangana' ||
+      selectedState.toLowerCase().includes('telangana') ||
+      identifier.toUpperCase().includes('TG')
+        ? 'telangana'
+        : 'karnataka';
+
     const roleLabel =
       activeTab === 'claimant'
         ? 'Citizen Claimant Portal'
         : activeTab === 'state'
-        ? 'State Government Portal (Karnataka & Telangana)'
+        ? resolvedState === 'karnataka'
+          ? 'Karnataka State Government Portal'
+          : 'Telangana State Government Portal'
         : 'National MoTA Central Portal';
 
     setLoginSuccessMessage(`Authenticated. Redirecting to ${roleLabel}...`);
 
     setTimeout(() => {
       setIsLoading(false);
-      onLogin(targetRole);
+      onLogin(targetRole, activeTab === 'state' ? resolvedState : undefined);
     }, 650);
   };
 
@@ -317,6 +346,55 @@ export const LoginPortal: React.FC<LoginPortalProps> = ({
 
               {/* Login Form */}
               <form onSubmit={handleLoginSubmit} className="space-y-4">
+                {/* Dedicated State Dashboard Sub-Selector (When State Tab is active) */}
+                {activeTab === 'state' && (
+                  <div className="p-2.5 bg-emerald-50/90 rounded-xl border border-emerald-200 space-y-2">
+                    <div className="flex items-center justify-between text-[11px]">
+                      <span className="font-bold text-emerald-950 uppercase tracking-wide flex items-center space-x-1.5">
+                        <Landmark className="w-3.5 h-3.5 text-emerald-700" />
+                        <span>Select State Official Dashboard</span>
+                      </span>
+                      <span className="text-[10px] text-emerald-700 font-semibold">Separate Portals</span>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-2">
+                      <button
+                        type="button"
+                        id="btn-login-karnataka-choice"
+                        onClick={() => handleStateOfficialChoice('karnataka')}
+                        className={`py-2 px-2.5 rounded-lg text-xs font-bold transition flex flex-col items-center justify-center text-center cursor-pointer border ${
+                          stateOfficialChoice === 'karnataka'
+                            ? 'bg-gov-900 text-white border-gov-900 shadow-xs'
+                            : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50'
+                        }`}
+                      >
+                        <span className="flex items-center space-x-1">
+                          <span className="w-2 h-2 rounded-full bg-amber-400 inline-block" />
+                          <span>Karnataka SLMC</span>
+                        </span>
+                        <span className="text-[9.5px] font-normal opacity-85 mt-0.5">Dr. K. Manjunath, IAS</span>
+                      </button>
+
+                      <button
+                        type="button"
+                        id="btn-login-telangana-choice"
+                        onClick={() => handleStateOfficialChoice('telangana')}
+                        className={`py-2 px-2.5 rounded-lg text-xs font-bold transition flex flex-col items-center justify-center text-center cursor-pointer border ${
+                          stateOfficialChoice === 'telangana'
+                            ? 'bg-gov-900 text-white border-gov-900 shadow-xs'
+                            : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50'
+                        }`}
+                      >
+                        <span className="flex items-center space-x-1">
+                          <span className="w-2 h-2 rounded-full bg-emerald-400 inline-block" />
+                          <span>Telangana SLMC</span>
+                        </span>
+                        <span className="text-[9.5px] font-normal opacity-85 mt-0.5">Smt. A. Sharada, IAS</span>
+                      </button>
+                    </div>
+                  </div>
+                )}
+
                 {/* 1. State Dropdown Field */}
                 <div>
                   <label
@@ -332,7 +410,17 @@ export const LoginPortal: React.FC<LoginPortalProps> = ({
                     <select
                       id="state-select"
                       value={selectedState}
-                      onChange={(e) => setSelectedState(e.target.value)}
+                      onChange={(e) => {
+                        const val = e.target.value;
+                        setSelectedState(val);
+                        if (activeTab === 'state') {
+                          if (val === 'Karnataka') {
+                            handleStateOfficialChoice('karnataka');
+                          } else if (val === 'Telangana') {
+                            handleStateOfficialChoice('telangana');
+                          }
+                        }
+                      }}
                       className="w-full pl-9 pr-8 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs sm:text-sm text-slate-800 font-medium focus:outline-none focus:ring-2 focus:ring-emerald-600/30 focus:border-emerald-600 transition-all appearance-none cursor-pointer"
                     >
                       <option value="Karnataka">Karnataka (District Shimoga, Uttara Kannada, Kodagu)</option>
@@ -374,12 +462,24 @@ export const LoginPortal: React.FC<LoginPortalProps> = ({
                       type="text"
                       required
                       value={identifier}
-                      onChange={(e) => setIdentifier(e.target.value)}
+                      onChange={(e) => {
+                        const val = e.target.value;
+                        setIdentifier(val);
+                        if (activeTab === 'state') {
+                          if (val.toUpperCase().includes('TG') || val.toLowerCase().includes('telangana')) {
+                            setStateOfficialChoice('telangana');
+                            setSelectedState('Telangana');
+                          } else if (val.toUpperCase().includes('KA') || val.toLowerCase().includes('karnataka')) {
+                            setStateOfficialChoice('karnataka');
+                            setSelectedState('Karnataka');
+                          }
+                        }
+                      }}
                       placeholder={
                         activeTab === 'claimant'
                           ? 'Enter 10-digit Mobile or 12-digit Aadhaar'
                           : activeTab === 'state'
-                          ? 'e.g. SDLC-UMR-2024-884'
+                          ? 'e.g. SDLC-KA-2026-884 or SDLC-TG-2026-441'
                           : 'e.g. MOTA-HQ-9901'
                       }
                       className="w-full pl-9 pr-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs sm:text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-600/30 focus:border-emerald-600 transition-all font-mono"

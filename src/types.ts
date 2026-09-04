@@ -1,4 +1,5 @@
 export type RoleKey = 'claimant' | 'state' | 'central';
+export type StateCode = 'karnataka' | 'telangana';
 
 export interface ClaimRecord {
   id: string;

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Mountain,
   FileSpreadsheet,
@@ -10,13 +10,15 @@ import {
   Satellite,
   ArrowRight,
   Layers,
-  MapPin
+  MapPin,
+  Landmark
 } from 'lucide-react';
 import { KARNATAKA_DISTRICTS, TELANGANA_DISTRICTS } from '../data/mockData';
 import { DistrictMetric, ClaimRecord } from '../types';
 import { SdlcFieldGisConsole } from './SdlcFieldGisConsole';
 
 interface StateGovViewProps {
+  userState?: 'karnataka' | 'telangana';
   onExportReport: () => void;
   onOpenDossier: (claim: ClaimRecord) => void;
   onFlagForDlc: (claimId: string) => void;
@@ -24,23 +26,23 @@ interface StateGovViewProps {
 }
 
 export const StateGovView: React.FC<StateGovViewProps> = ({
+  userState = 'karnataka',
   onExportReport,
   onOpenDossier,
   onFlagForDlc,
   onDrillDownDistrict
 }) => {
-  const [activeState, setActiveState] = useState<'karnataka' | 'telangana'>('karnataka');
+  const activeState = userState;
   const [subTab, setSubTab] = useState<'overview' | 'sdlc'>('overview');
   const [hoveredDistrict, setHoveredDistrict] = useState<string | null>(null);
 
   const currentDistricts = activeState === 'karnataka' ? KARNATAKA_DISTRICTS : TELANGANA_DISTRICTS;
   const [selectedDistrict, setSelectedDistrict] = useState<DistrictMetric>(currentDistricts[0]);
 
-  const handleSwitchState = (st: 'karnataka' | 'telangana') => {
-    setActiveState(st);
-    const newDistricts = st === 'karnataka' ? KARNATAKA_DISTRICTS : TELANGANA_DISTRICTS;
-    setSelectedDistrict(newDistricts[0]);
-  };
+  useEffect(() => {
+    const districts = activeState === 'karnataka' ? KARNATAKA_DISTRICTS : TELANGANA_DISTRICTS;
+    setSelectedDistrict(districts[0]);
+  }, [activeState]);
 
   return (
     <section className="space-y-5 animate-fade-slide-up" id="view-state">
@@ -50,34 +52,14 @@ export const StateGovView: React.FC<StateGovViewProps> = ({
           <div className="flex flex-wrap items-center gap-2">
             <h1 className="text-lg font-bold text-[#1C2B22] flex items-center gap-2">
               <Mountain className="w-4.5 h-4.5 text-[#2A7C13]" />
-              <span>State Level Monitoring Committee (SLMC) – State Overview</span>
+              <span>State Level Monitoring Committee (SLMC) – {activeState === 'karnataka' ? 'Karnataka' : 'Telangana'} State Portal</span>
             </h1>
-            <div className="glass-tabs flex text-xs">
-              <button
-                type="button"
-                id="btn-state-karnataka"
-                onClick={() => handleSwitchState('karnataka')}
-                className={`px-3 py-1.5 rounded-md font-semibold transition cursor-pointer text-xs ${
-                  activeState === 'karnataka'
-                    ? 'glass-tab-active text-[#2A7C13]'
-                    : 'text-slate-500 hover:text-slate-800'
-                }`}
-              >
-                Karnataka
-              </button>
-              <button
-                type="button"
-                id="btn-state-telangana"
-                onClick={() => handleSwitchState('telangana')}
-                className={`px-3 py-1.5 rounded-md font-semibold transition cursor-pointer text-xs ${
-                  activeState === 'telangana'
-                    ? 'glass-tab-active text-[#2A7C13]'
-                    : 'text-slate-500 hover:text-slate-800'
-                }`}
-              >
-                Telangana
-              </button>
-            </div>
+            <span className={`inline-flex items-center space-x-1.5 px-3 py-1 rounded-full text-xs font-bold border shadow-xs ${
+              activeState === 'karnataka' ? 'bg-amber-50 text-amber-900 border-amber-300' : 'bg-emerald-50 text-emerald-900 border-emerald-300'
+            }`}>
+              <Landmark className="w-3.5 h-3.5 text-[#2A7C13]" />
+              <span>{activeState === 'karnataka' ? 'Government of Karnataka' : 'Government of Telangana'}</span>
+            </span>
           </div>
           <p className="text-xs text-slate-500 mt-0.5">
             Official Ministry of Tribal Affairs dataset &amp; AI bottleneck diagnosis for{' '}

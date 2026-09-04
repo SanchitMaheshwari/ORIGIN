@@ -8,7 +8,6 @@ import {
   X,
   ExternalLink,
   LogOut,
-  KeyRound,
   FileText,
   FileSpreadsheet,
   AlertTriangle,
@@ -20,6 +19,7 @@ import { RoleKey, NotificationItem } from '../types';
 
 interface HeaderProps {
   currentRole: RoleKey;
+  stateCode?: 'karnataka' | 'telangana';
   notifications: NotificationItem[];
   onMarkNotificationsRead: () => void;
   onNavigateNotification?: (role: RoleKey) => void;
@@ -50,10 +50,10 @@ const ROLE_PROFILES: Record<RoleKey, RoleProfile> = {
   state: {
     name: 'Dr. K. Manjunath, IAS',
     designation: 'Principal Secretary & State SLMC Member Secretary',
-    subLocation: 'State SLMC • Karnataka & Telangana',
+    subLocation: 'State SLMC • Karnataka',
     avatarUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80',
-    badge: 'STATE GOVT PORTAL (KARNATAKA & TELANGANA)',
-    badgeClass: 'bg-blue-900 text-blue-200 border-blue-600'
+    badge: 'STATE GOVT PORTAL (KARNATAKA)',
+    badgeClass: 'bg-amber-900 text-amber-200 border-amber-600'
   },
   central: {
     name: 'Rahul Sharma, IAS',
@@ -67,6 +67,7 @@ const ROLE_PROFILES: Record<RoleKey, RoleProfile> = {
 
 export const Header: React.FC<HeaderProps> = ({
   currentRole,
+  stateCode = 'karnataka',
   notifications,
   onMarkNotificationsRead,
   onNavigateNotification,
@@ -79,7 +80,24 @@ export const Header: React.FC<HeaderProps> = ({
   // Filter notifications strictly for the authenticated governance tier
   const roleNotifications = notifications.filter(n => !n.linkTab || n.linkTab === currentRole);
   const unreadCount = roleNotifications.filter(n => !n.read).length;
-  const profile = ROLE_PROFILES[currentRole];
+
+  const stateProfile: RoleProfile = stateCode === 'telangana' ? {
+    name: 'Smt. A. Sharada, IAS',
+    designation: 'Principal Secretary & State SLMC Member Secretary',
+    subLocation: 'State SLMC • BRKR Bhavan, Hyderabad, Telangana',
+    avatarUrl: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80',
+    badge: 'STATE GOVT PORTAL (TELANGANA)',
+    badgeClass: 'bg-emerald-900 text-emerald-200 border-emerald-600'
+  } : {
+    name: 'Dr. K. Manjunath, IAS',
+    designation: 'Principal Secretary & State SLMC Member Secretary',
+    subLocation: 'State SLMC • Vidhana Soudha, Bengaluru, Karnataka',
+    avatarUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80',
+    badge: 'STATE GOVT PORTAL (KARNATAKA)',
+    badgeClass: 'bg-amber-900 text-amber-200 border-amber-600'
+  };
+
+  const profile = currentRole === 'state' ? stateProfile : ROLE_PROFILES[currentRole];
 
   return (
     <header className="bg-gov-900 text-white shadow-lg sticky top-0 z-40 border-b border-emerald-950">
@@ -219,28 +237,16 @@ export const Header: React.FC<HeaderProps> = ({
                 src={profile.avatarUrl}
               />
 
-              {/* Switch Portal Button (Leads directly to login page) */}
-              <button
-                id="header-switch-portal-btn"
-                type="button"
-                onClick={onLogout}
-                className="flex items-center space-x-1.5 text-xs text-emerald-100 hover:text-white bg-emerald-800/90 hover:bg-emerald-700/90 border border-emerald-600/70 px-2.5 py-1.5 rounded-lg transition-all shadow-xs cursor-pointer ml-1 font-semibold"
-                title="Switch Portal (Return to Login Page)"
-              >
-                <KeyRound className="w-3.5 h-3.5 text-amber-300" />
-                <span className="hidden sm:inline">Switch Portal</span>
-              </button>
-
               {/* Logout Button (Leads directly to login page) */}
               <button
                 id="header-logout-btn"
                 type="button"
                 onClick={onLogout}
-                className="flex items-center space-x-1.5 text-xs text-emerald-200 hover:text-white bg-emerald-950/80 hover:bg-rose-900/80 border border-emerald-800/80 hover:border-rose-500/60 px-2.5 py-1.5 rounded-lg transition-all shadow-xs cursor-pointer ml-1"
+                className="flex items-center space-x-1.5 text-xs text-rose-200 hover:text-white bg-rose-950/60 hover:bg-rose-900/90 border border-rose-800/80 hover:border-rose-500/70 px-3 py-1.5 rounded-lg transition-all shadow-xs cursor-pointer ml-1.5 font-medium"
                 title="Logout (Return to Login Page)"
               >
                 <LogOut className="w-3.5 h-3.5 text-rose-300" />
-                <span className="hidden md:inline">Logout</span>
+                <span>Logout</span>
               </button>
             </div>
           </div>
@@ -288,7 +294,11 @@ export const Header: React.FC<HeaderProps> = ({
             <div className="flex items-center space-x-3">
               <div className="flex items-center space-x-1.5 px-3 py-1 bg-blue-700 text-white rounded-md font-bold shadow-xs">
                 <Landmark className="w-3.5 h-3.5" />
-                <span>State SLMC Monitoring &amp; SDLC WebGIS (Karnataka &amp; Telangana)</span>
+                <span>
+                  {stateCode === 'telangana'
+                    ? 'Telangana State SLMC Monitoring & SDLC WebGIS (Agency Tracts)'
+                    : 'Karnataka State SLMC Monitoring & SDLC WebGIS (Western Ghats)'}
+                </span>
               </div>
 
               {onExportReport && (
@@ -299,7 +309,9 @@ export const Header: React.FC<HeaderProps> = ({
                   className="flex items-center space-x-1.5 px-3 py-1 rounded-md text-emerald-200 hover:text-white hover:bg-white/10 transition cursor-pointer font-medium"
                 >
                   <FileSpreadsheet className="w-3.5 h-3.5 text-emerald-400" />
-                  <span>Export State SLMC Report</span>
+                  <span>
+                    Export {stateCode === 'telangana' ? 'Telangana' : 'Karnataka'} SLMC Report
+                  </span>
                 </button>
               )}
             </div>
@@ -318,18 +330,6 @@ export const Header: React.FC<HeaderProps> = ({
               </span>
             </div>
           )}
-
-          {/* Switch Portal / Role button on far right (leads directly to login page) */}
-          <button
-            type="button"
-            id="nav-switch-portal-btn"
-            onClick={onLogout}
-            className="text-[11px] text-emerald-300 hover:text-white hover:underline flex items-center space-x-1 cursor-pointer shrink-0 ml-4 font-medium"
-            title="Switch Portal / Role (Return to Login Page)"
-          >
-            <KeyRound className="w-3 h-3 text-amber-300" />
-            <span>Switch Portal / Role</span>
-          </button>
         </nav>
       </div>
     </header>

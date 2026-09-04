@@ -19,14 +19,18 @@ import { RoleKey, ClaimRecord, NotificationItem } from './types';
 export default function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [currentRole, setCurrentRole] = useState<RoleKey>('claimant');
+  const [stateCode, setStateCode] = useState<'karnataka' | 'telangana'>('karnataka');
   const [notifications, setNotifications] = useState<NotificationItem[]>(NOTIFICATIONS);
   const [showReceipt, setShowReceipt] = useState(false);
   const [showGrievance, setShowGrievance] = useState(false);
   const [selectedDossierClaim, setSelectedDossierClaim] = useState<ClaimRecord | null>(null);
   const [showExportReport, setShowExportReport] = useState(false);
 
-  const handleLogin = (role: RoleKey) => {
+  const handleLogin = (role: RoleKey, state?: 'karnataka' | 'telangana') => {
     setCurrentRole(role);
+    if (state) {
+      setStateCode(state);
+    }
     setIsAuthenticated(true);
   };
 
@@ -80,6 +84,7 @@ export default function App() {
       {/* Top Header with Portal navigation and Logout button */}
       <Header
         currentRole={currentRole}
+        stateCode={stateCode}
         notifications={notifications}
         onMarkNotificationsRead={handleMarkNotificationsRead}
         onLogout={handleLogout}
@@ -103,6 +108,7 @@ export default function App() {
 
         {currentRole === 'state' && (
           <StateGovView
+            userState={stateCode}
             onExportReport={() => setShowExportReport(true)}
             onOpenDossier={(claim) => setSelectedDossierClaim(claim)}
             onFlagForDlc={handleFlagClaimForDlc}
@@ -147,6 +153,7 @@ export default function App() {
 
       {showExportReport && (
         <ExportReportModal
+          stateCode={stateCode}
           onClose={() => setShowExportReport(false)}
         />
       )}
