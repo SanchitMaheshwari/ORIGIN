@@ -17,13 +17,11 @@ import { PanIndiaMap } from './PanIndiaMap';
 import { PRIORITY_CLAIMS_QUEUE } from '../data/mockData';
 
 interface CentralGovViewProps {
-  onNavigateRole: (role: RoleKey) => void;
   onOpenDossier: (claim: ClaimRecord) => void;
   onFlagForDlc: (claimId: string) => void;
 }
 
 export const CentralGovView: React.FC<CentralGovViewProps> = ({
-  onNavigateRole,
   onOpenDossier,
   onFlagForDlc
 }) => {
@@ -40,15 +38,6 @@ export const CentralGovView: React.FC<CentralGovViewProps> = ({
     }
   };
 
-  const handleBreadcrumbClick = (crumb: 'india' | 'state' | 'district' | 'claim' | 'anomaly') => {
-    setActiveBreadcrumb(crumb);
-    if (crumb === 'state' || crumb === 'district' || crumb === 'anomaly') {
-      onNavigateRole('state');
-    } else if (crumb === 'claim') {
-      onNavigateRole('claimant');
-    }
-  };
-
   return (
     <section className="space-y-6 animate-in fade-in duration-200" id="view-central">
       {/* Title & Breadcrumbs */}
@@ -59,46 +48,18 @@ export const CentralGovView: React.FC<CentralGovViewProps> = ({
             <span>Ministry of Tribal Affairs (MoTA) National Dashboard</span>
           </h1>
           <p className="text-xs text-slate-500">
-            Pan-India Forest Rights Act compliance, title distribution, and AI anomaly tracking.
+            Pan-India Forest Rights Act compliance, title distribution, and AI anomaly tracking across all 726 districts.
           </p>
         </div>
 
-        {/* Drill Down Hierarchy Breadcrumbs */}
+        {/* National Hierarchy Scope Bar */}
         <div className="text-xs bg-slate-100 px-3 py-1.5 rounded-lg border border-slate-200 font-mono text-slate-600 flex items-center space-x-1.5">
-          <button
-            onClick={() => handleBreadcrumbClick('india')}
-            className={`cursor-pointer ${activeBreadcrumb === 'india' ? 'text-gov-900 font-bold' : 'hover:underline'}`}
-          >
-            India
-          </button>
+          <span className="text-gov-900 font-bold">National Registry Scope:</span>
+          <span className="text-emerald-700 font-semibold">Pan-India</span>
           <span>&gt;</span>
-          <button
-            onClick={() => handleBreadcrumbClick('state')}
-            className="text-gov-800 font-bold hover:underline cursor-pointer"
-          >
-            State
-          </button>
+          <span className="text-slate-700">36 States/UTs</span>
           <span>&gt;</span>
-          <button
-            onClick={() => handleBreadcrumbClick('district')}
-            className="hover:underline cursor-pointer text-slate-700"
-          >
-            District
-          </button>
-          <span>&gt;</span>
-          <button
-            onClick={() => handleBreadcrumbClick('claim')}
-            className="hover:underline cursor-pointer text-slate-700"
-          >
-            Claim
-          </button>
-          <span>&gt;</span>
-          <button
-            onClick={() => handleBreadcrumbClick('anomaly')}
-            className="text-rose-600 font-bold hover:underline cursor-pointer"
-          >
-            AI Anomaly
-          </button>
+          <span className="text-slate-700">726 Districts</span>
         </div>
       </div>
 
@@ -145,7 +106,7 @@ export const CentralGovView: React.FC<CentralGovViewProps> = ({
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* National Map of India (7 cols) */}
         <div className="lg:col-span-7">
-          <PanIndiaMap onNavigateRole={onNavigateRole} />
+          <PanIndiaMap />
         </div>
 
         {/* Comparative State Trends (5 cols) */}
@@ -286,10 +247,13 @@ export const CentralGovView: React.FC<CentralGovViewProps> = ({
 
           <button
             type="button"
-            onClick={() => onNavigateRole('state')}
+            onClick={() => {
+              const el = document.getElementById('sdlc-queue-section');
+              el?.scrollIntoView({ behavior: 'smooth' });
+            }}
             className="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-gov-900 font-semibold text-xs transition cursor-pointer self-start sm:self-auto"
           >
-            <span>Open State &amp; Sub-Divisional Consoles</span>
+            <span>Inspect Priority Queue</span>
             <ArrowRight className="w-3.5 h-3.5" />
           </button>
         </div>
@@ -443,14 +407,9 @@ export const CentralGovView: React.FC<CentralGovViewProps> = ({
               <p className="text-[11px] text-gov-800 leading-relaxed">
                 All 75 high-anomaly claims across Madhya Pradesh (Bandhavgarh), Odisha (Kandhamal), and Maharashtra (Gadchiroli) are mandated for joint on-site DGPS re-verification prior to the next statutory DLC session.
               </p>
-              <button
-                type="button"
-                onClick={() => onNavigateRole('state')}
-                className="w-full mt-1 py-1.5 px-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-semibold flex items-center justify-center space-x-1.5 transition cursor-pointer"
-              >
-                <span>Drill Down into State / SDLC Field GIS</span>
-                <ArrowRight className="w-3.5 h-3.5" />
-              </button>
+              <div className="text-[10px] text-emerald-800 bg-white/70 p-2 rounded border border-emerald-300/80 font-mono">
+                Mandated SLA: 15 days for Gram Sabha &amp; SDLC compliance across all 36 States/UTs.
+              </div>
             </div>
           </div>
         </div>

@@ -80,11 +80,12 @@ export default function App() {
       {/* Top Header with Portal navigation and Logout button */}
       <Header
         currentRole={currentRole}
-        onSelectRole={setCurrentRole}
         notifications={notifications}
         onMarkNotificationsRead={handleMarkNotificationsRead}
-        onNavigateNotification={setCurrentRole}
         onLogout={handleLogout}
+        onOpenReceipt={() => setShowReceipt(true)}
+        onOpenGrievance={() => setShowGrievance(true)}
+        onExportReport={() => setShowExportReport(true)}
       />
 
       {/* Human In The Loop Global Policy Banner */}
@@ -110,7 +111,6 @@ export default function App() {
 
         {currentRole === 'central' && (
           <CentralGovView
-            onNavigateRole={setCurrentRole}
             onOpenDossier={(claim) => setSelectedDossierClaim(claim)}
             onFlagForDlc={handleFlagClaimForDlc}
           />

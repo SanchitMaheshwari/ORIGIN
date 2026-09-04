@@ -124,6 +124,15 @@ export const NOTIFICATIONS: NotificationItem[] = [
     type: 'info',
     read: false,
     linkTab: 'claimant'
+  },
+  {
+    id: 'notif-4',
+    title: 'MoTA National Telemetry & Satellite Sync',
+    description: '726-District WebGIS multispectral land-use layer refreshed across all 36 States/UTs.',
+    time: '4 hours ago',
+    type: 'info',
+    read: false,
+    linkTab: 'central'
   }
 ];
 

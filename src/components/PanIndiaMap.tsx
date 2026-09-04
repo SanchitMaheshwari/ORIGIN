@@ -21,13 +21,13 @@ import {
 } from '../data/indiaGeoData';
 
 interface PanIndiaMapProps {
-  onNavigateRole: (role: RoleKey) => void;
+  onNavigateRole?: (role: RoleKey) => void;
 }
 
 type MetricMode = 'conferment' | 'pending' | 'anomaly';
 type ViewGranularity = 'state' | 'district';
 
-export const PanIndiaMap: React.FC<PanIndiaMapProps> = ({ onNavigateRole }) => {
+export const PanIndiaMap: React.FC<PanIndiaMapProps> = () => {
   const [viewMode, setViewMode] = useState<ViewGranularity>('state');
   const [metricMode, setMetricMode] = useState<MetricMode>('conferment');
   const [selectedState, setSelectedState] = useState<string>('ALL');
@@ -545,21 +545,20 @@ export const PanIndiaMap: React.FC<PanIndiaMapProps> = ({ onNavigateRole }) => {
             </div>
           </div>
 
-          {/* Drill down button for linked views */}
-          {activeItem.targetRole && (
-            <button
-              type="button"
-              onClick={() => onNavigateRole(activeItem.targetRole === 'central' ? 'central' : 'state')}
-              className="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-lg bg-emerald-600 text-white font-medium hover:bg-emerald-700 transition shadow-xs cursor-pointer text-xs shrink-0"
-            >
-              <span>
-                {activeItem.name === 'Madhya Pradesh' || activeItem.name.includes('Umaria')
-                  ? 'Open MP & SDLC Field Console'
-                  : 'Open State SLMC Overview'}
-              </span>
-              <ArrowRight className="w-3.5 h-3.5" />
-            </button>
-          )}
+          {/* In-page district focus button */}
+          <button
+            type="button"
+            onClick={() => {
+              const targetState = activeItem.subName ? activeItem.subName : activeItem.name;
+              setSelectedState(targetState);
+              setViewMode('district');
+            }}
+            className="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-lg bg-gov-900 hover:bg-gov-800 text-white font-medium transition shadow-xs cursor-pointer text-xs shrink-0"
+            title={`Focus on ${activeItem.name} in Central WebGIS`}
+          >
+            <span>Focus on {activeItem.name}</span>
+            <ArrowRight className="w-3.5 h-3.5" />
+          </button>
         </div>
       )}
     </div>
