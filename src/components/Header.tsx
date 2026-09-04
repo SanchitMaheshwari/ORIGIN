@@ -1,5 +1,5 @@
 import React from 'react';
-import { Bell, Check, User, MapPin, Landmark, Network, X, ExternalLink } from 'lucide-react';
+import { Bell, Check, User, MapPin, Landmark, Network, X, ExternalLink, LogOut } from 'lucide-react';
 import { RoleKey, NotificationItem } from '../types';
 
 interface HeaderProps {
@@ -8,6 +8,7 @@ interface HeaderProps {
   notifications: NotificationItem[];
   onMarkNotificationsRead: () => void;
   onNavigateNotification: (role: RoleKey) => void;
+  onLogout?: () => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -15,7 +16,8 @@ export const Header: React.FC<HeaderProps> = ({
   onSelectRole,
   notifications,
   onMarkNotificationsRead,
-  onNavigateNotification
+  onNavigateNotification,
+  onLogout
 }) => {
   const [showNotifications, setShowNotifications] = React.useState(false);
   const unreadCount = notifications.filter(n => !n.read).length;
@@ -146,6 +148,18 @@ export const Header: React.FC<HeaderProps> = ({
                 className="h-10 w-10 rounded-full border-2 border-emerald-400 object-cover shadow-sm ring-2 ring-black/20"
                 src="https://lh3.googleusercontent.com/aida-public/AB6AXuCREhN0ceaDPvlmUX7jI3xDolFv6Eg3jCMayQbpzMrG9UzhDbNHzeAkES3AWJwvOFaUH3OV-HyUvkMfcYJgSxhufVspFFsdxpnQnGtaXwCautkW3US_4vbz8sBhXPLGnkujtb3pqovkmxqYTL_x22jr3odHEUEF9UlypseGZxAt1z-aQSTLAA7jhsv_TYV47cRKNNvrJv_CihYIH0u0LkMuhfqrshtBq1GTDBZrcyG427EkqAm3m8Pw7A"
               />
+
+              {onLogout && (
+                <button
+                  onClick={onLogout}
+                  id="header-logout-btn"
+                  className="flex items-center space-x-1 text-xs text-emerald-200 hover:text-white bg-emerald-950/80 hover:bg-rose-900/60 border border-emerald-700/60 hover:border-rose-500/60 px-2.5 py-1.5 rounded-lg transition-all shadow-sm cursor-pointer"
+                  title="Switch Portal / Logout"
+                >
+                  <LogOut className="w-3.5 h-3.5" />
+                  <span className="hidden md:inline">Logout</span>
+                </button>
+              )}
             </div>
           </div>
         </div>

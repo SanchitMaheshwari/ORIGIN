@@ -7,6 +7,7 @@ import { StateGovView } from './components/StateGovView';
 import { CentralGovView } from './components/CentralGovView';
 import { AiAssistantDrawer } from './components/AiAssistantDrawer';
 import { Footer } from './components/Footer';
+import { LoginPortal } from './components/LoginPortal';
 import {
   FormAReceiptModal,
   GrievanceModal,
@@ -17,6 +18,7 @@ import { PRIMARY_CLAIM, NOTIFICATIONS } from './data/mockData';
 import { RoleKey, ClaimRecord, NotificationItem } from './types';
 
 export default function App() {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [currentRole, setCurrentRole] = useState<RoleKey>('claimant');
   const [notifications, setNotifications] = useState<NotificationItem[]>(NOTIFICATIONS);
   const [showReceipt, setShowReceipt] = useState(false);
@@ -24,12 +26,20 @@ export default function App() {
   const [selectedDossierClaim, setSelectedDossierClaim] = useState<ClaimRecord | null>(null);
   const [showExportReport, setShowExportReport] = useState(false);
 
+  const handleLogin = (role: RoleKey) => {
+    setCurrentRole(role);
+    setIsAuthenticated(true);
+  };
+
+  const handleLogout = () => {
+    setIsAuthenticated(false);
+  };
+
   const handleMarkNotificationsRead = () => {
     setNotifications(prev => prev.map(n => ({ ...n, read: true })));
   };
 
   const handleFlagClaimForDlc = (claimId: string) => {
-    // Add a new system notification
     const newNotif: NotificationItem = {
       id: `flag-${Date.now()}`,
       title: `Claim ${claimId} Flagged for DLC`,
@@ -42,15 +52,40 @@ export default function App() {
     setNotifications(prev => [newNotif, ...prev]);
   };
 
+  // If not logged in, display the SwasthyaSetu-styled FRA-MITRA GovTech Login Portal
+  if (!isAuthenticated) {
+    return (
+      <>
+        <LoginPortal
+          onLogin={handleLogin}
+          onOpenRegisterClaim={() => {
+            setIsAuthenticated(true);
+            setCurrentRole('claimant');
+            setShowReceipt(true);
+          }}
+        />
+
+        {/* Form A Receipt modal if triggered directly */}
+        {showReceipt && (
+          <FormAReceiptModal
+            claim={PRIMARY_CLAIM}
+            onClose={() => setShowReceipt(false)}
+          />
+        )}
+      </>
+    );
+  }
+
   return (
-    <div className="min-h-full flex flex-col font-sans overflow-x-hidden antialiased selection:bg-emerald-500 selection:text-white page-bg">
-      {/* Top Header */}
+    <div className="min-h-full flex flex-col font-sans overflow-x-hidden antialiased selection:bg-emerald-500 selection:text-white bg-slate-50">
+      {/* Top Header with Portal navigation and Logout button */}
       <Header
         currentRole={currentRole}
         onSelectRole={setCurrentRole}
         notifications={notifications}
         onMarkNotificationsRead={handleMarkNotificationsRead}
         onNavigateNotification={setCurrentRole}
+        onLogout={handleLogout}
       />
 
       {/* Human In The Loop Global Policy Banner */}

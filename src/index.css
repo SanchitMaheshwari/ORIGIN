@@ -7,77 +7,63 @@
   --color-gov-800: #065f46;
   --color-gov-900: #064E3B;
   --color-gov-dark: #043427;
+  --color-portal-header: #0F382C;
+  --color-portal-button: #0D3B2E;
   --font-sans: 'Plus Jakarta Sans', 'Inter', system-ui, -apple-system, sans-serif;
-
-  /* User palette */
-  --color-pal-leaf:    #76C457;
 }
 
-/* ─── Background: very soft, muted sage — same feel as reference ───────────── */
-/* #76C457 desaturated to ~15% and pushed to 94% lightness = #EDF4E6           */
-/* Subtle radial depth gives the reference's airy, paper-like look             */
-.page-bg {
-  background:
-    radial-gradient(ellipse 70% 50% at 15% 10%,  rgba(255,255,255,0.55) 0%, transparent 70%),
-    radial-gradient(ellipse 50% 60% at 85% 90%,  rgba(180, 220, 155, 0.25) 0%, transparent 65%),
-    radial-gradient(ellipse 80% 80% at 50% 50%,  rgba(237, 244, 230, 1)   0%, #e2f0d6 100%);
-  min-height: 100%;
+@keyframes pulseSubtle {
+
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 0.85;
+    transform: scale(1.05);
+  }
 }
 
-/* ─── Glassmorphism cards — reference style: near-white, clean, crisp ──────── */
-/* Reference cards look almost fully opaque white with a very light gray border */
-#view-claimant .bg-white,
-#view-claimant .bg-amber-50,
-#view-claimant [class*="from-emerald-50"],
-#view-employee .bg-white,
-#view-employee [class*="from-slate-800"],
-#view-state    .bg-white,
-#view-state    [class*="from-slate-800"],
-#view-central  .bg-white,
-#view-central  [class*="from-slate-800"] {
-  background: rgba(255, 255, 255, 0.82) !important;
-  backdrop-filter: blur(18px) saturate(140%);
-  -webkit-backdrop-filter: blur(18px) saturate(140%);
-  border: 1px solid rgba(118, 196, 87, 0.18) !important;
-  box-shadow:
-    0 2px 12px rgba(118, 196, 87, 0.08),
-    0 1px 3px rgba(0, 0, 0, 0.05) !important;
-  border-radius: inherit;
-}
-
-/* Amber/status card — stays warm but glassy */
-#view-claimant .bg-amber-50 {
-  background: rgba(255, 251, 235, 0.88) !important;
-  border-color: rgba(245, 158, 11, 0.22) !important;
-}
-
-/* AI insights panel — very light green tint glass */
-#view-claimant [class*="from-emerald-50"] {
-  background: rgba(236, 253, 245, 0.85) !important;
-  border-color: rgba(118, 196, 87, 0.25) !important;
-}
-
-/* Nested inner white-translucent cards */
-.bg-white\/90 {
-  background: rgba(255, 255, 255, 0.90) !important;
+.status-pulse {
+  animation: pulseSubtle 2s infinite ease-in-out;
 }
 
 /* ─── Scrollbar ─────────────────────────────────────────────────────────────── */
-.scrollbar-thin::-webkit-scrollbar { width: 6px; height: 6px; }
-.scrollbar-thin::-webkit-scrollbar-track { background: transparent; }
+.scrollbar-thin::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: transparent;
+}
+
 .scrollbar-thin::-webkit-scrollbar-thumb {
   background-color: rgba(118, 196, 87, 0.35);
   border-radius: 4px;
 }
+
 .scrollbar-thin::-webkit-scrollbar-thumb:hover {
   background-color: rgba(118, 196, 87, 0.60);
 }
 
 /* ─── Status pulse animation ────────────────────────────────────────────────── */
 @keyframes pulseSubtle {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50%       { opacity: 0.85; transform: scale(1.05); }
+
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 0.85;
+    transform: scale(1.05);
+  }
 }
+
 .status-pulse {
   animation: pulseSubtle 2s infinite ease-in-out;
 }
