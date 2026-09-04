@@ -242,7 +242,7 @@ export const PanIndiaMap: React.FC<PanIndiaMapProps> = () => {
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search district or state (e.g. Umaria, Mayurbhanj)..."
+                placeholder="Search district or state (e.g. Shimoga, Bhadradri Kothagudem)..."
                 className="w-full text-xs pl-8 pr-3 py-1.5 bg-slate-50 rounded-lg border border-slate-200 focus:outline-hidden focus:border-emerald-500 focus:bg-white text-slate-800"
               />
               {searchQuery && (

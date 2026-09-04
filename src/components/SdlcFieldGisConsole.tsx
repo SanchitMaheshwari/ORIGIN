@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Satellite,
   Plus,
@@ -17,20 +17,32 @@ import { PRIORITY_CLAIMS_QUEUE } from '../data/mockData';
 
 interface SdlcFieldGisConsoleProps {
   initialDistrict?: string;
-  activeState?: 'odisha' | 'mp';
+  activeState?: 'karnataka' | 'telangana' | 'odisha' | 'mp';
   onOpenDossier: (claim: ClaimRecord) => void;
   onFlagForDlc: (claimId: string) => void;
 }
 
 export const SdlcFieldGisConsole: React.FC<SdlcFieldGisConsoleProps> = ({
-  initialDistrict = 'Bandhavgarh (Umaria)',
-  activeState = 'mp',
+  initialDistrict = 'Shimoga (Sagar Sub-Division)',
+  activeState = 'karnataka',
   onOpenDossier,
   onFlagForDlc
 }) => {
   const [selectedDistrict, setSelectedDistrict] = useState(
-    activeState === 'odisha' ? 'Mayurbhanj' : initialDistrict
+    activeState === 'telangana'
+      ? 'Bhadradri Kothagudem (Kothagudem Sub-Division)'
+      : activeState === 'karnataka'
+      ? 'Shimoga (Sagar Sub-Division)'
+      : initialDistrict
   );
+
+  useEffect(() => {
+    setSelectedDistrict(
+      activeState === 'telangana'
+        ? 'Bhadradri Kothagudem (Kothagudem Sub-Division)'
+        : 'Shimoga (Sagar Sub-Division)'
+    );
+  }, [activeState]);
   const [selectedStatus, setSelectedStatus] = useState('All Statuses');
   const [anomalyFilter, setAnomalyFilter] = useState('High (Score > 7.0)');
   const [showHeatmap, setShowHeatmap] = useState(true);
@@ -81,19 +93,28 @@ export const SdlcFieldGisConsole: React.FC<SdlcFieldGisConsoleProps> = ({
                 onChange={(e) => setSelectedDistrict(e.target.value)}
                 className="text-xs py-1 px-2.5 rounded-lg border border-slate-300 font-medium focus:ring-1 focus:ring-emerald-500 bg-white"
               >
-                {activeState === 'odisha' ? (
+                {activeState === 'karnataka' ? (
                   <>
-                    <option>Mayurbhanj (Baripada)</option>
-                    <option>Kandhamal (Phulbani)</option>
-                    <option>Sundargarh (Panposh)</option>
-                    <option>Koraput (Jeypore)</option>
+                    <option>Shimoga (Sagar Sub-Division)</option>
+                    <option>Uttara Kannada (Sirsi Sub-Division)</option>
+                    <option>Chikkamagaluru (Tarikere Sub-Division)</option>
+                    <option>Belagavi (Khanapur Sub-Division)</option>
+                    <option>Kodagu (Madikeri Sub-Division)</option>
+                    <option>Chamrajnagar (Kollegal Sub-Division)</option>
+                  </>
+                ) : activeState === 'telangana' ? (
+                  <>
+                    <option>Bhadradri Kothagudem (Kothagudem Sub-Division)</option>
+                    <option>Mahabubabad (Mahabubabad Sub-Division)</option>
+                    <option>Adilabad (Utnoor Sub-Division)</option>
+                    <option>Komaram Bheem Asifabad (Asifabad Sub-Division)</option>
+                    <option>Mulugu (Mulugu Sub-Division)</option>
+                    <option>Khammam (Khammam Sub-Division)</option>
                   </>
                 ) : (
                   <>
-                    <option>Bandhavgarh (Umaria)</option>
-                    <option>Manpur (Umaria)</option>
-                    <option>Mandla (Niwas)</option>
-                    <option>Dindori (Shahpura)</option>
+                    <option>Shimoga (Sagar Sub-Division)</option>
+                    <option>Bhadradri Kothagudem (Kothagudem Sub-Division)</option>
                   </>
                 )}
               </select>

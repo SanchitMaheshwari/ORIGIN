@@ -8,9 +8,11 @@ import {
   CheckCircle2,
   AlertOctagon,
   Satellite,
-  ArrowRight
+  ArrowRight,
+  Layers,
+  MapPin
 } from 'lucide-react';
-import { ODISHA_DISTRICTS } from '../data/mockData';
+import { KARNATAKA_DISTRICTS, TELANGANA_DISTRICTS } from '../data/mockData';
 import { DistrictMetric, ClaimRecord } from '../types';
 import { SdlcFieldGisConsole } from './SdlcFieldGisConsole';
 
@@ -27,10 +29,18 @@ export const StateGovView: React.FC<StateGovViewProps> = ({
   onFlagForDlc,
   onDrillDownDistrict
 }) => {
-  const [activeState, setActiveState] = useState<'odisha' | 'mp'>('odisha');
+  const [activeState, setActiveState] = useState<'karnataka' | 'telangana'>('karnataka');
   const [subTab, setSubTab] = useState<'overview' | 'sdlc'>('overview');
-  const [selectedDistrict, setSelectedDistrict] = useState<DistrictMetric | null>(ODISHA_DISTRICTS[4]); // Kandhamal default
   const [hoveredDistrict, setHoveredDistrict] = useState<string | null>(null);
+
+  const currentDistricts = activeState === 'karnataka' ? KARNATAKA_DISTRICTS : TELANGANA_DISTRICTS;
+  const [selectedDistrict, setSelectedDistrict] = useState<DistrictMetric>(currentDistricts[0]);
+
+  const handleSwitchState = (st: 'karnataka' | 'telangana') => {
+    setActiveState(st);
+    const newDistricts = st === 'karnataka' ? KARNATAKA_DISTRICTS : TELANGANA_DISTRICTS;
+    setSelectedDistrict(newDistricts[0]);
+  };
 
   return (
     <section className="space-y-6 animate-in fade-in duration-200" id="view-state">
@@ -40,29 +50,42 @@ export const StateGovView: React.FC<StateGovViewProps> = ({
           <div className="flex items-center space-x-2">
             <h1 className="text-xl font-bold text-gov-900 flex items-center space-x-2">
               <Mountain className="w-5 h-5 text-emerald-600" />
-              <span>State Level Monitoring Committee (SLMC) - State Overview</span>
+              <span>State Level Monitoring Committee (SLMC) – State Overview</span>
             </h1>
             <div className="inline-flex rounded-lg border border-slate-300 p-0.5 bg-slate-100 text-xs">
               <button
-                onClick={() => setActiveState('odisha')}
-                className={`px-2 py-0.5 rounded font-semibold transition ${
-                  activeState === 'odisha' ? 'bg-white text-gov-900 shadow-sm' : 'text-slate-600 hover:text-slate-900'
+                type="button"
+                id="btn-state-karnataka"
+                onClick={() => handleSwitchState('karnataka')}
+                className={`px-2.5 py-1 rounded font-semibold transition cursor-pointer ${
+                  activeState === 'karnataka'
+                    ? 'bg-white text-gov-900 shadow-xs'
+                    : 'text-slate-600 hover:text-slate-900'
                 }`}
               >
-                Odisha
+                Karnataka
               </button>
               <button
-                onClick={() => setActiveState('mp')}
-                className={`px-2 py-0.5 rounded font-semibold transition ${
-                  activeState === 'mp' ? 'bg-white text-gov-900 shadow-sm' : 'text-slate-600 hover:text-slate-900'
+                type="button"
+                id="btn-state-telangana"
+                onClick={() => handleSwitchState('telangana')}
+                className={`px-2.5 py-1 rounded font-semibold transition cursor-pointer ${
+                  activeState === 'telangana'
+                    ? 'bg-white text-gov-900 shadow-xs'
+                    : 'text-slate-600 hover:text-slate-900'
                 }`}
               >
-                Madhya Pradesh
+                Telangana
               </button>
             </div>
           </div>
           <p className="text-xs text-slate-500 mt-0.5">
-            Comprehensive FRA implementation progress and AI bottleneck diagnosis for <strong>{activeState === 'odisha' ? 'Odisha State Tribal Welfare Department' : 'Madhya Pradesh Forest Department'}</strong>.
+            Official Ministry of Tribal Affairs dataset &amp; AI bottleneck diagnosis for{' '}
+            <strong>
+              {activeState === 'karnataka'
+                ? 'Karnataka State Tribal Welfare & Forest Department'
+                : 'Telangana State Tribal Welfare & Forest Department'}
+            </strong>.
           </p>
         </div>
 
@@ -70,6 +93,7 @@ export const StateGovView: React.FC<StateGovViewProps> = ({
           {/* Sub-tab Switcher: Overview vs SDLC Field Operations */}
           <div className="flex bg-slate-100 p-0.5 rounded-lg border border-slate-200 text-xs font-semibold">
             <button
+              type="button"
               onClick={() => setSubTab('overview')}
               className={`px-3 py-1.5 rounded-md flex items-center space-x-1.5 transition cursor-pointer ${
                 subTab === 'overview'
@@ -81,6 +105,7 @@ export const StateGovView: React.FC<StateGovViewProps> = ({
               <span>1. State SLMC Overview</span>
             </button>
             <button
+              type="button"
               onClick={() => setSubTab('sdlc')}
               className={`px-3 py-1.5 rounded-md flex items-center space-x-1.5 transition cursor-pointer ${
                 subTab === 'sdlc'
@@ -94,8 +119,9 @@ export const StateGovView: React.FC<StateGovViewProps> = ({
           </div>
 
           <button
+            type="button"
             onClick={onExportReport}
-            className="text-xs font-bold px-3 py-1.5 bg-gov-800 text-white rounded-lg hover:bg-gov-900 shadow-sm flex items-center space-x-1.5 transition active:scale-95 cursor-pointer"
+            className="text-xs font-bold px-3 py-1.5 bg-gov-800 text-white rounded-lg hover:bg-gov-900 shadow-xs flex items-center space-x-1.5 transition active:scale-95 cursor-pointer"
           >
             <FileSpreadsheet className="w-3.5 h-3.5" />
             <span>Export Report</span>
@@ -106,7 +132,11 @@ export const StateGovView: React.FC<StateGovViewProps> = ({
       {subTab === 'sdlc' ? (
         <SdlcFieldGisConsole
           activeState={activeState}
-          initialDistrict={activeState === 'odisha' ? 'Mayurbhanj' : 'Bandhavgarh (Umaria)'}
+          initialDistrict={
+            activeState === 'karnataka'
+              ? 'Shimoga (Sagar Sub-Division)'
+              : 'Bhadradri Kothagudem (Kothagudem Sub-Division)'
+          }
           onOpenDossier={onOpenDossier}
           onFlagForDlc={onFlagForDlc}
         />
@@ -114,306 +144,534 @@ export const StateGovView: React.FC<StateGovViewProps> = ({
         <>
           {/* State Level KPI Strip (6 items) */}
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
-        <div className="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm">
-          <span className="text-[10px] uppercase font-bold text-slate-400">Total State Claims</span>
-          <div className="text-2xl font-black text-slate-900 mt-1">
-            {activeState === 'odisha' ? '28,500' : '76,000'}
-          </div>
-          <span className="text-[10px] text-emerald-600 font-medium">94% Digital Enrolled</span>
-        </div>
-
-        <div className="bg-emerald-50 p-3.5 rounded-xl border border-emerald-200 shadow-sm">
-          <span className="text-[10px] uppercase font-bold text-emerald-800">Titles Conferred</span>
-          <div className="text-2xl font-black text-gov-900 mt-1">
-            {activeState === 'odisha' ? '15,200' : '38,760'}
-          </div>
-          <span className="text-[10px] text-gov-700 font-medium">
-            {activeState === 'odisha' ? '53.3%' : '51.0%'} clearance
-          </span>
-        </div>
-
-        <div className="bg-amber-50 p-3.5 rounded-xl border border-amber-200 shadow-sm">
-          <span className="text-[10px] uppercase font-bold text-amber-800">Pending</span>
-          <div className="text-2xl font-black text-amber-700 mt-1">
-            {activeState === 'odisha' ? '10,100' : '32,400'}
-          </div>
-          <span className="text-[10px] text-amber-600 font-medium">Avg delay: 92 days</span>
-        </div>
-
-        <div className="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm">
-          <span className="text-[10px] uppercase font-bold text-slate-400">Rejection Rate</span>
-          <div className="text-2xl font-black text-slate-800 mt-1">3%</div>
-          <span className="text-[10px] text-slate-400 font-medium">Below national avg</span>
-        </div>
-
-        <div className="bg-rose-50 p-3.5 rounded-xl border border-rose-200 shadow-sm">
-          <span className="text-[10px] uppercase font-bold text-rose-800">AI Anomaly Cases</span>
-          <div className="text-2xl font-black text-rose-600 mt-1">
-            {activeState === 'odisha' ? '480' : '1,120'}
-          </div>
-          <span className="text-[10px] text-rose-700 font-medium">Requires field checks</span>
-        </div>
-
-        <div className="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm">
-          <span className="text-[10px] uppercase font-bold text-slate-400">Priority Districts</span>
-          <div className="text-2xl font-black text-gov-800 mt-1">5</div>
-          <span className="text-[10px] text-rose-600 font-medium">Special drive active</span>
-        </div>
-      </div>
-
-      {/* State Graphic Split: Odisha Boundary Map + District Analytics */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        {/* State WebGIS Map (7 cols) */}
-        <div className="lg:col-span-7 bg-white rounded-xl border border-slate-200 p-4 shadow-sm space-y-3 flex flex-col justify-between">
-          <div>
-            <div className="flex items-center justify-between border-b border-slate-100 pb-2">
-              <div>
-                <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wide">
-                  State Spatial Distribution: {activeState === 'odisha' ? 'Odisha Forest Divisions' : 'MP Central & Forest Circles'}
-                </h3>
-                <p className="text-[11px] text-slate-400">
-                  Choropleth map displaying pending titles and anomaly clusters by district
-                </p>
+            <div className="bg-white p-3.5 rounded-xl border border-slate-200 shadow-xs">
+              <span className="text-[10px] uppercase font-bold text-slate-400">Total State Claims</span>
+              <div className="text-2xl font-black text-slate-900 mt-1">
+                {activeState === 'karnataka' ? '295,176' : '655,249'}
               </div>
-              <span className="text-xs bg-emerald-100 text-gov-800 px-2.5 py-0.5 rounded-full font-bold">
-                Interactive GIS
+              <span className="text-[10px] text-emerald-600 font-medium">
+                {activeState === 'karnataka' ? '289k IFR • 5.9k CFR' : '651k IFR • 3.4k CFR'}
               </span>
             </div>
 
-            {/* Simulated District Map of Odisha */}
-            <div className="h-80 bg-emerald-50/40 rounded-lg relative overflow-hidden border border-emerald-100 flex items-center justify-center mt-3">
-              <svg className="w-full h-full" viewBox="0 0 500 350" xmlns="http://www.w3.org/2000/svg">
-                {/* Mayurbhanj (North) - Orange */}
-                <polygon
-                  points="320,30 380,45 420,100 360,130 310,90"
-                  fill={hoveredDistrict === 'mayurbhanj' ? '#fdba74' : '#fed7aa'}
-                  stroke="#ea580c"
-                  strokeWidth="1.5"
-                  className="cursor-pointer transition-colors"
-                  onMouseEnter={() => setHoveredDistrict('mayurbhanj')}
-                  onMouseLeave={() => setHoveredDistrict(null)}
-                  onClick={() => setSelectedDistrict(ODISHA_DISTRICTS[1])}
-                >
-                  <title>Mayurbhanj: 2,420 Pending | 65 Anomaly Flags</title>
-                </polygon>
-                <text x="340" y="80" fill="#9a3412" fontSize="9" fontWeight="bold">Mayurbhanj</text>
-
-                {/* Sundargarh (NW) - Fast clearance (Green) */}
-                <polygon
-                  points="190,40 310,90 290,140 180,110 150,60"
-                  fill={hoveredDistrict === 'sundargarh' ? '#86efac' : '#bbf7d0'}
-                  stroke="#16a34a"
-                  strokeWidth="1.5"
-                  className="cursor-pointer transition-colors"
-                  onMouseEnter={() => setHoveredDistrict('sundargarh')}
-                  onMouseLeave={() => setHoveredDistrict(null)}
-                  onClick={() => setSelectedDistrict(ODISHA_DISTRICTS[0])}
-                >
-                  <title>Sundargarh: 88% Clearance</title>
-                </polygon>
-                <text x="210" y="85" fill="#166534" fontSize="9" fontWeight="bold">Sundargarh</text>
-
-                {/* Keonjhar (Central North) - Green */}
-                <polygon
-                  points="290,140 360,130 340,190 270,180"
-                  fill={hoveredDistrict === 'keonjhar' ? '#86efac' : '#bbf7d0'}
-                  stroke="#16a34a"
-                  strokeWidth="1.5"
-                  className="cursor-pointer transition-colors"
-                  onMouseEnter={() => setHoveredDistrict('keonjhar')}
-                  onMouseLeave={() => setHoveredDistrict(null)}
-                  onClick={() => setSelectedDistrict(ODISHA_DISTRICTS[2])}
-                />
-                <text x="290" y="160" fill="#166534" fontSize="8.5" fontWeight="bold">Keonjhar</text>
-
-                {/* Sambalpur / Bargarh (West) - Orange */}
-                <polygon
-                  points="140,120 220,130 200,210 110,180"
-                  fill={hoveredDistrict === 'sambalpur' ? '#fdba74' : '#fed7aa'}
-                  stroke="#ea580c"
-                  strokeWidth="1.5"
-                  className="cursor-pointer transition-colors"
-                  onMouseEnter={() => setHoveredDistrict('sambalpur')}
-                  onMouseLeave={() => setHoveredDistrict(null)}
-                  onClick={() => setSelectedDistrict(ODISHA_DISTRICTS[3])}
-                />
-                <text x="135" y="160" fill="#9a3412" fontSize="8.5" fontWeight="bold">Sambalpur</text>
-
-                {/* Kandhamal (Central) - High Anomaly (Red hotspot) */}
-                <polygon
-                  points="190,215 270,210 250,280 170,270"
-                  fill={hoveredDistrict === 'kandhamal' ? '#f87171' : '#fecaca'}
-                  stroke="#dc2626"
-                  strokeWidth="2.5"
-                  className="cursor-pointer transition-colors"
-                  onMouseEnter={() => setHoveredDistrict('kandhamal')}
-                  onMouseLeave={() => setHoveredDistrict(null)}
-                  onClick={() => setSelectedDistrict(ODISHA_DISTRICTS[4])}
-                >
-                  <title>Kandhamal: Hotspot! 140 Boundary Overlaps</title>
-                </polygon>
-                <text x="195" y="245" fill="#991b1b" fontSize="9" fontWeight="bold">Kandhamal (Hotspot)</text>
-
-                {/* Koraput / Malkangiri (South) - Red */}
-                <polygon
-                  points="120,260 170,270 160,340 70,330"
-                  fill={hoveredDistrict === 'koraput' ? '#f87171' : '#fecaca'}
-                  stroke="#dc2626"
-                  strokeWidth="1.8"
-                  className="cursor-pointer transition-colors"
-                  onMouseEnter={() => setHoveredDistrict('koraput')}
-                  onMouseLeave={() => setHoveredDistrict(null)}
-                  onClick={() => setSelectedDistrict(ODISHA_DISTRICTS[5])}
-                />
-                <text x="95" y="300" fill="#991b1b" fontSize="9" fontWeight="bold">Koraput</text>
-
-                {/* Coastal Districts (Cuttack, Puri, Ganjam) - Green Fast */}
-                <polygon
-                  points="270,180 340,190 390,260 300,280 250,220"
-                  fill="#86efac"
-                  stroke="#15803d"
-                  strokeWidth="1.5"
-                  className="cursor-pointer hover:opacity-80"
-                />
-                <text x="290" y="230" fill="#14532d" fontSize="8.5" fontWeight="bold">Coastal Divisions</text>
-
-                {/* Bay of Bengal label */}
-                <path d="M 370 200 Q 420 280 400 340" fill="none" stroke="#38bdf8" strokeWidth="2" strokeDasharray="3 3" />
-                <text x="380" y="320" fill="#0284c7" fontSize="10" fontWeight="bold" opacity="0.6">Bay of Bengal</text>
-              </svg>
-
-              {/* Map Floating Mini Legend */}
-              <div className="absolute bottom-2 left-2 bg-white/90 backdrop-blur px-2.5 py-1.5 rounded-lg border border-slate-200 text-[10px] space-y-1 shadow-sm">
-                <div className="flex items-center space-x-1.5">
-                  <span className="w-3 h-2 bg-green-300 border border-green-600 inline-block rounded-xs"></span>
-                  <span>Normal Clearance (&gt;75%)</span>
-                </div>
-                <div className="flex items-center space-x-1.5">
-                  <span className="w-3 h-2 bg-amber-200 border border-amber-600 inline-block rounded-xs"></span>
-                  <span>SDLC Backlog (&gt;90d Delay)</span>
-                </div>
-                <div className="flex items-center space-x-1.5">
-                  <span className="w-3 h-2 bg-red-200 border border-red-600 inline-block rounded-xs"></span>
-                  <span>AI Anomaly Hotspot (&gt;50 Flags)</span>
-                </div>
+            <div className="bg-emerald-50 p-3.5 rounded-xl border border-emerald-200 shadow-xs">
+              <span className="text-[10px] uppercase font-bold text-emerald-800">Titles Conferred</span>
+              <div className="text-2xl font-black text-gov-900 mt-1">
+                {activeState === 'karnataka' ? '16,700' : '231,456'}
               </div>
+              <span className="text-[10px] text-gov-700 font-medium">
+                {activeState === 'karnataka' ? '5.7% title rate' : '35.3% title rate'}
+              </span>
+            </div>
+
+            <div className="bg-amber-50 p-3.5 rounded-xl border border-amber-200 shadow-xs">
+              <span className="text-[10px] uppercase font-bold text-amber-800">Pending Backlog</span>
+              <div className="text-2xl font-black text-amber-700 mt-1">
+                {activeState === 'karnataka' ? '15,850' : '329,367'}
+              </div>
+              <span className="text-[10px] text-amber-600 font-medium">
+                {activeState === 'karnataka' ? 'Avg delay: 184 days' : '50.3% pending rate'}
+              </span>
+            </div>
+
+            <div className="bg-white p-3.5 rounded-xl border border-slate-200 shadow-xs">
+              <span className="text-[10px] uppercase font-bold text-slate-400">Claims Rejected</span>
+              <div className="text-2xl font-black text-rose-600 mt-1">
+                {activeState === 'karnataka' ? '262,626' : '94,426'}
+              </div>
+              <span className="text-[10px] text-rose-700 font-medium">
+                {activeState === 'karnataka' ? '89.0% High Rejection Bottleneck' : '14.4% rejection rate'}
+              </span>
+            </div>
+
+            <div className="bg-rose-50 p-3.5 rounded-xl border border-rose-200 shadow-xs">
+              <span className="text-[10px] uppercase font-bold text-rose-800">AI Anomaly Cases</span>
+              <div className="text-2xl font-black text-rose-600 mt-1">
+                {activeState === 'karnataka' ? '1,240' : '2,840'}
+              </div>
+              <span className="text-[10px] text-rose-700 font-medium">
+                {activeState === 'karnataka' ? 'Western Ghats Overlaps' : 'Podu Land Boundary Flags'}
+              </span>
+            </div>
+
+            <div className="bg-white p-3.5 rounded-xl border border-slate-200 shadow-xs">
+              <span className="text-[10px] uppercase font-bold text-slate-400">Priority Districts</span>
+              <div className="text-2xl font-black text-gov-800 mt-1">
+                {activeState === 'karnataka' ? '6' : '7'}
+              </div>
+              <span className="text-[10px] text-rose-600 font-medium">Special SDLC drive active</span>
             </div>
           </div>
 
-          {/* Selected District Info Bar */}
-          {selectedDistrict && (
-            <div className="mt-2 p-2.5 bg-slate-50 border border-slate-200 rounded-lg flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 text-xs">
-              <div className="flex items-center space-x-2">
-                <span className="font-bold text-slate-800">{selectedDistrict.name} District:</span>
-                <span className="text-slate-600">
-                  {selectedDistrict.conferredClaims} titles conferred ({selectedDistrict.conferredRate}%), {selectedDistrict.anomalyFlags} anomaly flags
-                </span>
-                <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${
-                  selectedDistrict.statusType === 'clearance'
-                    ? 'bg-emerald-100 text-emerald-800'
-                    : selectedDistrict.statusType === 'hotspot'
-                    ? 'bg-rose-100 text-rose-800'
-                    : 'bg-amber-100 text-amber-800'
-                }`}>
-                  {selectedDistrict.statusType.toUpperCase()}
-                </span>
+          {/* State Graphic Split: Boundary Map + District Analytics */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            {/* State WebGIS Map (7 cols) */}
+            <div className="lg:col-span-7 bg-white rounded-xl border border-slate-200 p-4 shadow-xs space-y-3 flex flex-col justify-between">
+              <div>
+                <div className="flex items-center justify-between border-b border-slate-100 pb-2">
+                  <div>
+                    <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wide">
+                      State Spatial Distribution:{' '}
+                      {activeState === 'karnataka'
+                        ? 'Karnataka Forest Divisions & Western Ghats'
+                        : 'Telangana Forest Divisions & Agency Tracts'}
+                    </h3>
+                    <p className="text-[11px] text-slate-400">
+                      Choropleth WebGIS showing official district claims, pending backlogs, and AI anomaly clusters
+                    </p>
+                  </div>
+                  <span className="text-xs bg-emerald-100 text-gov-800 px-2.5 py-0.5 rounded-full font-bold">
+                    Official WebGIS
+                  </span>
+                </div>
+
+                {/* SVG Choropleth Map for Selected State */}
+                <div className="h-80 bg-emerald-50/40 rounded-lg relative overflow-hidden border border-emerald-100 flex items-center justify-center mt-3">
+                  {activeState === 'karnataka' ? (
+                    /* KARNATAKA CHOROPLETH SVG */
+                    <svg className="w-full h-full" viewBox="0 0 500 360" xmlns="http://www.w3.org/2000/svg">
+                      {/* Belgaum (NW) - Orange Backlog */}
+                      <polygon
+                        points="110,25 220,30 200,95 100,90"
+                        fill={hoveredDistrict === 'belgaum' ? '#fdba74' : '#fed7aa'}
+                        stroke="#ea580c"
+                        strokeWidth="1.5"
+                        className="cursor-pointer transition-colors"
+                        onMouseEnter={() => setHoveredDistrict('belgaum')}
+                        onMouseLeave={() => setHoveredDistrict(null)}
+                        onClick={() => setSelectedDistrict(KARNATAKA_DISTRICTS[3])}
+                      >
+                        <title>Belgaum: 17,424 claims | 551 titles | 16,873 rejected</title>
+                      </polygon>
+                      <text x="125" y="65" fill="#9a3412" fontSize="9" fontWeight="bold">Belgaum (Belagavi)</text>
+
+                      {/* Bagalakote (North) - Orange */}
+                      <polygon
+                        points="220,30 330,35 310,105 200,95"
+                        fill={hoveredDistrict === 'bagalakote' ? '#fdba74' : '#fed7aa'}
+                        stroke="#ea580c"
+                        strokeWidth="1.5"
+                        className="cursor-pointer transition-colors"
+                        onMouseEnter={() => setHoveredDistrict('bagalakote')}
+                        onMouseLeave={() => setHoveredDistrict(null)}
+                        onClick={() => setSelectedDistrict(KARNATAKA_DISTRICTS[4])}
+                      >
+                        <title>Bagalakote: 11,931 claims | 88 titles | 11,843 rejected</title>
+                      </polygon>
+                      <text x="235" y="70" fill="#9a3412" fontSize="9" fontWeight="bold">Bagalakote</text>
+
+                      {/* Uttara Kannada (Coastal Ghats) - Hotspot Red */}
+                      <polygon
+                        points="90,95 180,95 170,185 80,180"
+                        fill={hoveredDistrict === 'uttara_kannada' ? '#f87171' : '#fecaca'}
+                        stroke="#dc2626"
+                        strokeWidth="2.2"
+                        className="cursor-pointer transition-colors"
+                        onMouseEnter={() => setHoveredDistrict('uttara_kannada')}
+                        onMouseLeave={() => setHoveredDistrict(null)}
+                        onClick={() => setSelectedDistrict(KARNATAKA_DISTRICTS[1])}
+                      >
+                        <title>Uttara Kannada: Hotspot! 85,065 claims | 11,763 pending | 71,561 rejected</title>
+                      </polygon>
+                      <text x="88" y="145" fill="#991b1b" fontSize="9" fontWeight="bold">Uttara Kannada (Hotspot)</text>
+
+                      {/* Shimoga (Shivamogga) - Hotspot Red */}
+                      <polygon
+                        points="170,125 260,120 245,195 165,185"
+                        fill={hoveredDistrict === 'shimoga' ? '#f87171' : '#fecaca'}
+                        stroke="#dc2626"
+                        strokeWidth="2.2"
+                        className="cursor-pointer transition-colors"
+                        onMouseEnter={() => setHoveredDistrict('shimoga')}
+                        onMouseLeave={() => setHoveredDistrict(null)}
+                        onClick={() => setSelectedDistrict(KARNATAKA_DISTRICTS[0])}
+                      >
+                        <title>Shimoga: 95,431 claims | 2,409 titles | 90,809 rejected | 2,213 pending</title>
+                      </polygon>
+                      <text x="175" y="165" fill="#991b1b" fontSize="9" fontWeight="bold">Shimoga (Hotspot)</text>
+
+                      {/* Davanagere (Central) - Orange */}
+                      <polygon
+                        points="245,120 330,125 315,195 240,185"
+                        fill={hoveredDistrict === 'davanagere' ? '#fdba74' : '#fed7aa'}
+                        stroke="#ea580c"
+                        strokeWidth="1.5"
+                        className="cursor-pointer transition-colors"
+                        onMouseEnter={() => setHoveredDistrict('davanagere')}
+                        onMouseLeave={() => setHoveredDistrict(null)}
+                        onClick={() => setSelectedDistrict(KARNATAKA_DISTRICTS[5])}
+                      >
+                        <title>Davanagere: 11,034 claims | 616 titles</title>
+                      </polygon>
+                      <text x="250" y="160" fill="#9a3412" fontSize="8.5" fontWeight="bold">Davanagere</text>
+
+                      {/* Chickmagalur (Western Ghats) - Orange */}
+                      <polygon
+                        points="160,185 245,195 230,265 155,250"
+                        fill={hoveredDistrict === 'chickmagalur' ? '#fdba74' : '#fed7aa'}
+                        stroke="#ea580c"
+                        strokeWidth="1.5"
+                        className="cursor-pointer transition-colors"
+                        onMouseEnter={() => setHoveredDistrict('chickmagalur')}
+                        onMouseLeave={() => setHoveredDistrict(null)}
+                        onClick={() => setSelectedDistrict(KARNATAKA_DISTRICTS[2])}
+                      >
+                        <title>Chickmagalur: 21,213 claims | 1,910 titles | 19,303 rejected</title>
+                      </polygon>
+                      <text x="162" y="230" fill="#9a3412" fontSize="8.5" fontWeight="bold">Chickmagalur</text>
+
+                      {/* Kodagu (South Ghats) - Green Fast Clearance */}
+                      <polygon
+                        points="155,250 225,260 210,320 145,305"
+                        fill={hoveredDistrict === 'kodagu' ? '#86efac' : '#bbf7d0'}
+                        stroke="#16a34a"
+                        strokeWidth="1.8"
+                        className="cursor-pointer transition-colors"
+                        onMouseEnter={() => setHoveredDistrict('kodagu')}
+                        onMouseLeave={() => setHoveredDistrict(null)}
+                        onClick={() => setSelectedDistrict(KARNATAKA_DISTRICTS[7])}
+                      >
+                        <title>Kodagu: 56.5% Titles Conferred (2,385 / 4,220)</title>
+                      </polygon>
+                      <text x="155" y="290" fill="#166534" fontSize="9" fontWeight="bold">Kodagu (Clearance)</text>
+
+                      {/* Mysore (Mysuru) - Orange Backlog */}
+                      <polygon
+                        points="225,260 310,265 295,330 210,320"
+                        fill={hoveredDistrict === 'mysore' ? '#fdba74' : '#fed7aa'}
+                        stroke="#ea580c"
+                        strokeWidth="1.5"
+                        className="cursor-pointer transition-colors"
+                        onMouseEnter={() => setHoveredDistrict('mysore')}
+                        onMouseLeave={() => setHoveredDistrict(null)}
+                        onClick={() => setSelectedDistrict(KARNATAKA_DISTRICTS[6])}
+                      >
+                        <title>Mysore: 7,340 claims | 961 titles | 540 pending</title>
+                      </polygon>
+                      <text x="235" y="295" fill="#9a3412" fontSize="8.5" fontWeight="bold">Mysore</text>
+
+                      {/* Chamrajnagar (South Border) - Green Fast Clearance */}
+                      <polygon
+                        points="295,310 365,305 350,352 285,348"
+                        fill={hoveredDistrict === 'chamrajnagar' ? '#86efac' : '#bbf7d0'}
+                        stroke="#16a34a"
+                        strokeWidth="1.8"
+                        className="cursor-pointer transition-colors"
+                        onMouseEnter={() => setHoveredDistrict('chamrajnagar')}
+                        onMouseLeave={() => setHoveredDistrict(null)}
+                        onClick={() => setSelectedDistrict(KARNATAKA_DISTRICTS[8])}
+                      >
+                        <title>Chamrajnagar: 83.1% Conferred (2,060 / 2,480)</title>
+                      </polygon>
+                      <text x="290" y="335" fill="#166534" fontSize="8.5" fontWeight="bold">Chamrajnagar (83%)</text>
+
+                      {/* Arabian Sea coastline annotation */}
+                      <path d="M 60 40 Q 75 180 70 330" fill="none" stroke="#38bdf8" strokeWidth="2" strokeDasharray="3 3" />
+                      <text x="20" y="200" fill="#0284c7" fontSize="9" fontWeight="bold" opacity="0.7" transform="rotate(-90 20 200)">
+                        Arabian Sea Coast
+                      </text>
+                    </svg>
+                  ) : (
+                    /* TELANGANA CHOROPLETH SVG */
+                    <svg className="w-full h-full" viewBox="0 0 500 360" xmlns="http://www.w3.org/2000/svg">
+                      {/* Adilabad (North) - Red Hotspot */}
+                      <polygon
+                        points="130,25 240,20 225,90 120,85"
+                        fill={hoveredDistrict === 'adilabad' ? '#f87171' : '#fecaca'}
+                        stroke="#dc2626"
+                        strokeWidth="2.2"
+                        className="cursor-pointer transition-colors"
+                        onMouseEnter={() => setHoveredDistrict('adilabad')}
+                        onMouseLeave={() => setHoveredDistrict(null)}
+                        onClick={() => setSelectedDistrict(TELANGANA_DISTRICTS[2])}
+                      >
+                        <title>Adilabad: 64,680 claims | 26,779 titles | 29,472 pending | 125 flags</title>
+                      </polygon>
+                      <text x="140" y="60" fill="#991b1b" fontSize="9" fontWeight="bold">Adilabad (Hotspot)</text>
+
+                      {/* Komaram Bheem Asifabad (NE) - Orange */}
+                      <polygon
+                        points="240,20 340,30 315,100 225,90"
+                        fill={hoveredDistrict === 'asifabad' ? '#fdba74' : '#fed7aa'}
+                        stroke="#ea580c"
+                        strokeWidth="1.5"
+                        className="cursor-pointer transition-colors"
+                        onMouseEnter={() => setHoveredDistrict('asifabad')}
+                        onMouseLeave={() => setHoveredDistrict(null)}
+                        onClick={() => setSelectedDistrict(TELANGANA_DISTRICTS[3])}
+                      >
+                        <title>Asifabad: 60,280 claims | 26,461 titles | 28,964 pending</title>
+                      </polygon>
+                      <text x="235" y="65" fill="#9a3412" fontSize="9" fontWeight="bold">KB Asifabad</text>
+
+                      {/* Nirmal (NW Central) - Orange */}
+                      <polygon
+                        points="105,85 195,90 180,160 95,150"
+                        fill={hoveredDistrict === 'nirmal' ? '#fdba74' : '#fed7aa'}
+                        stroke="#ea580c"
+                        strokeWidth="1.5"
+                        className="cursor-pointer transition-colors"
+                        onMouseEnter={() => setHoveredDistrict('nirmal')}
+                        onMouseLeave={() => setHoveredDistrict(null)}
+                        onClick={() => setSelectedDistrict(TELANGANA_DISTRICTS[7])}
+                      >
+                        <title>Nirmal: 26,307 claims | 10,908 titles | 12,364 pending</title>
+                      </polygon>
+                      <text x="115" y="130" fill="#9a3412" fontSize="8.5" fontWeight="bold">Nirmal</text>
+
+                      {/* Mulugu (East Forest Division) - Red Hotspot */}
+                      <polygon
+                        points="260,110 350,115 335,190 250,180"
+                        fill={hoveredDistrict === 'mulugu' ? '#f87171' : '#fecaca'}
+                        stroke="#dc2626"
+                        strokeWidth="2.2"
+                        className="cursor-pointer transition-colors"
+                        onMouseEnter={() => setHoveredDistrict('mulugu')}
+                        onMouseLeave={() => setHoveredDistrict(null)}
+                        onClick={() => setSelectedDistrict(TELANGANA_DISTRICTS[4])}
+                      >
+                        <title>Mulugu: 47,994 claims | 12,350 titles | 28,162 pending | 140 flags</title>
+                      </polygon>
+                      <text x="265" y="155" fill="#991b1b" fontSize="9" fontWeight="bold">Mulugu (Hotspot)</text>
+
+                      {/* Bhadradri Kothagudem (East Agency) - Major Hotspot Red */}
+                      <polygon
+                        points="335,150 450,165 425,290 320,270"
+                        fill={hoveredDistrict === 'bhadradri_kothagudem' ? '#f87171' : '#fecaca'}
+                        stroke="#dc2626"
+                        strokeWidth="2.5"
+                        className="cursor-pointer transition-colors"
+                        onMouseEnter={() => setHoveredDistrict('bhadradri_kothagudem')}
+                        onMouseLeave={() => setHoveredDistrict(null)}
+                        onClick={() => setSelectedDistrict(TELANGANA_DISTRICTS[0])}
+                      >
+                        <title>Bhadradri Kothagudem: 139,691 claims | 68,387 titles | 46,244 pending | 184 flags</title>
+                      </polygon>
+                      <text x="330" y="225" fill="#991b1b" fontSize="9.5" fontWeight="bold">Bhadradri Kothagudem</text>
+
+                      {/* Mahabubabad (Central East) - Orange */}
+                      <polygon
+                        points="230,180 325,185 305,255 220,240"
+                        fill={hoveredDistrict === 'mahabubabad' ? '#fdba74' : '#fed7aa'}
+                        stroke="#ea580c"
+                        strokeWidth="1.5"
+                        className="cursor-pointer transition-colors"
+                        onMouseEnter={() => setHoveredDistrict('mahabubabad')}
+                        onMouseLeave={() => setHoveredDistrict(null)}
+                        onClick={() => setSelectedDistrict(TELANGANA_DISTRICTS[1])}
+                      >
+                        <title>Mahabubabad: 65,874 claims | 30,220 titles | 22,338 pending</title>
+                      </polygon>
+                      <text x="235" y="220" fill="#9a3412" fontSize="8.5" fontWeight="bold">Mahabubabad</text>
+
+                      {/* Khammam (SE Border) - Orange */}
+                      <polygon
+                        points="295,255 385,265 360,335 280,325"
+                        fill={hoveredDistrict === 'khammam' ? '#fdba74' : '#fed7aa'}
+                        stroke="#ea580c"
+                        strokeWidth="1.5"
+                        className="cursor-pointer transition-colors"
+                        onMouseEnter={() => setHoveredDistrict('khammam')}
+                        onMouseLeave={() => setHoveredDistrict(null)}
+                        onClick={() => setSelectedDistrict(TELANGANA_DISTRICTS[6])}
+                      >
+                        <title>Khammam: 32,061 claims | 12,970 titles | 11,958 pending</title>
+                      </polygon>
+                      <text x="295" y="295" fill="#9a3412" fontSize="8.5" fontWeight="bold">Khammam</text>
+
+                      {/* Nalgonda (South) - Orange Backlog */}
+                      <polygon
+                        points="160,240 270,250 245,330 145,315"
+                        fill={hoveredDistrict === 'nalgonda' ? '#fdba74' : '#fed7aa'}
+                        stroke="#ea580c"
+                        strokeWidth="1.5"
+                        className="cursor-pointer transition-colors"
+                        onMouseEnter={() => setHoveredDistrict('nalgonda')}
+                        onMouseLeave={() => setHoveredDistrict(null)}
+                        onClick={() => setSelectedDistrict(TELANGANA_DISTRICTS[8])}
+                      >
+                        <title>Nalgonda: 28,742 claims | 6,701 titles | 18,072 pending</title>
+                      </polygon>
+                      <text x="170" y="290" fill="#9a3412" fontSize="8.5" fontWeight="bold">Nalgonda</text>
+
+                      {/* Godavari River line and label */}
+                      <path d="M 160 20 Q 280 80 380 150 T 460 260" fill="none" stroke="#38bdf8" strokeWidth="2.5" strokeDasharray="4 3" />
+                      <text x="330" y="110" fill="#0284c7" fontSize="9" fontWeight="bold" opacity="0.8">
+                        Godavari River Basin
+                      </text>
+                    </svg>
+                  )}
+
+                  {/* Map Floating Mini Legend */}
+                  <div className="absolute bottom-2 left-2 bg-white/90 backdrop-blur px-2.5 py-1.5 rounded-lg border border-slate-200 text-[10px] space-y-1 shadow-xs">
+                    <div className="flex items-center space-x-1.5">
+                      <span className="w-3 h-2 bg-green-300 border border-green-600 inline-block rounded-xs"></span>
+                      <span>Normal Clearance (&gt;50%)</span>
+                    </div>
+                    <div className="flex items-center space-x-1.5">
+                      <span className="w-3 h-2 bg-amber-200 border border-amber-600 inline-block rounded-xs"></span>
+                      <span>SDLC Backlog (&gt;90d Delay)</span>
+                    </div>
+                    <div className="flex items-center space-x-1.5">
+                      <span className="w-3 h-2 bg-red-200 border border-red-600 inline-block rounded-xs"></span>
+                      <span>AI Anomaly Hotspot (&gt;75 Flags)</span>
+                    </div>
+                  </div>
+                </div>
               </div>
-              <button
-                type="button"
-                onClick={() => setSubTab('sdlc')}
-                className="inline-flex items-center space-x-1 text-[11px] font-bold text-emerald-700 hover:text-emerald-900 bg-emerald-50 px-2.5 py-1 rounded border border-emerald-200 hover:bg-emerald-100 transition cursor-pointer shrink-0"
-              >
-                <span>Inspect SDLC Field GIS</span>
-                <ArrowRight className="w-3 h-3" />
-              </button>
+
+              {/* Selected District Info Bar */}
+              {selectedDistrict && (
+                <div className="mt-2 p-2.5 bg-slate-50 border border-slate-200 rounded-lg flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 text-xs">
+                  <div className="flex items-center space-x-2">
+                    <MapPin className="w-4 h-4 text-emerald-600 shrink-0" />
+                    <span className="font-bold text-slate-800">{selectedDistrict.name}:</span>
+                    <span className="text-slate-600">
+                      {selectedDistrict.conferredClaims.toLocaleString()} conferred ({selectedDistrict.conferredRate}%),{' '}
+                      {selectedDistrict.pendingClaims.toLocaleString()} pending,{' '}
+                      {selectedDistrict.anomalyFlags} anomaly flags
+                    </span>
+                    <span
+                      className={`px-2 py-0.5 rounded text-[10px] font-bold ${
+                        selectedDistrict.statusType === 'clearance'
+                          ? 'bg-emerald-100 text-emerald-800'
+                          : selectedDistrict.statusType === 'hotspot'
+                          ? 'bg-rose-100 text-rose-800'
+                          : 'bg-amber-100 text-amber-800'
+                      }`}
+                    >
+                      {selectedDistrict.statusType.toUpperCase()}
+                    </span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setSubTab('sdlc')}
+                    className="inline-flex items-center space-x-1 text-[11px] font-bold text-emerald-700 hover:text-emerald-900 bg-emerald-50 px-2.5 py-1 rounded border border-emerald-200 hover:bg-emerald-100 transition cursor-pointer shrink-0"
+                  >
+                    <span>Inspect SDLC Field GIS</span>
+                    <ArrowRight className="w-3 h-3" />
+                  </button>
+                </div>
+              )}
+
+              <p className="text-[11px] text-slate-500 italic mt-1">
+                Click on any district polygon to inspect Sub-Divisions and cadastral forest plots in the SDLC Console.
+              </p>
             </div>
-          )}
 
-          <p className="text-[11px] text-slate-500 italic mt-1">
-            Click on any district boundary to inspect Sub-Divisions and individual village forest polygons.
-          </p>
-        </div>
-
-        {/* District Statistics & Processing Bottlenecks (5 cols) */}
-        <div className="lg:col-span-5 space-y-4">
-          {/* District-wise Clearance Chart Card */}
-          <div className="bg-white rounded-xl border border-slate-200 p-4 shadow-sm space-y-3">
-            <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wide">
-              District-Wise Status Comparison
-            </h3>
-
-            <div className="space-y-3 text-xs">
-              {/* Sundargarh */}
-              <div>
-                <div className="flex justify-between text-[11px] mb-1">
-                  <span className="font-bold text-slate-700">Sundargarh</span>
-                  <span className="text-slate-500">82% Conferred (4,100 / 5,000)</span>
+            {/* District Statistics & Processing Bottlenecks (5 cols) */}
+            <div className="lg:col-span-5 space-y-4">
+              {/* District-wise Status Comparison Card */}
+              <div className="bg-white rounded-xl border border-slate-200 p-4 shadow-xs space-y-3">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wide">
+                    {activeState === 'karnataka' ? 'Karnataka' : 'Telangana'} District Status Comparison
+                  </h3>
+                  <span className="text-[10px] text-slate-400 font-mono">Official State Data</span>
                 </div>
-                <div className="w-full h-2.5 bg-slate-100 rounded-full overflow-hidden flex">
-                  <div className="bg-emerald-500 h-full" style={{ width: '82%' }}></div>
-                  <div className="bg-amber-400 h-full" style={{ width: '14%' }}></div>
-                  <div className="bg-rose-500 h-full" style={{ width: '4%' }}></div>
+
+                <div className="space-y-3 text-xs">
+                  {currentDistricts.slice(0, 5).map((dist) => {
+                    const conferredPct = Math.min(100, Math.round((dist.conferredClaims / dist.totalClaims) * 100));
+                    const pendingPct = Math.min(100 - conferredPct, Math.round((dist.pendingClaims / dist.totalClaims) * 100));
+                    const rejectedPct = Math.max(0, 100 - conferredPct - pendingPct);
+
+                    return (
+                      <div key={dist.id} className="space-y-1">
+                        <div className="flex justify-between text-[11px]">
+                          <span className="font-bold text-slate-800">{dist.name}</span>
+                          <span className="text-slate-500 font-medium">
+                            {dist.conferredRate}% Conferred ({dist.conferredClaims.toLocaleString()} / {dist.totalClaims.toLocaleString()})
+                          </span>
+                        </div>
+                        <div className="w-full h-2.5 bg-slate-100 rounded-full overflow-hidden flex">
+                          <div
+                            className="bg-emerald-500 h-full"
+                            style={{ width: `${conferredPct}%` }}
+                            title={`Conferred: ${conferredPct}%`}
+                          />
+                          <div
+                            className="bg-amber-400 h-full"
+                            style={{ width: `${pendingPct}%` }}
+                            title={`Pending: ${pendingPct}%`}
+                          />
+                          <div
+                            className="bg-rose-500 h-full"
+                            style={{ width: `${rejectedPct}%` }}
+                            title={`Rejected: ${rejectedPct}%`}
+                          />
+                        </div>
+                        <div className="flex justify-between text-[9.5px] text-slate-400">
+                          <span>Pending: {dist.pendingClaims.toLocaleString()}</span>
+                          <span>Anomalies: {dist.anomalyFlags} flags</span>
+                        </div>
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
 
-              {/* Mayurbhanj */}
-              <div>
-                <div className="flex justify-between text-[11px] mb-1">
-                  <span className="font-bold text-slate-700">Mayurbhanj</span>
-                  <span className="text-slate-500">54% Conferred (3,240 / 6,000)</span>
-                </div>
-                <div className="w-full h-2.5 bg-slate-100 rounded-full overflow-hidden flex">
-                  <div className="bg-emerald-500 h-full" style={{ width: '54%' }}></div>
-                  <div className="bg-amber-400 h-full" style={{ width: '38%' }}></div>
-                  <div className="bg-rose-500 h-full" style={{ width: '8%' }}></div>
-                </div>
-              </div>
+              {/* AI State Bottleneck Diagnosis */}
+              <div className="bg-white rounded-xl border border-slate-200 p-4 shadow-xs space-y-2">
+                <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wide flex items-center space-x-1.5">
+                  <Brain className="w-4 h-4 text-purple-600" />
+                  <span>
+                    {activeState === 'karnataka' ? 'Karnataka' : 'Telangana'} Processing Bottlenecks &amp; AI Breakdown
+                  </span>
+                </h3>
 
-              {/* Kandhamal */}
-              <div>
-                <div className="flex justify-between text-[11px] mb-1">
-                  <span className="font-bold text-slate-700">Kandhamal</span>
-                  <span className="text-slate-500">41% Conferred (1,850 / 4,500)</span>
-                </div>
-                <div className="w-full h-2.5 bg-slate-100 rounded-full overflow-hidden flex">
-                  <div className="bg-emerald-500 h-full" style={{ width: '41%' }}></div>
-                  <div className="bg-amber-400 h-full" style={{ width: '44%' }}></div>
-                  <div className="bg-rose-500 h-full" style={{ width: '15%' }}></div>
-                </div>
+                {activeState === 'karnataka' ? (
+                  <>
+                    <div className="grid grid-cols-3 gap-2 text-center pt-1">
+                      <div className="p-2 bg-rose-50 rounded-lg border border-rose-200">
+                        <span className="text-[10px] font-bold text-rose-800 block">Rejection Rate</span>
+                        <span className="text-base font-extrabold text-rose-700">89%</span>
+                      </div>
+                      <div className="p-2 bg-slate-50 rounded-lg border border-slate-200">
+                        <span className="text-[10px] font-bold text-slate-600 block">Delay &gt;180d</span>
+                        <span className="text-base font-extrabold text-slate-800">48%</span>
+                      </div>
+                      <div className="p-2 bg-amber-50 rounded-lg border border-amber-200">
+                        <span className="text-[10px] font-bold text-amber-800 block">Ghats Overlap</span>
+                        <span className="text-base font-extrabold text-amber-700">34%</span>
+                      </div>
+                    </div>
+
+                    <div className="p-2.5 bg-emerald-50/80 rounded-lg border border-emerald-200 text-[11px] text-gov-900 mt-2 leading-relaxed">
+                      <strong>Karnataka SLMC Recommendation:</strong> Convene Special Division Review for{' '}
+                      <strong>Shimoga (Shivamogga)</strong> and <strong>Uttara Kannada</strong> to re-examine 162,370 rejected
+                      IFR claims with DGPS satellite cadastral overlays before the State High Court statutory compliance deadline.
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <div className="grid grid-cols-3 gap-2 text-center pt-1">
+                      <div className="p-2 bg-amber-50 rounded-lg border border-amber-200">
+                        <span className="text-[10px] font-bold text-amber-800 block">Pending Backlog</span>
+                        <span className="text-base font-extrabold text-amber-700">50.3%</span>
+                      </div>
+                      <div className="p-2 bg-slate-50 rounded-lg border border-slate-200">
+                        <span className="text-[10px] font-bold text-slate-600 block">Delay &gt;180d</span>
+                        <span className="text-base font-extrabold text-slate-800">58%</span>
+                      </div>
+                      <div className="p-2 bg-rose-50 rounded-lg border border-rose-200">
+                        <span className="text-[10px] font-bold text-rose-800 block">Podu Land Overlap</span>
+                        <span className="text-base font-extrabold text-rose-700">27%</span>
+                      </div>
+                    </div>
+
+                    <div className="p-2.5 bg-emerald-50/80 rounded-lg border border-emerald-200 text-[11px] text-gov-900 mt-2 leading-relaxed">
+                      <strong>Telangana SLMC Recommendation:</strong> Expedite RoFR digital title distribution for{' '}
+                      <strong>46,244 pending files in Bhadradri Kothagudem</strong> and{' '}
+                      <strong>29,472 in Adilabad</strong> through coordinated SDLC revenue camps and Gram Sabha quorum re-verification drives.
+                    </div>
+                  </>
+                )}
               </div>
             </div>
           </div>
-
-          {/* AI State Bottleneck Diagnosis */}
-          <div className="bg-white rounded-xl border border-slate-200 p-4 shadow-sm space-y-2">
-            <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wide flex items-center space-x-1.5">
-              <Brain className="w-4 h-4 text-purple-600" />
-              <span>Processing Bottlenecks &amp; AI Anomaly Breakdown</span>
-            </h3>
-
-            <div className="grid grid-cols-3 gap-2 text-center pt-1">
-              <div className="p-2 bg-slate-50 rounded-lg border border-slate-200">
-                <span className="text-[10px] font-bold text-slate-500 block">Delay &gt;180d</span>
-                <span className="text-base font-extrabold text-slate-800">62%</span>
-              </div>
-              <div className="p-2 bg-amber-50 rounded-lg border border-amber-200">
-                <span className="text-[10px] font-bold text-amber-800 block">Overlap</span>
-                <span className="text-base font-extrabold text-amber-700">23%</span>
-              </div>
-              <div className="p-2 bg-rose-50 rounded-lg border border-rose-200">
-                <span className="text-[10px] font-bold text-rose-800 block">Land Mismatch</span>
-                <span className="text-base font-extrabold text-rose-600">15%</span>
-              </div>
-            </div>
-
-            <div className="p-2.5 bg-emerald-50/70 rounded-lg border border-emerald-200 text-[11px] text-gov-800 mt-2">
-              <strong>State Recommendation:</strong> Deploy mobile SDLC drone mapping camps to Mayurbhanj &amp; Kandhamal to resolve 238 boundary overlap cases before the quarterly review.
-            </div>
-          </div>
-        </div>
-      </div>
-    </>
-  )}
-</section>
+        </>
+      )}
+    </section>
   );
 };

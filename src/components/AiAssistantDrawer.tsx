@@ -60,8 +60,14 @@ export const AiAssistantDrawer: React.FC<AiAssistantDrawerProps> = ({ onOpenGrie
     if (qLower.includes('delay') || qLower.includes('bandhavgarh') || qLower.includes('f-412') || qLower.includes('mangar')) {
       botReply = 'AI Explanation: Claim F-412 in Bandhavgarh (Claimant: Mangar Gond) is delayed due to insufficient GPS geofence match and land record variance (0.6 ha mismatch against RoR). Re-verification has been scheduled by the SDLC team for 22 Aug 2026.';
       isInsight = true;
-    } else if (qLower.includes('odisha') || qLower.includes('state')) {
-      botReply = 'Odisha Summary: Total Claims Recorded: 28,500 | Titles Conferred: 15,200 (53.3% clearance) | Pending in SDLC/DLC: 10,100 | Priority Districts with active drives: Mayurbhanj, Kandhamal, Koraput.';
+    } else if (qLower.includes('karnataka')) {
+      botReply = 'Karnataka Official Summary (MoTA): Total Claims Recorded: 295,176 (289,236 IFR, 5,940 CFR) | Titles Conferred: 16,700 (5.7%) | Rejected: 262,626 (89.0% bottleneck) | Pending in SDLC/DLC: 15,850. Priority Districts: Shimoga (95.4k claims), Uttara Kannada (85.1k claims), Chickmagalur.';
+      isInsight = true;
+    } else if (qLower.includes('telangana')) {
+      botReply = 'Telangana Official Summary (MoTA): Total Claims Recorded: 655,249 (651,822 IFR, 3,427 CFR) | Titles Conferred: 231,456 (35.3%) | Pending in SDLC/DLC: 329,367 (50.3% backlog) | Rejected: 94,426. Priority Districts: Bhadradri Kothagudem (139.7k claims), Adilabad (64.7k claims), Asifabad (60.3k claims).';
+      isInsight = true;
+    } else if (qLower.includes('state') || qLower.includes('odisha')) {
+      botReply = 'State Summaries (Official MoTA Dataset): Karnataka has 295,176 claims (16,700 titles conferred, 262,626 rejected, 89% rejection bottleneck). Telangana has 655,249 claims (231,456 titles conferred, 329,367 pending backlog, 50.3% pending rate). Priority focus: Shimoga & Bhadradri Kothagudem.';
       isInsight = true;
     } else if (qLower.includes('national') || qLower.includes('total') || qLower.includes('india') || qLower.includes('mota')) {
       botReply = 'MoTA National Metrics: 315,000 total claims recorded nationwide; 210,000 titles conferred (66.6%); 95,000 pending. National AI anomaly rate stands at 1.1% (3,465 flags). 18 States are currently on track (>60% title rate).';
