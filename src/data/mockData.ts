@@ -105,7 +105,7 @@ export const NOTIFICATIONS: NotificationItem[] = [
     time: '12 mins ago',
     type: 'warning',
     read: false,
-    linkTab: 'employee'
+    linkTab: 'state'
   },
   {
     id: 'notif-2',
@@ -223,7 +223,7 @@ export const NATIONAL_ZONES: NationalZone[] = [
     conferredPercentage: 51,
     status: 'Priority Action / SDLC Drive',
     color: '#fed7aa',
-    targetRole: 'employee'
+    targetRole: 'state'
   },
   {
     id: 'east',

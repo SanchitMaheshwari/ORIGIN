@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Header } from './components/Header';
 import { HumanInTheLoopBanner } from './components/HumanInTheLoopBanner';
 import { ClaimantView } from './components/ClaimantView';
-import { EmployeeGisView } from './components/EmployeeGisView';
 import { StateGovView } from './components/StateGovView';
 import { CentralGovView } from './components/CentralGovView';
 import { AiAssistantDrawer } from './components/AiAssistantDrawer';
@@ -47,7 +46,7 @@ export default function App() {
       time: 'Just now',
       type: 'warning',
       read: false,
-      linkTab: 'employee'
+      linkTab: 'state'
     };
     setNotifications(prev => [newNotif, ...prev]);
   };
@@ -101,22 +100,19 @@ export default function App() {
           />
         )}
 
-        {currentRole === 'employee' && (
-          <EmployeeGisView
-            onOpenDossier={(claim) => setSelectedDossierClaim(claim)}
-            onFlagForDlc={handleFlagClaimForDlc}
-          />
-        )}
-
         {currentRole === 'state' && (
           <StateGovView
             onExportReport={() => setShowExportReport(true)}
+            onOpenDossier={(claim) => setSelectedDossierClaim(claim)}
+            onFlagForDlc={handleFlagClaimForDlc}
           />
         )}
 
         {currentRole === 'central' && (
           <CentralGovView
             onNavigateRole={setCurrentRole}
+            onOpenDossier={(claim) => setSelectedDossierClaim(claim)}
+            onFlagForDlc={handleFlagClaimForDlc}
           />
         )}
       </main>

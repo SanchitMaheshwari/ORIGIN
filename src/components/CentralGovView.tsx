@@ -2,25 +2,48 @@ import React, { useState } from 'react';
 import {
   Network,
   TrendingDown,
-  MousePointerClick,
-  FileBarChart2
+  FileBarChart2,
+  Satellite,
+  AlertTriangle,
+  FileText,
+  CheckCircle2,
+  ArrowRight,
+  ShieldAlert,
+  Layers,
+  Calendar
 } from 'lucide-react';
-import { RoleKey } from '../types';
+import { RoleKey, ClaimRecord } from '../types';
+import { PanIndiaMap } from './PanIndiaMap';
+import { PRIORITY_CLAIMS_QUEUE } from '../data/mockData';
 
 interface CentralGovViewProps {
   onNavigateRole: (role: RoleKey) => void;
+  onOpenDossier: (claim: ClaimRecord) => void;
+  onFlagForDlc: (claimId: string) => void;
 }
 
-export const CentralGovView: React.FC<CentralGovViewProps> = ({ onNavigateRole }) => {
+export const CentralGovView: React.FC<CentralGovViewProps> = ({
+  onNavigateRole,
+  onOpenDossier,
+  onFlagForDlc
+}) => {
   const [activeBreadcrumb, setActiveBreadcrumb] = useState<'india' | 'state' | 'district' | 'claim' | 'anomaly'>('india');
-  const [selectedZone, setSelectedZone] = useState<string | null>(null);
+  const [flaggedIds, setFlaggedIds] = useState<string[]>([]);
+  const [bannerMsg, setBannerMsg] = useState<string | null>(null);
+
+  const handleFlagDirective = (claimId: string) => {
+    if (!flaggedIds.includes(claimId)) {
+      setFlaggedIds([...flaggedIds, claimId]);
+      setBannerMsg(`Central Directive issued for Claim ${claimId}: Priority Joint DGPS Resurvey mandated.`);
+      onFlagForDlc(claimId);
+      setTimeout(() => setBannerMsg(null), 4000);
+    }
+  };
 
   const handleBreadcrumbClick = (crumb: 'india' | 'state' | 'district' | 'claim' | 'anomaly') => {
     setActiveBreadcrumb(crumb);
-    if (crumb === 'state') {
+    if (crumb === 'state' || crumb === 'district' || crumb === 'anomaly') {
       onNavigateRole('state');
-    } else if (crumb === 'district' || crumb === 'anomaly') {
-      onNavigateRole('employee');
     } else if (crumb === 'claim') {
       onNavigateRole('claimant');
     }
@@ -121,108 +144,8 @@ export const CentralGovView: React.FC<CentralGovViewProps> = ({ onNavigateRole }
       {/* National Map & Analytics Section */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* National Map of India (7 cols) */}
-        <div className="lg:col-span-7 bg-white rounded-xl border border-slate-200 p-4 shadow-sm space-y-3 flex flex-col justify-between">
-          <div>
-            <div className="flex items-center justify-between border-b border-slate-100 pb-2">
-              <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wide">
-                Pan-India FRA Progress &amp; Pendency Choropleth
-              </h3>
-              <span className="text-[11px] text-slate-400 font-mono">Source: MoTA Central Registry</span>
-            </div>
-
-            {/* India Map Representation */}
-            <div className="h-96 bg-slate-50 rounded-lg border border-slate-100 flex items-center justify-center relative overflow-hidden mt-3">
-              <svg className="w-full h-full" viewBox="0 0 500 450" xmlns="http://www.w3.org/2000/svg">
-                {/* Simplified India Outline */}
-                <g stroke="#ffffff" strokeWidth="1.5">
-                  {/* Northern Zone (J&K, HP, Uttarakhand) - Green */}
-                  <polygon
-                    points="180,40 220,30 250,60 260,90 220,110 180,90"
-                    fill="#86efac"
-                    className="cursor-pointer hover:opacity-80 transition"
-                    onClick={() => setSelectedZone('Northern Zone (78% Conferred)')}
-                  >
-                    <title>Northern Zone: Fast Clearance</title>
-                  </polygon>
-
-                  {/* Western Zone (Rajasthan, Gujarat) */}
-                  <polygon
-                    points="110,130 180,110 190,180 140,220 90,190"
-                    fill="#bbf7d0"
-                    className="cursor-pointer hover:opacity-80 transition"
-                    onClick={() => setSelectedZone('Western Zone (72% Conferred)')}
-                  >
-                    <title>Western Zone: 72% Conferred</title>
-                  </polygon>
-
-                  {/* Central Zone (Madhya Pradesh & Chhattisgarh) */}
-                  <polygon
-                    points="190,180 270,160 300,230 240,250 190,220"
-                    fill="#fed7aa"
-                    stroke="#ea580c"
-                    strokeWidth="2"
-                    className="cursor-pointer hover:opacity-80 transition"
-                    onClick={() => onNavigateRole('employee')}
-                  >
-                    <title>Madhya Pradesh: Click to View Bandhavgarh SDLC</title>
-                  </polygon>
-                  <text x="215" y="210" fill="#9a3412" fontSize="10" fontWeight="bold">MP / CG</text>
-
-                  {/* Eastern Zone (Odisha, Jharkhand, West Bengal) */}
-                  <polygon
-                    points="270,160 340,170 360,230 300,240"
-                    fill="#fed7aa"
-                    stroke="#059669"
-                    strokeWidth="2"
-                    className="cursor-pointer hover:opacity-80 transition"
-                    onClick={() => onNavigateRole('state')}
-                  >
-                    <title>Odisha: Click to open State Overview</title>
-                  </polygon>
-                  <text x="295" y="200" fill="#065f46" fontSize="10" fontWeight="bold">Odisha</text>
-
-                  {/* Southern Zone (Maharashtra, Karnataka, Kerala, TN) */}
-                  <polygon
-                    points="140,220 240,250 220,380 170,390 140,280"
-                    fill="#fecaca"
-                    stroke="#dc2626"
-                    strokeWidth="2"
-                    className="cursor-pointer hover:opacity-80 transition"
-                    onClick={() => setSelectedZone('Southern Zone (High pending backlog - 42% conferred)')}
-                  >
-                    <title>Maharashtra &amp; Kerala: High Pending Backlogs</title>
-                  </polygon>
-                  <text x="165" y="300" fill="#991b1b" fontSize="10" fontWeight="bold">MH &amp; South</text>
-
-                  {/* North East Zone (Assam, Tripura, Arunachal) */}
-                  <polygon
-                    points="360,140 430,120 460,160 390,180"
-                    fill="#86efac"
-                    className="cursor-pointer hover:opacity-80 transition"
-                    onClick={() => setSelectedZone('North East Zone (High CFR Rights - 86% Conferred)')}
-                  >
-                    <title>North East: High Community Rights (CFR)</title>
-                  </polygon>
-                  <text x="385" y="155" fill="#14532d" fontSize="9" fontWeight="bold">NE Zone</text>
-                </g>
-              </svg>
-
-              {/* Click hint popup */}
-              <div className="absolute bottom-3 right-3 bg-white/95 px-3 py-1.5 rounded-lg border border-slate-200 shadow text-xs flex items-center space-x-2">
-                <MousePointerClick className="w-3.5 h-3.5 text-emerald-600 animate-bounce" />
-                <span className="font-medium text-slate-700">
-                  Click on <strong>Odisha</strong> or <strong>MP</strong> to drill down into district maps
-                </span>
-              </div>
-            </div>
-          </div>
-
-          {selectedZone && (
-            <div className="p-2 bg-emerald-50 border border-emerald-200 rounded-lg text-xs text-gov-900 flex items-center justify-between">
-              <span><strong>Selected Zone:</strong> {selectedZone}</span>
-              <button onClick={() => setSelectedZone(null)} className="text-slate-400 hover:text-slate-600 text-xs">✕</button>
-            </div>
-          )}
+        <div className="lg:col-span-7">
+          <PanIndiaMap onNavigateRole={onNavigateRole} />
         </div>
 
         {/* Comparative State Trends (5 cols) */}
@@ -329,6 +252,206 @@ export const CentralGovView: React.FC<CentralGovViewProps> = ({ onNavigateRole }
             <p className="text-[11px] text-slate-500 leading-snug">
               Autonomous GIS satellite change detection resolved 410 false overlaps across June.
             </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Central Directive Toast */}
+      {bannerMsg && (
+        <div className="p-2.5 bg-emerald-50 border border-emerald-300 text-emerald-900 rounded-lg text-xs flex items-center justify-between animate-in fade-in">
+          <span>{bannerMsg}</span>
+          <button onClick={() => setBannerMsg(null)} className="text-emerald-700 font-bold ml-2 cursor-pointer">✕</button>
+        </div>
+      )}
+
+      {/* National Ground-Truthing & SDLC Field Operational Oversight Section */}
+      <div className="bg-white rounded-xl border border-slate-200 p-5 shadow-sm space-y-4">
+        <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-2 border-b border-slate-100 pb-3">
+          <div>
+            <div className="flex items-center space-x-2">
+              <span className="p-1 rounded bg-emerald-100 text-emerald-800">
+                <Satellite className="w-4 h-4 text-emerald-600" />
+              </span>
+              <h2 className="text-sm font-bold text-slate-900 uppercase tracking-wide">
+                National SDLC Field Ground-Truthing &amp; Critical Anomaly Oversight
+              </h2>
+              <span className="text-[10px] font-bold bg-rose-100 text-rose-800 px-2 py-0.5 rounded-full">
+                Cross-State Telemetry
+              </span>
+            </div>
+            <p className="text-xs text-slate-500 mt-0.5">
+              Field operational telemetry from Sub-Divisional Level Committees (SDLC), cadastral survey units, and autonomous DGPS re-surveys.
+            </p>
+          </div>
+
+          <button
+            type="button"
+            onClick={() => onNavigateRole('state')}
+            className="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-gov-900 font-semibold text-xs transition cursor-pointer self-start sm:self-auto"
+          >
+            <span>Open State &amp; Sub-Divisional Consoles</span>
+            <ArrowRight className="w-3.5 h-3.5" />
+          </button>
+        </div>
+
+        {/* 4 Telemetry Metrics */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          <div className="bg-slate-50 p-3 rounded-lg border border-slate-200">
+            <span className="text-[10px] uppercase font-bold text-slate-400">Ground Surveys Active</span>
+            <div className="text-xl font-black text-slate-800 mt-0.5">14,280</div>
+            <span className="text-[10px] text-slate-500">Across 112 priority units</span>
+          </div>
+          <div className="bg-amber-50 p-3 rounded-lg border border-amber-200">
+            <span className="text-[10px] uppercase font-bold text-amber-800">Quorum Discrepancies</span>
+            <div className="text-xl font-black text-amber-700 mt-0.5">3,120</div>
+            <span className="text-[10px] text-amber-600">Gram Sabha re-verification</span>
+          </div>
+          <div className="bg-rose-50 p-3 rounded-lg border border-rose-200">
+            <span className="text-[10px] uppercase font-bold text-rose-800">Satellite RoR Overlaps</span>
+            <div className="text-xl font-black text-rose-600 mt-0.5">3,465</div>
+            <span className="text-[10px] text-rose-600">0.6 ha average variance</span>
+          </div>
+          <div className="bg-emerald-50 p-3 rounded-lg border border-emerald-200">
+            <span className="text-[10px] uppercase font-bold text-emerald-800">Joint DGPS Re-surveys</span>
+            <div className="text-xl font-black text-emerald-700 mt-0.5">420</div>
+            <span className="text-[10px] text-emerald-700">Scheduled for August</span>
+          </div>
+        </div>
+
+        {/* Split Grid: Priority SDLC Queue & Directives */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 pt-2">
+          {/* Priority SDLC Field Claims Queue (7 cols) */}
+          <div className="lg:col-span-7 space-y-3">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-bold text-slate-800 uppercase tracking-wider flex items-center space-x-1.5">
+                <AlertTriangle className="w-3.5 h-3.5 text-rose-500" />
+                <span>Priority Sub-Divisional Anomaly Queue (Field Telemetry)</span>
+              </span>
+              <span className="text-[10px] text-slate-400 font-mono">Live Sync</span>
+            </div>
+
+            <div className="space-y-2.5">
+              {PRIORITY_CLAIMS_QUEUE.map((item) => (
+                <div
+                  key={item.id}
+                  className="p-3 bg-slate-50 hover:bg-slate-100/80 rounded-xl border border-slate-200 transition space-y-2"
+                >
+                  <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-1.5">
+                    <div className="flex items-center space-x-2">
+                      <span className="px-2 py-0.5 rounded text-[11px] font-bold bg-rose-100 text-rose-800 border border-rose-200">
+                        Score {item.anomalyScore}
+                      </span>
+                      <span className="font-bold text-slate-900 text-xs">
+                        {item.plotId} • {item.claimantName}
+                      </span>
+                      <span className="text-[10px] bg-slate-200 text-slate-700 px-1.5 py-0.5 rounded font-mono">
+                        {item.category}
+                      </span>
+                    </div>
+
+                    <div className="flex items-center space-x-2">
+                      <button
+                        type="button"
+                        onClick={() => handleFlagDirective(item.id)}
+                        disabled={flaggedIds.includes(item.id)}
+                        className={`text-[11px] px-2.5 py-1 rounded font-medium transition cursor-pointer ${
+                          flaggedIds.includes(item.id)
+                            ? 'bg-slate-200 text-slate-500 cursor-not-allowed'
+                            : 'bg-rose-600 hover:bg-rose-700 text-white shadow-xs'
+                        }`}
+                      >
+                        {flaggedIds.includes(item.id) ? 'Directive Active ✓' : 'Issue Central Directive'}
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => onOpenDossier(item)}
+                        className="text-[11px] px-2.5 py-1 rounded bg-white hover:bg-slate-200 text-slate-700 border border-slate-300 font-medium transition cursor-pointer"
+                      >
+                        Open Dossier
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="text-[11px] text-slate-600 flex flex-wrap gap-x-3 gap-y-0.5">
+                    <span><strong>Location:</strong> {item.village}, {item.district}</span>
+                    <span>•</span>
+                    <span><strong>Extent:</strong> {item.landExtentHectares} Ha</span>
+                    <span>•</span>
+                    <span><strong>Unit:</strong> {item.assignedTeam}</span>
+                  </div>
+
+                  <p className="text-[11px] text-slate-700">
+                    <strong className="text-rose-700">Field Anomaly:</strong> {item.anomalyReasons?.join('; ')}
+                  </p>
+
+                  {item.aiRecommendation && (
+                    <div className="p-2 bg-amber-50/80 rounded-md border border-amber-200 text-[11px] text-amber-900">
+                      <strong>AI Operational Recommendation:</strong> {item.aiRecommendation}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Operational Field Health & Directives (5 cols) */}
+          <div className="lg:col-span-5 space-y-3">
+            <span className="text-xs font-bold text-slate-800 uppercase tracking-wider block">
+              Ground-Truthing Technology Adoption
+            </span>
+
+            <div className="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-3.5 text-xs">
+              <div>
+                <div className="flex justify-between text-[11px] mb-1">
+                  <span className="font-semibold text-slate-700">Handheld RTK DGPS Penetration</span>
+                  <span className="font-bold text-emerald-700">68% (493 Sub-Divisions)</span>
+                </div>
+                <div className="w-full h-2 bg-slate-200 rounded-full overflow-hidden">
+                  <div className="bg-emerald-600 h-full rounded-full" style={{ width: '68%' }}></div>
+                </div>
+              </div>
+
+              <div>
+                <div className="flex justify-between text-[11px] mb-1">
+                  <span className="font-semibold text-slate-700">Dense Canopy Drone LiDAR Surveys</span>
+                  <span className="font-bold text-amber-700">54% (392 Sub-Divisions)</span>
+                </div>
+                <div className="w-full h-2 bg-slate-200 rounded-full overflow-hidden">
+                  <div className="bg-amber-500 h-full rounded-full" style={{ width: '54%' }}></div>
+                </div>
+              </div>
+
+              <div>
+                <div className="flex justify-between text-[11px] mb-1">
+                  <span className="font-semibold text-slate-700">Gram Sabha Digital Geo-Tagging Sync</span>
+                  <span className="font-bold text-gov-800">89% (646 Sub-Divisions)</span>
+                </div>
+                <div className="w-full h-2 bg-slate-200 rounded-full overflow-hidden">
+                  <div className="bg-gov-700 h-full rounded-full" style={{ width: '89%' }}></div>
+                </div>
+              </div>
+            </div>
+
+            {/* Ministry Statutory Directive Card */}
+            <div className="p-3.5 bg-emerald-50 rounded-xl border border-emerald-200 space-y-2">
+              <div className="flex items-center space-x-2">
+                <Calendar className="w-4 h-4 text-emerald-700" />
+                <span className="font-bold text-xs text-gov-900">
+                  MoTA National Directive: 2026/04
+                </span>
+              </div>
+              <p className="text-[11px] text-gov-800 leading-relaxed">
+                All 75 high-anomaly claims across Madhya Pradesh (Bandhavgarh), Odisha (Kandhamal), and Maharashtra (Gadchiroli) are mandated for joint on-site DGPS re-verification prior to the next statutory DLC session.
+              </p>
+              <button
+                type="button"
+                onClick={() => onNavigateRole('state')}
+                className="w-full mt-1 py-1.5 px-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-semibold flex items-center justify-center space-x-1.5 transition cursor-pointer"
+              >
+                <span>Drill Down into State / SDLC Field GIS</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </button>
+            </div>
           </div>
         </div>
       </div>

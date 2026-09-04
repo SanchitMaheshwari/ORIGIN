@@ -8,21 +8,29 @@ import {
   FileText,
   X,
   Calendar,
-  Layers
+  Layers,
+  CheckCircle2,
+  ShieldAlert
 } from 'lucide-react';
 import { ClaimRecord } from '../types';
 import { PRIORITY_CLAIMS_QUEUE } from '../data/mockData';
 
-interface EmployeeGisViewProps {
+interface SdlcFieldGisConsoleProps {
+  initialDistrict?: string;
+  activeState?: 'odisha' | 'mp';
   onOpenDossier: (claim: ClaimRecord) => void;
   onFlagForDlc: (claimId: string) => void;
 }
 
-export const EmployeeGisView: React.FC<EmployeeGisViewProps> = ({
+export const SdlcFieldGisConsole: React.FC<SdlcFieldGisConsoleProps> = ({
+  initialDistrict = 'Bandhavgarh (Umaria)',
+  activeState = 'mp',
   onOpenDossier,
   onFlagForDlc
 }) => {
-  const [selectedDistrict, setSelectedDistrict] = useState('Bandhavgarh (Umaria)');
+  const [selectedDistrict, setSelectedDistrict] = useState(
+    activeState === 'odisha' ? 'Mayurbhanj' : initialDistrict
+  );
   const [selectedStatus, setSelectedStatus] = useState('All Statuses');
   const [anomalyFilter, setAnomalyFilter] = useState('High (Score > 7.0)');
   const [showHeatmap, setShowHeatmap] = useState(true);
@@ -43,37 +51,56 @@ export const EmployeeGisView: React.FC<EmployeeGisViewProps> = ({
   };
 
   return (
-    <section className="space-y-6 animate-in fade-in duration-200" id="view-employee">
+    <div className="space-y-4 animate-in fade-in duration-200" id="sdlc-field-gis-console">
       {/* Title & Filters Bar */}
       <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm space-y-3">
         <div className="flex flex-col md:flex-row justify-between md:items-center gap-3">
           <div>
-            <h1 className="text-lg font-bold text-gov-900 flex items-center space-x-2">
-              <Satellite className="w-5 h-5 text-emerald-600" />
-              <span>Sub-Divisional Level Committee (SDLC) Operational GIS Console</span>
-            </h1>
-            <p className="text-xs text-slate-500">
-              WebGIS automated boundary dispute &amp; anomaly detection for Bandhavgarh Sub-Division.
+            <div className="flex items-center space-x-2">
+              <span className="p-1 rounded bg-emerald-100 text-emerald-800">
+                <Satellite className="w-4 h-4" />
+              </span>
+              <h2 className="text-base font-bold text-gov-900">
+                Sub-Divisional Level Committee (SDLC) Operational Ground-Truthing &amp; WebGIS
+              </h2>
+              <span className="text-[10px] bg-amber-100 text-amber-800 font-bold px-2 py-0.5 rounded-full">
+                Field Operations
+              </span>
+            </div>
+            <p className="text-xs text-slate-500 mt-0.5">
+              Ground-truthing cadastral boundary verification, satellite RoR mismatch detection, and DLC statutory preparation.
             </p>
           </div>
 
           {/* Filter Dropdowns */}
           <div className="flex flex-wrap items-center gap-2">
             <div>
-              <label className="block text-[10px] font-bold text-slate-500 uppercase">Select District</label>
+              <label className="block text-[10px] font-bold text-slate-500 uppercase">District &amp; Sub-Division</label>
               <select
                 value={selectedDistrict}
                 onChange={(e) => setSelectedDistrict(e.target.value)}
                 className="text-xs py-1 px-2.5 rounded-lg border border-slate-300 font-medium focus:ring-1 focus:ring-emerald-500 bg-white"
               >
-                <option>Bandhavgarh (Umaria)</option>
-                <option>Mandla</option>
-                <option>Dindori</option>
+                {activeState === 'odisha' ? (
+                  <>
+                    <option>Mayurbhanj (Baripada)</option>
+                    <option>Kandhamal (Phulbani)</option>
+                    <option>Sundargarh (Panposh)</option>
+                    <option>Koraput (Jeypore)</option>
+                  </>
+                ) : (
+                  <>
+                    <option>Bandhavgarh (Umaria)</option>
+                    <option>Manpur (Umaria)</option>
+                    <option>Mandla (Niwas)</option>
+                    <option>Dindori (Shahpura)</option>
+                  </>
+                )}
               </select>
             </div>
 
             <div>
-              <label className="block text-[10px] font-bold text-slate-500 uppercase">Select Status</label>
+              <label className="block text-[10px] font-bold text-slate-500 uppercase">Workflow Status</label>
               <select
                 value={selectedStatus}
                 onChange={(e) => setSelectedStatus(e.target.value)}
@@ -112,7 +139,7 @@ export const EmployeeGisView: React.FC<EmployeeGisViewProps> = ({
         {/* KPI Pill Metric Row */}
         <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 pt-2 border-t border-slate-100">
           <div className="bg-slate-50 p-2.5 rounded-lg border border-slate-200">
-            <span className="text-[10px] uppercase font-bold text-slate-400">Total Claims</span>
+            <span className="text-[10px] uppercase font-bold text-slate-400">Sub-Division Claims</span>
             <div className="text-xl font-black text-slate-800">1,250</div>
           </div>
           <div className="bg-slate-50 p-2.5 rounded-lg border border-slate-200">
@@ -128,7 +155,7 @@ export const EmployeeGisView: React.FC<EmployeeGisViewProps> = ({
             <div className="text-xl font-black text-amber-700">75</div>
           </div>
           <div className="bg-rose-50 p-2.5 rounded-lg border border-rose-200">
-            <span className="text-[10px] uppercase font-bold text-rose-700">Critical Anomalies</span>
+            <span className="text-[10px] uppercase font-bold text-rose-700">Critical Conflicts</span>
             <div className="text-xl font-black text-rose-600">15</div>
           </div>
         </div>
@@ -213,7 +240,7 @@ export const EmployeeGisView: React.FC<EmployeeGisViewProps> = ({
               xmlns="http://www.w3.org/2000/svg"
             >
               <defs>
-                <pattern id="grid-pattern" width="40" height="40" patternUnits="userSpaceOnUse">
+                <pattern id="sdlc-grid-pattern" width="40" height="40" patternUnits="userSpaceOnUse">
                   <path
                     d="M 40 0 L 0 0 0 40"
                     fill="none"
@@ -222,7 +249,7 @@ export const EmployeeGisView: React.FC<EmployeeGisViewProps> = ({
                   />
                 </pattern>
 
-                <radialGradient id="hotspotGlow" cx="50%" cy="50%" r="50%">
+                <radialGradient id="sdlcHotspotGlow" cx="50%" cy="50%" r="50%">
                   <stop offset="0%" stopColor="#ef4444" stopOpacity="0.65" />
                   <stop offset="60%" stopColor="#f97316" stopOpacity="0.25" />
                   <stop offset="100%" stopColor="#ef4444" stopOpacity="0" />
@@ -230,7 +257,7 @@ export const EmployeeGisView: React.FC<EmployeeGisViewProps> = ({
               </defs>
 
               {/* Grid Background */}
-              <rect width="100%" height="100%" fill="url(#grid-pattern)" />
+              <rect width="100%" height="100%" fill="url(#sdlc-grid-pattern)" />
 
               {/* Contour terrain shades */}
               <path
@@ -239,7 +266,7 @@ export const EmployeeGisView: React.FC<EmployeeGisViewProps> = ({
                 opacity={showSatellite ? '0.4' : '0.7'}
               />
 
-              {/* Bandhavgarh Forest Division Boundary Polygon */}
+              {/* Forest Division Boundary Polygon */}
               <path
                 d="M 160 140 C 220 100, 310 90, 420 110 C 510 130, 620 170, 660 230 C 700 290, 640 380, 560 410 C 460 450, 330 420, 240 390 C 150 350, 110 270, 130 200 Z"
                 fill={showSatellite ? '#064e3b' : '#d1fae5'}
@@ -249,7 +276,7 @@ export const EmployeeGisView: React.FC<EmployeeGisViewProps> = ({
                 strokeDasharray="4 2"
               />
 
-              {/* Core National Park Zone (Strict Conservation) */}
+              {/* Core National Park / Protected Forest Zone */}
               <path
                 d="M 280 180 C 350 160, 480 180, 520 240 C 540 290, 480 340, 390 330 C 310 320, 260 250, 280 180 Z"
                 fill={showSatellite ? '#022c22' : '#a7f3d0'}
@@ -265,7 +292,7 @@ export const EmployeeGisView: React.FC<EmployeeGisViewProps> = ({
                 fontWeight="bold"
                 opacity="0.85"
               >
-                Bandhavgarh Core Zone
+                {selectedDistrict} Reserve Forest Core
               </text>
 
               {/* Khasra cadastral boundary lines */}
@@ -282,8 +309,8 @@ export const EmployeeGisView: React.FC<EmployeeGisViewProps> = ({
               {/* Anomaly Heatmap Clouds */}
               {showHeatmap && (
                 <g>
-                  <circle cx="340" cy="270" r="70" fill="url(#hotspotGlow)" />
-                  <circle cx="510" cy="290" r="50" fill="url(#hotspotGlow)" />
+                  <circle cx="340" cy="270" r="70" fill="url(#sdlcHotspotGlow)" />
+                  <circle cx="510" cy="290" r="50" fill="url(#sdlcHotspotGlow)" />
                 </g>
               )}
 
@@ -345,7 +372,7 @@ export const EmployeeGisView: React.FC<EmployeeGisViewProps> = ({
                   </div>
                   <button
                     onClick={() => setSelectedClaim(null)}
-                    className="text-slate-400 hover:text-slate-600 text-xs p-1"
+                    className="text-slate-400 hover:text-slate-600 text-xs p-1 cursor-pointer"
                     aria-label="Close Inspector"
                   >
                     <X className="w-3.5 h-3.5" />
@@ -407,7 +434,7 @@ export const EmployeeGisView: React.FC<EmployeeGisViewProps> = ({
                 <span>High Anomaly (75)</span>
               </span>
             </div>
-            <span className="font-mono text-[11px] text-slate-400">EPSG: 4326 | WGS 84 WebGIS</span>
+            <span className="font-mono text-[11px] text-slate-400">EPSG: 4326 | WGS 84 WebGIS Cadastral Layer</span>
           </div>
         </div>
 
@@ -415,7 +442,7 @@ export const EmployeeGisView: React.FC<EmployeeGisViewProps> = ({
         <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-4 flex flex-col justify-between space-y-4">
           <div>
             <div className="flex items-center justify-between border-b border-slate-200 pb-2 mb-3">
-              <h3 className="text-sm font-bold text-slate-800 uppercase tracking-wide">Claim Priority Queue</h3>
+              <h3 className="text-sm font-bold text-slate-800 uppercase tracking-wide">SDLC Priority Queue</h3>
               <span className="text-[11px] font-semibold text-rose-600 bg-rose-50 px-2 py-0.5 rounded-full border border-rose-200">
                 15 Urgent
               </span>
@@ -462,11 +489,11 @@ export const EmployeeGisView: React.FC<EmployeeGisViewProps> = ({
             </div>
           </div>
 
-          {/* Employee Action Box */}
+          {/* Action Reminder Box */}
           <div className="bg-gov-50 p-3 rounded-lg border border-gov-100 text-xs">
             <span className="font-bold text-gov-900 block mb-1 flex items-center space-x-1.5">
               <Calendar className="w-3.5 h-3.5 text-emerald-700" />
-              <span>SDLC Action Reminder</span>
+              <span>Statutory SDLC Meeting Schedule</span>
             </span>
             <p className="text-[11px] text-gov-800 leading-snug">
               Joint verification committee meeting scheduled for <strong>22 Aug 2026</strong>. 12 dossiers prepared for Gram Sabha sync.
@@ -474,6 +501,6 @@ export const EmployeeGisView: React.FC<EmployeeGisViewProps> = ({
           </div>
         </div>
       </div>
-    </section>
+    </div>
   );
 };

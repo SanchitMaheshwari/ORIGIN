@@ -6,21 +6,29 @@ import {
   ChevronRight,
   Info,
   CheckCircle2,
-  AlertOctagon
+  AlertOctagon,
+  Satellite,
+  ArrowRight
 } from 'lucide-react';
 import { ODISHA_DISTRICTS } from '../data/mockData';
-import { DistrictMetric } from '../types';
+import { DistrictMetric, ClaimRecord } from '../types';
+import { SdlcFieldGisConsole } from './SdlcFieldGisConsole';
 
 interface StateGovViewProps {
   onExportReport: () => void;
+  onOpenDossier: (claim: ClaimRecord) => void;
+  onFlagForDlc: (claimId: string) => void;
   onDrillDownDistrict?: (district: DistrictMetric) => void;
 }
 
 export const StateGovView: React.FC<StateGovViewProps> = ({
   onExportReport,
+  onOpenDossier,
+  onFlagForDlc,
   onDrillDownDistrict
 }) => {
   const [activeState, setActiveState] = useState<'odisha' | 'mp'>('odisha');
+  const [subTab, setSubTab] = useState<'overview' | 'sdlc'>('overview');
   const [selectedDistrict, setSelectedDistrict] = useState<DistrictMetric | null>(ODISHA_DISTRICTS[4]); // Kandhamal default
   const [hoveredDistrict, setHoveredDistrict] = useState<string | null>(null);
 
@@ -58,19 +66,54 @@ export const StateGovView: React.FC<StateGovViewProps> = ({
           </p>
         </div>
 
-        <div className="flex items-center space-x-2">
+        <div className="flex flex-wrap items-center gap-2">
+          {/* Sub-tab Switcher: Overview vs SDLC Field Operations */}
+          <div className="flex bg-slate-100 p-0.5 rounded-lg border border-slate-200 text-xs font-semibold">
+            <button
+              onClick={() => setSubTab('overview')}
+              className={`px-3 py-1.5 rounded-md flex items-center space-x-1.5 transition cursor-pointer ${
+                subTab === 'overview'
+                  ? 'bg-white text-gov-900 shadow-xs'
+                  : 'text-slate-600 hover:text-slate-900'
+              }`}
+            >
+              <Mountain className="w-3.5 h-3.5 text-emerald-600" />
+              <span>1. State SLMC Overview</span>
+            </button>
+            <button
+              onClick={() => setSubTab('sdlc')}
+              className={`px-3 py-1.5 rounded-md flex items-center space-x-1.5 transition cursor-pointer ${
+                subTab === 'sdlc'
+                  ? 'bg-white text-gov-900 shadow-xs'
+                  : 'text-slate-600 hover:text-slate-900'
+              }`}
+            >
+              <Satellite className="w-3.5 h-3.5 text-emerald-600" />
+              <span>2. SDLC Field Operations &amp; GIS</span>
+            </button>
+          </div>
+
           <button
             onClick={onExportReport}
             className="text-xs font-bold px-3 py-1.5 bg-gov-800 text-white rounded-lg hover:bg-gov-900 shadow-sm flex items-center space-x-1.5 transition active:scale-95 cursor-pointer"
           >
             <FileSpreadsheet className="w-3.5 h-3.5" />
-            <span>Export State FRA Report</span>
+            <span>Export Report</span>
           </button>
         </div>
       </div>
 
-      {/* State Level KPI Strip (6 items) */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+      {subTab === 'sdlc' ? (
+        <SdlcFieldGisConsole
+          activeState={activeState}
+          initialDistrict={activeState === 'odisha' ? 'Mayurbhanj' : 'Bandhavgarh (Umaria)'}
+          onOpenDossier={onOpenDossier}
+          onFlagForDlc={onFlagForDlc}
+        />
+      ) : (
+        <>
+          {/* State Level KPI Strip (6 items) */}
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
         <div className="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm">
           <span className="text-[10px] uppercase font-bold text-slate-400">Total State Claims</span>
           <div className="text-2xl font-black text-slate-900 mt-1">
@@ -259,22 +302,30 @@ export const StateGovView: React.FC<StateGovViewProps> = ({
 
           {/* Selected District Info Bar */}
           {selectedDistrict && (
-            <div className="mt-2 p-2.5 bg-slate-50 border border-slate-200 rounded-lg flex items-center justify-between text-xs">
+            <div className="mt-2 p-2.5 bg-slate-50 border border-slate-200 rounded-lg flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 text-xs">
               <div className="flex items-center space-x-2">
                 <span className="font-bold text-slate-800">{selectedDistrict.name} District:</span>
                 <span className="text-slate-600">
                   {selectedDistrict.conferredClaims} titles conferred ({selectedDistrict.conferredRate}%), {selectedDistrict.anomalyFlags} anomaly flags
                 </span>
+                <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${
+                  selectedDistrict.statusType === 'clearance'
+                    ? 'bg-emerald-100 text-emerald-800'
+                    : selectedDistrict.statusType === 'hotspot'
+                    ? 'bg-rose-100 text-rose-800'
+                    : 'bg-amber-100 text-amber-800'
+                }`}>
+                  {selectedDistrict.statusType.toUpperCase()}
+                </span>
               </div>
-              <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${
-                selectedDistrict.statusType === 'clearance'
-                  ? 'bg-emerald-100 text-emerald-800'
-                  : selectedDistrict.statusType === 'hotspot'
-                  ? 'bg-rose-100 text-rose-800'
-                  : 'bg-amber-100 text-amber-800'
-              }`}>
-                {selectedDistrict.statusType.toUpperCase()}
-              </span>
+              <button
+                type="button"
+                onClick={() => setSubTab('sdlc')}
+                className="inline-flex items-center space-x-1 text-[11px] font-bold text-emerald-700 hover:text-emerald-900 bg-emerald-50 px-2.5 py-1 rounded border border-emerald-200 hover:bg-emerald-100 transition cursor-pointer shrink-0"
+              >
+                <span>Inspect SDLC Field GIS</span>
+                <ArrowRight className="w-3 h-3" />
+              </button>
             </div>
           )}
 
@@ -361,6 +412,8 @@ export const StateGovView: React.FC<StateGovViewProps> = ({
           </div>
         </div>
       </div>
-    </section>
+    </>
+  )}
+</section>
   );
 };
