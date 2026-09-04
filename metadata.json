@@ -1,0 +1,6 @@
+{
+  "name": "FRA-MITRA - Forest Rights Act Decision Support System",
+  "description": "AI-Powered WebGIS Decision Support System for Forest Rights Act (FRA) 2006 monitoring, boundary dispute detection, and title tracking across Citizen, SDLC, State, and National governance.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
