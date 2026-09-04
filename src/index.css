@@ -7,7 +7,10 @@
   --color-gov-800: #065f46;
   --color-gov-900: #064E3B;
   --color-gov-dark: #043427;
+  --color-portal-header: #0F382C;
+  --color-portal-button: #0D3B2E;
   --font-sans: 'Plus Jakarta Sans', 'Inter', system-ui, -apple-system, sans-serif;
+  --font-serif: 'Playfair Display', Georgia, Cambria, 'Times New Roman', serif;
 }
 
 @keyframes pulseSubtle {
