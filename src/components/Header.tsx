@@ -139,8 +139,9 @@ export const Header: React.FC<HeaderProps> = ({
 
               {/* Notification Popover Dropdown */}
               {showNotifications && (
-                <div className="absolute right-0 mt-2 w-80 sm:w-96 bg-white rounded-xl shadow-2xl border border-slate-200 text-slate-800 z-50 overflow-hidden animate-in fade-in zoom-in-95 duration-150">
-                  <div className="bg-gov-900 text-white p-3.5 flex items-center justify-between">
+                <div className="absolute right-0 mt-2 w-80 sm:w-96 rounded-xl shadow-2xl text-slate-800 z-50 overflow-hidden animate-in fade-in zoom-in-95 duration-150"
+                     style={{ background: 'rgba(255,255,255,0.97)', border: '1px solid rgba(118,196,87,0.20)', backdropFilter: 'blur(16px)' }}>
+                  <div className="text-white p-3.5 flex items-center justify-between" style={{ background: '#2A7C13' }}>
                     <div className="flex items-center space-x-2">
                       <Bell className="w-4 h-4 text-emerald-400" />
                       <span className="text-xs font-bold uppercase tracking-wider">
@@ -196,7 +197,8 @@ export const Header: React.FC<HeaderProps> = ({
                       ))
                     )}
                   </div>
-                  <div className="p-2 bg-slate-50 border-t border-slate-100 text-center text-[10px] text-slate-500">
+                  <div className="p-2 border-t text-center text-[10px] text-slate-500"
+                       style={{ background: 'rgba(240,247,236,0.75)', borderColor: 'rgba(118,196,87,0.14)' }}>
                     Logged in to {profile.badge}
                   </div>
                 </div>

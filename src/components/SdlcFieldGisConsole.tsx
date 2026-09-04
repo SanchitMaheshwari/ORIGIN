@@ -63,21 +63,19 @@ export const SdlcFieldGisConsole: React.FC<SdlcFieldGisConsoleProps> = ({
   };
 
   return (
-    <div className="space-y-4 animate-in fade-in duration-200" id="sdlc-field-gis-console">
+    <div className="space-y-4 animate-fade-slide-up" id="sdlc-field-gis-console">
       {/* Title & Filters Bar */}
-      <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm space-y-3">
+      <div className="glass-card p-4 space-y-3">
         <div className="flex flex-col md:flex-row justify-between md:items-center gap-3">
           <div>
-            <div className="flex items-center space-x-2">
-              <span className="p-1 rounded bg-emerald-100 text-emerald-800">
+            <div className="flex items-center gap-2">
+              <span className="p-1 rounded" style={{ background: 'rgba(118,196,87,0.15)', color: '#2A7C13' }}>
                 <Satellite className="w-4 h-4" />
               </span>
-              <h2 className="text-base font-bold text-gov-900">
+              <h2 className="text-base font-bold text-[#1C2B22]">
                 Sub-Divisional Level Committee (SDLC) Operational Ground-Truthing &amp; WebGIS
               </h2>
-              <span className="text-[10px] bg-amber-100 text-amber-800 font-bold px-2 py-0.5 rounded-full">
-                Field Operations
-              </span>
+              <span className="badge-amber">Field Operations</span>
             </div>
             <p className="text-xs text-slate-500 mt-0.5">
               Ground-truthing cadastral boundary verification, satellite RoR mismatch detection, and DLC statutory preparation.
@@ -91,7 +89,7 @@ export const SdlcFieldGisConsole: React.FC<SdlcFieldGisConsoleProps> = ({
               <select
                 value={selectedDistrict}
                 onChange={(e) => setSelectedDistrict(e.target.value)}
-                className="text-xs py-1 px-2.5 rounded-lg border border-slate-300 font-medium focus:ring-1 focus:ring-emerald-500 bg-white"
+                className="glass-select"
               >
                 {activeState === 'karnataka' ? (
                   <>
@@ -125,7 +123,7 @@ export const SdlcFieldGisConsole: React.FC<SdlcFieldGisConsoleProps> = ({
               <select
                 value={selectedStatus}
                 onChange={(e) => setSelectedStatus(e.target.value)}
-                className="text-xs py-1 px-2.5 rounded-lg border border-slate-300 font-medium focus:ring-1 focus:ring-emerald-500 bg-white"
+                className="glass-select"
               >
                 <option>All Statuses</option>
                 <option>Pending Field Survey</option>
@@ -135,11 +133,11 @@ export const SdlcFieldGisConsole: React.FC<SdlcFieldGisConsoleProps> = ({
             </div>
 
             <div>
-              <label className="block text-[10px] font-bold text-rose-600 uppercase">Anomaly Priority</label>
+              <label className="block text-[10px] font-bold text-rose-700 uppercase">Anomaly Priority</label>
               <select
                 value={anomalyFilter}
                 onChange={(e) => setAnomalyFilter(e.target.value)}
-                className="text-xs py-1 px-2.5 rounded-lg border border-rose-300 bg-rose-50 text-rose-800 font-bold focus:ring-1 focus:ring-rose-500"
+                className="glass-select text-rose-800 font-bold"
               >
                 <option>High (Score &gt; 7.0)</option>
                 <option>Critical Only (&gt; 8.5)</option>
@@ -381,55 +379,52 @@ export const SdlcFieldGisConsole: React.FC<SdlcFieldGisConsoleProps> = ({
 
             {/* Floating Overlay Card: Detailed Claim View on map */}
             {selectedClaim && (
-              <div className="absolute bottom-3 left-3 right-3 sm:right-auto sm:max-w-md bg-white/95 backdrop-blur-md rounded-xl p-3.5 border border-rose-200 shadow-xl z-20 animate-in fade-in slide-in-from-bottom-2 duration-150">
-                <div className="flex items-center justify-between border-b border-slate-100 pb-2 mb-2">
+              <div className="absolute bottom-3 left-3 right-3 sm:right-auto sm:max-w-md glass-modal p-4 border border-rose-200/80 shadow-2xl z-20 animate-in fade-in slide-in-from-bottom-2 duration-150">
+                <div className="flex items-center justify-between border-b border-[#76C457]/20 pb-2.5 mb-2.5">
                   <div className="flex items-center space-x-2">
-                    <span className="px-2 py-0.5 rounded text-[11px] font-bold bg-rose-100 text-rose-800 border border-rose-200">
-                      AI Anomaly Score: {selectedClaim.anomalyScore}/10
+                    <span className="badge-rose text-[11px] font-bold">
+                      AI Anomaly: {selectedClaim.anomalyScore}/10
                     </span>
-                    <span className="text-xs font-bold text-slate-800">
+                    <span className="text-xs font-bold text-[#1C2B22]">
                       Claim ID: {selectedClaim.plotId.split(' ')[0]}
                     </span>
                   </div>
                   <button
                     onClick={() => setSelectedClaim(null)}
-                    className="text-slate-400 hover:text-slate-600 text-xs p-1 cursor-pointer"
+                    className="text-slate-400 hover:text-slate-700 text-xs p-1 rounded-md hover:bg-black/5 transition cursor-pointer"
                     aria-label="Close Inspector"
                   >
                     <X className="w-3.5 h-3.5" />
                   </button>
                 </div>
 
-                <div className="space-y-1.5 text-xs">
-                  <p className="text-slate-700">
-                    <strong>Supporting Evidence:</strong> {selectedClaim.anomalyReasons?.join('. ')}
+                <div className="space-y-2 text-xs">
+                  <p className="text-slate-800 leading-relaxed">
+                    <strong className="text-slate-900">Supporting Evidence:</strong> {selectedClaim.anomalyReasons?.join('. ')}
                   </p>
                   {selectedClaim.aiRecommendation && (
-                    <div className="p-2 bg-amber-50 rounded border border-amber-200 text-amber-900 text-[11px] leading-snug">
-                      <strong>AI Recommendation:</strong> {selectedClaim.aiRecommendation}
+                    <div className="p-2.5 rounded-lg text-[11px] leading-relaxed"
+                         style={{ background: 'rgba(251, 230, 194, 0.65)', border: '1px solid rgba(217, 119, 6, 0.25)', color: '#78350f' }}>
+                      <strong className="font-bold text-amber-950">AI Recommendation:</strong> {selectedClaim.aiRecommendation}
                     </div>
                   )}
                 </div>
 
-                <div className="mt-2.5 pt-2 border-t border-slate-100 flex items-center justify-between">
-                  <span className="text-[10px] text-slate-400 font-mono">
+                <div className="mt-3 pt-2.5 border-t border-[#76C457]/20 flex items-center justify-between">
+                  <span className="text-[10px] text-slate-500 font-mono font-medium">
                     Assigned: {selectedClaim.assignedTeam}
                   </span>
-                  <div className="flex space-x-2">
+                  <div className="flex items-center space-x-2">
                     <button
                       onClick={() => handleFlag(selectedClaim.id)}
                       disabled={flaggedIds.includes(selectedClaim.id)}
-                      className={`px-2.5 py-1 text-xs font-medium rounded shadow-sm transition ${
-                        flaggedIds.includes(selectedClaim.id)
-                          ? 'bg-slate-200 text-slate-500 cursor-not-allowed'
-                          : 'bg-rose-600 hover:bg-rose-700 text-white cursor-pointer'
-                      }`}
+                      className={flaggedIds.includes(selectedClaim.id) ? 'btn-directive' : 'btn-directive'}
                     >
                       {flaggedIds.includes(selectedClaim.id) ? 'Flagged for DLC ✓' : 'Flag for DLC'}
                     </button>
                     <button
                       onClick={() => onOpenDossier(selectedClaim)}
-                      className="px-2.5 py-1 text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium rounded cursor-pointer transition"
+                      className="btn-dossier"
                     >
                       Open Dossier
                     </button>
@@ -440,31 +435,34 @@ export const SdlcFieldGisConsole: React.FC<SdlcFieldGisConsoleProps> = ({
           </div>
 
           {/* Map Legend Footer */}
-          <div className="bg-white border-t border-slate-200 px-4 py-2 flex flex-wrap items-center justify-between text-xs text-slate-600 gap-2">
+          <div
+            className="border-t px-4 py-2.5 flex flex-wrap items-center justify-between text-xs text-slate-700 gap-2"
+            style={{ background: 'rgba(255, 255, 255, 0.75)', backdropFilter: 'blur(10px)', borderColor: 'rgba(118, 196, 87, 0.20)' }}
+          >
             <div className="flex items-center space-x-4">
-              <span className="flex items-center space-x-1.5">
-                <span className="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+              <span className="flex items-center space-x-1.5 font-medium">
+                <span className="w-2.5 h-2.5 rounded-full bg-[#2A7C13]"></span>
                 <span>Verified (865)</span>
               </span>
-              <span className="flex items-center space-x-1.5">
+              <span className="flex items-center space-x-1.5 font-medium">
                 <span className="w-2.5 h-2.5 rounded-full bg-amber-500"></span>
                 <span>Pending Survey (310)</span>
               </span>
-              <span className="flex items-center space-x-1.5">
-                <span className="w-2.5 h-2.5 rounded-full bg-rose-500"></span>
+              <span className="flex items-center space-x-1.5 font-medium">
+                <span className="w-2.5 h-2.5 rounded-full bg-rose-600"></span>
                 <span>High Anomaly (75)</span>
               </span>
             </div>
-            <span className="font-mono text-[11px] text-slate-400">EPSG: 4326 | WGS 84 WebGIS Cadastral Layer</span>
+            <span className="font-mono text-[11px] text-slate-500">EPSG: 4326 | WGS 84 WebGIS Cadastral Layer</span>
           </div>
         </div>
 
         {/* Right Side: Claim Priority Queue (1 col) */}
-        <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-4 flex flex-col justify-between space-y-4">
+        <div className="glass-panel p-4 flex flex-col justify-between space-y-4">
           <div>
-            <div className="flex items-center justify-between border-b border-slate-200 pb-2 mb-3">
-              <h3 className="text-sm font-bold text-slate-800 uppercase tracking-wide">SDLC Priority Queue</h3>
-              <span className="text-[11px] font-semibold text-rose-600 bg-rose-50 px-2 py-0.5 rounded-full border border-rose-200">
+            <div className="flex items-center justify-between border-b border-[#76C457]/20 pb-2.5 mb-3">
+              <h3 className="text-xs font-bold text-[#1C2B22] uppercase tracking-wider">SDLC Priority Queue</h3>
+              <span className="badge-rose text-[10px] font-bold">
                 15 Urgent
               </span>
             </div>
@@ -477,30 +475,32 @@ export const SdlcFieldGisConsole: React.FC<SdlcFieldGisConsoleProps> = ({
                   <div
                     key={item.id}
                     onClick={() => setSelectedClaim(item)}
-                    className={`p-2.5 rounded-lg border transition cursor-pointer ${
+                    className={`p-3 rounded-xl transition cursor-pointer ${
                       isSelected
-                        ? 'border-2 border-rose-400 bg-rose-50/50 shadow-sm'
-                        : 'border-slate-200 hover:border-slate-300 hover:bg-slate-50'
+                        ? 'glass-strip glass-strip-green border-[#2A7C13] shadow-md ring-1 ring-[#2A7C13]/30'
+                        : item.anomalyScore >= 7.5
+                        ? 'glass-strip glass-strip-rose'
+                        : 'glass-strip glass-strip-amber'
                     }`}
                   >
                     <div className="flex items-center justify-between">
-                      <span className="text-xs font-black text-slate-900">
+                      <span className="text-xs font-bold text-[#1C2B22]">
                         Claim ID: {item.plotId.split(' ')[0]} - {item.category}
                       </span>
                       <span
                         className={`px-1.5 py-0.5 rounded text-[10px] font-bold ${
                           item.anomalyScore >= 7.5
-                            ? 'bg-rose-600 text-white'
-                            : 'bg-amber-100 text-amber-800'
+                            ? 'badge-rose'
+                            : 'badge-amber'
                         }`}
                       >
                         {item.anomalyScore}
                       </span>
                     </div>
-                    <p className="text-[11px] text-slate-600 mt-1">
+                    <p className="text-[11px] text-slate-700 mt-1 font-medium">
                       Village: {item.village} | {item.landExtentHectares} Ha | Delay {item.submissionDate}
                     </p>
-                    <span className="text-[10px] text-rose-700 font-semibold block mt-0.5 flex items-center space-x-1">
+                    <span className="text-[10px] text-rose-700 font-semibold block mt-1 flex items-center space-x-1">
                       <AlertTriangle className="w-3 h-3 text-rose-600 shrink-0" />
                       <span className="truncate">{item.anomalyReasons?.[0]}</span>
                     </span>
@@ -511,12 +511,12 @@ export const SdlcFieldGisConsole: React.FC<SdlcFieldGisConsoleProps> = ({
           </div>
 
           {/* Action Reminder Box */}
-          <div className="bg-gov-50 p-3 rounded-lg border border-gov-100 text-xs">
-            <span className="font-bold text-gov-900 block mb-1 flex items-center space-x-1.5">
-              <Calendar className="w-3.5 h-3.5 text-emerald-700" />
+          <div className="glass-stat-cream p-3.5 space-y-1">
+            <span className="font-bold text-[#2A7C13] block flex items-center space-x-1.5 text-xs">
+              <Calendar className="w-3.5 h-3.5 text-[#2A7C13]" />
               <span>Statutory SDLC Meeting Schedule</span>
             </span>
-            <p className="text-[11px] text-gov-800 leading-snug">
+            <p className="text-[11px] text-slate-700 leading-snug">
               Joint verification committee meeting scheduled for <strong>22 Aug 2026</strong>. 12 dossiers prepared for Gram Sabha sync.
             </p>
           </div>

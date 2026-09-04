@@ -39,66 +39,78 @@ export const CentralGovView: React.FC<CentralGovViewProps> = ({
   };
 
   return (
-    <section className="space-y-6 animate-in fade-in duration-200" id="view-central">
+    <section className="space-y-5 animate-fade-slide-up" id="view-central">
       {/* Title & Breadcrumbs */}
-      <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-2 pb-2 border-b border-slate-200">
+      <div className="flex flex-col sm:flex-row justify-between sm:items-start gap-2">
         <div>
-          <h1 className="text-xl font-bold text-gov-900 flex items-center space-x-2">
-            <Network className="w-5 h-5 text-emerald-600" />
+          <h1 className="text-lg font-bold text-[#1C2B22] flex items-center gap-2">
+            <Network className="w-4.5 h-4.5 text-[#2A7C13]" />
             <span>Ministry of Tribal Affairs (MoTA) National Dashboard</span>
           </h1>
-          <p className="text-xs text-slate-500">
+          <p className="text-xs text-slate-500 mt-0.5">
             Pan-India Forest Rights Act compliance, title distribution, and AI anomaly tracking across all 726 districts.
           </p>
         </div>
 
         {/* National Hierarchy Scope Bar */}
-        <div className="text-xs bg-slate-100 px-3 py-1.5 rounded-lg border border-slate-200 font-mono text-slate-600 flex items-center space-x-1.5">
-          <span className="text-gov-900 font-bold">National Registry Scope:</span>
-          <span className="text-emerald-700 font-semibold">Pan-India</span>
-          <span>&gt;</span>
-          <span className="text-slate-700">36 States/UTs</span>
-          <span>&gt;</span>
-          <span className="text-slate-700">726 Districts</span>
+        <div className="badge-green text-[10px] font-mono px-3 py-1.5 rounded-lg flex items-center gap-1.5 whitespace-nowrap">
+          <span className="font-bold">National Registry Scope:</span>
+          <span>Pan-India</span>
+          <span className="opacity-50">›</span>
+          <span>36 States/UTs</span>
+          <span className="opacity-50">›</span>
+          <span>726 Districts</span>
         </div>
       </div>
 
       {/* National KPI Grid (6 items) */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
-        <div className="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm">
-          <span className="text-[10px] uppercase font-bold text-slate-400">National Total</span>
-          <div className="text-2xl font-black text-slate-900 mt-1">315,000</div>
-          <span className="text-[10px] text-slate-500 font-medium">Recorded claims</span>
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3.5">
+        <div className="glass-stat">
+          <span className="section-label">National Total</span>
+          <div className="mt-2 flex flex-col justify-end">
+            <div className="text-2xl sm:text-[26px] font-black text-[#1C2B22] tracking-tight leading-none">315,000</div>
+            <span className="text-[11px] text-slate-600 font-medium mt-1.5 block leading-tight">Recorded claims</span>
+          </div>
         </div>
 
-        <div className="bg-emerald-50 p-3.5 rounded-xl border border-emerald-200 shadow-sm">
-          <span className="text-[10px] uppercase font-bold text-gov-800">Titles Conferred</span>
-          <div className="text-2xl font-black text-gov-900 mt-1">210,000</div>
-          <span className="text-[10px] text-emerald-700 font-medium">66.6% completion</span>
+        <div className="glass-stat-cream">
+          <span className="section-label text-[#2A7C13]">Titles Conferred</span>
+          <div className="mt-2 flex flex-col justify-end">
+            <div className="text-2xl sm:text-[26px] font-black text-[#2A7C13] tracking-tight leading-none">210,000</div>
+            <span className="text-[11px] text-[#2A7C13] font-semibold mt-1.5 block leading-tight">66.6% completion</span>
+          </div>
         </div>
 
-        <div className="bg-amber-50 p-3.5 rounded-xl border border-amber-200 shadow-sm">
-          <span className="text-[10px] uppercase font-bold text-amber-800">Pending</span>
-          <div className="text-2xl font-black text-amber-700 mt-1">95,000</div>
-          <span className="text-[10px] text-amber-600 font-medium">In GS/SDLC/DLC</span>
+        <div className="glass-stat-beige">
+          <span className="section-label text-amber-800">Pending</span>
+          <div className="mt-2 flex flex-col justify-end">
+            <div className="text-2xl sm:text-[26px] font-black text-amber-900 tracking-tight leading-none">95,000</div>
+            <span className="text-[11px] text-amber-800 font-semibold mt-1.5 block leading-tight">In GS/SDLC/DLC</span>
+          </div>
         </div>
 
-        <div className="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm">
-          <span className="text-[10px] uppercase font-bold text-slate-400">States on Track</span>
-          <div className="text-2xl font-black text-emerald-600 mt-1">18</div>
-          <span className="text-[10px] text-slate-400 font-medium">&gt;60% title rate</span>
+        <div className="glass-stat">
+          <span className="section-label">States on Track</span>
+          <div className="mt-2 flex flex-col justify-end">
+            <div className="text-2xl sm:text-[26px] font-black text-[#2A7C13] tracking-tight leading-none">18</div>
+            <span className="text-[11px] text-slate-600 font-medium mt-1.5 block leading-tight">&gt;60% title rate</span>
+          </div>
         </div>
 
-        <div className="bg-rose-50 p-3.5 rounded-xl border border-rose-200 shadow-sm">
-          <span className="text-[10px] uppercase font-bold text-rose-800">High-Priority States</span>
-          <div className="text-2xl font-black text-rose-600 mt-1">4</div>
-          <span className="text-[10px] text-rose-700 font-medium">MH, MP, OD, KL</span>
+        <div className="glass-stat-rose">
+          <span className="section-label text-rose-800">High-Priority States</span>
+          <div className="mt-2 flex flex-col justify-end">
+            <div className="text-2xl sm:text-[26px] font-black text-rose-700 tracking-tight leading-none">4</div>
+            <span className="text-[11px] text-rose-700 font-semibold mt-1.5 block leading-tight">MH, MP, OD, KL</span>
+          </div>
         </div>
 
-        <div className="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm">
-          <span className="text-[10px] uppercase font-bold text-slate-400">National Anomaly Rate</span>
-          <div className="text-2xl font-black text-gov-800 mt-1">1.1%</div>
-          <span className="text-[10px] text-emerald-600 font-medium">3,465 flags</span>
+        <div className="glass-stat">
+          <span className="section-label text-[#2A7C13]">National Anomaly</span>
+          <div className="mt-2 flex flex-col justify-end">
+            <div className="text-2xl sm:text-[26px] font-black text-[#2A7C13] tracking-tight leading-none">1.1%</div>
+            <span className="text-[11px] text-[#2A7C13] font-semibold mt-1.5 block leading-tight">3,465 active flags</span>
+          </div>
         </div>
       </div>
 
@@ -112,29 +124,29 @@ export const CentralGovView: React.FC<CentralGovViewProps> = ({
         {/* Comparative State Trends (5 cols) */}
         <div className="lg:col-span-5 space-y-4">
           {/* State Approval Rate Comparison Bar Chart */}
-          <div className="bg-white rounded-xl border border-slate-200 p-4 shadow-sm space-y-3">
-            <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wide">
-              Top States Conferment Rate (%)
-            </h3>
+          <div className="glass-card p-4 space-y-3">
+            <div className="glass-card-header">
+              <h3 className="text-xs font-bold text-[#1C2B22]">Top States Conferment Rate (%)</h3>
+            </div>
 
             <div className="space-y-2.5 text-xs">
               <div>
                 <div className="flex justify-between text-[11px] mb-1">
-                  <span className="font-semibold text-slate-700">Tripura</span>
-                  <span className="font-bold text-emerald-700">89%</span>
+                  <span className="font-semibold text-[#1C2B22]">Tripura</span>
+                  <span className="font-bold text-[#2A7C13]">89%</span>
                 </div>
-                <div className="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
-                  <div className="bg-emerald-600 h-full rounded-full" style={{ width: '89%' }}></div>
+                <div className="w-full h-2 rounded-full overflow-hidden" style={{ background: 'rgba(118,196,87,0.12)' }}>
+                  <div className="h-full rounded-full" style={{ width: '89%', background: '#76C457' }}></div>
                 </div>
               </div>
 
               <div>
                 <div className="flex justify-between text-[11px] mb-1">
-                  <span className="font-semibold text-slate-700">Odisha</span>
-                  <span className="font-bold text-emerald-700">68%</span>
+                  <span className="font-semibold text-[#1C2B22]">Odisha</span>
+                  <span className="font-bold text-[#2A7C13]">68%</span>
                 </div>
-                <div className="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
-                  <div className="bg-emerald-600 h-full rounded-full" style={{ width: '68%' }}></div>
+                <div className="w-full h-2 rounded-full overflow-hidden" style={{ background: 'rgba(118,196,87,0.12)' }}>
+                  <div className="h-full rounded-full" style={{ width: '68%', background: '#76C457' }}></div>
                 </div>
               </div>
 
@@ -171,18 +183,16 @@ export const CentralGovView: React.FC<CentralGovViewProps> = ({
           </div>
 
           {/* National Anomaly Trends Graphic */}
-          <div className="bg-white rounded-xl border border-slate-200 p-4 shadow-sm space-y-2">
-            <div className="flex justify-between items-center">
-              <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wide">
-                Monthly AI Anomaly Detection Velocity
-              </h3>
-              <span className="text-[10px] font-mono text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-200 flex items-center space-x-1">
+          <div className="glass-card p-4 space-y-2">
+            <div className="glass-card-header">
+              <h3 className="text-xs font-bold text-[#1C2B22]">Monthly AI Anomaly Detection Velocity</h3>
+              <span className="badge-green flex items-center gap-1">
                 <TrendingDown className="w-3 h-3" />
                 <span>-14% vs Q1</span>
               </span>
             </div>
 
-            <div className="h-28 flex items-end justify-between space-x-2 pt-4 pb-2 px-3 bg-slate-50 rounded-lg border border-slate-100">
+            <div className="h-28 flex items-end justify-between gap-2 pt-4 pb-2 px-3 rounded-lg border" style={{ background: 'rgba(240,247,236,0.55)', borderColor: 'rgba(118,196,87,0.14)' }}>
               {/* Bar representation Jan - Jun */}
               <div className="flex-1 flex flex-col items-center gap-1">
                 <div className="w-full bg-slate-300 rounded-t transition-all hover:bg-slate-400" style={{ height: '60px' }}></div>
@@ -219,26 +229,24 @@ export const CentralGovView: React.FC<CentralGovViewProps> = ({
 
       {/* Central Directive Toast */}
       {bannerMsg && (
-        <div className="p-2.5 bg-emerald-50 border border-emerald-300 text-emerald-900 rounded-lg text-xs flex items-center justify-between animate-in fade-in">
+        <div className="alert-banner-success flex items-center justify-between animate-in fade-in">
           <span>{bannerMsg}</span>
-          <button onClick={() => setBannerMsg(null)} className="text-emerald-700 font-bold ml-2 cursor-pointer">✕</button>
+          <button onClick={() => setBannerMsg(null)} className="font-bold ml-2 cursor-pointer text-[#2A7C13]">✕</button>
         </div>
       )}
 
       {/* National Ground-Truthing & SDLC Field Operational Oversight Section */}
-      <div className="bg-white rounded-xl border border-slate-200 p-5 shadow-sm space-y-4">
-        <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-2 border-b border-slate-100 pb-3">
+      <div className="glass-panel p-5 space-y-4">
+        <div className="glass-card-header">
           <div>
-            <div className="flex items-center space-x-2">
-              <span className="p-1 rounded bg-emerald-100 text-emerald-800">
-                <Satellite className="w-4 h-4 text-emerald-600" />
+            <div className="flex items-center gap-2">
+              <span className="p-1 rounded" style={{ background: 'rgba(118,196,87,0.15)', color: '#2A7C13' }}>
+                <Satellite className="w-4 h-4" />
               </span>
-              <h2 className="text-sm font-bold text-slate-900 uppercase tracking-wide">
+              <h2 className="text-sm font-bold text-[#1C2B22]">
                 National SDLC Field Ground-Truthing &amp; Critical Anomaly Oversight
               </h2>
-              <span className="text-[10px] font-bold bg-rose-100 text-rose-800 px-2 py-0.5 rounded-full">
-                Cross-State Telemetry
-              </span>
+              <span className="badge-rose">Cross-State Telemetry</span>
             </div>
             <p className="text-xs text-slate-500 mt-0.5">
               Field operational telemetry from Sub-Divisional Level Committees (SDLC), cadastral survey units, and autonomous DGPS re-surveys.
@@ -251,7 +259,7 @@ export const CentralGovView: React.FC<CentralGovViewProps> = ({
               const el = document.getElementById('sdlc-queue-section');
               el?.scrollIntoView({ behavior: 'smooth' });
             }}
-            className="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-gov-900 font-semibold text-xs transition cursor-pointer self-start sm:self-auto"
+            className="btn-ghost shrink-0 self-start"
           >
             <span>Inspect Priority Queue</span>
             <ArrowRight className="w-3.5 h-3.5" />
@@ -259,26 +267,34 @@ export const CentralGovView: React.FC<CentralGovViewProps> = ({
         </div>
 
         {/* 4 Telemetry Metrics */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-          <div className="bg-slate-50 p-3 rounded-lg border border-slate-200">
-            <span className="text-[10px] uppercase font-bold text-slate-400">Ground Surveys Active</span>
-            <div className="text-xl font-black text-slate-800 mt-0.5">14,280</div>
-            <span className="text-[10px] text-slate-500">Across 112 priority units</span>
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3.5">
+          <div className="glass-stat">
+            <span className="section-label">Ground Surveys Active</span>
+            <div className="mt-2 flex flex-col justify-end">
+              <div className="text-xl font-black text-[#1C2B22] tracking-tight leading-none">14,280</div>
+              <span className="text-[11px] text-slate-600 mt-1.5 block font-medium leading-tight">Across 112 priority units</span>
+            </div>
           </div>
-          <div className="bg-amber-50 p-3 rounded-lg border border-amber-200">
-            <span className="text-[10px] uppercase font-bold text-amber-800">Quorum Discrepancies</span>
-            <div className="text-xl font-black text-amber-700 mt-0.5">3,120</div>
-            <span className="text-[10px] text-amber-600">Gram Sabha re-verification</span>
+          <div className="glass-stat-beige">
+            <span className="section-label text-amber-800">Quorum Discrepancies</span>
+            <div className="mt-2 flex flex-col justify-end">
+              <div className="text-xl font-black text-amber-900 tracking-tight leading-none">3,120</div>
+              <span className="text-[11px] text-amber-800 mt-1.5 block font-semibold leading-tight">Gram Sabha re-verification</span>
+            </div>
           </div>
-          <div className="bg-rose-50 p-3 rounded-lg border border-rose-200">
-            <span className="text-[10px] uppercase font-bold text-rose-800">Satellite RoR Overlaps</span>
-            <div className="text-xl font-black text-rose-600 mt-0.5">3,465</div>
-            <span className="text-[10px] text-rose-600">0.6 ha average variance</span>
+          <div className="glass-stat-rose">
+            <span className="section-label text-rose-800">Satellite RoR Overlaps</span>
+            <div className="mt-2 flex flex-col justify-end">
+              <div className="text-xl font-black text-rose-700 tracking-tight leading-none">3,465</div>
+              <span className="text-[11px] text-rose-700 mt-1.5 block font-semibold leading-tight">0.6 ha average variance</span>
+            </div>
           </div>
-          <div className="bg-emerald-50 p-3 rounded-lg border border-emerald-200">
-            <span className="text-[10px] uppercase font-bold text-emerald-800">Joint DGPS Re-surveys</span>
-            <div className="text-xl font-black text-emerald-700 mt-0.5">420</div>
-            <span className="text-[10px] text-emerald-700">Scheduled for August</span>
+          <div className="glass-stat-cream">
+            <span className="section-label text-[#2A7C13]">Joint DGPS Re-surveys</span>
+            <div className="mt-2 flex flex-col justify-end">
+              <div className="text-xl font-black text-[#2A7C13] tracking-tight leading-none">420</div>
+              <span className="text-[11px] text-[#2A7C13] mt-1.5 block font-semibold leading-tight">Scheduled for August</span>
+            </div>
           </div>
         </div>
 
@@ -287,70 +303,63 @@ export const CentralGovView: React.FC<CentralGovViewProps> = ({
           {/* Priority SDLC Field Claims Queue (7 cols) */}
           <div className="lg:col-span-7 space-y-3">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-bold text-slate-800 uppercase tracking-wider flex items-center space-x-1.5">
-                <AlertTriangle className="w-3.5 h-3.5 text-rose-500" />
+              <span className="text-xs font-bold text-[#1C2B22] flex items-center gap-1.5">
+                <AlertTriangle className="w-3.5 h-3.5 text-rose-600" />
                 <span>Priority Sub-Divisional Anomaly Queue (Field Telemetry)</span>
               </span>
-              <span className="text-[10px] text-slate-400 font-mono">Live Sync</span>
+              <span className="badge-green">Live Sync</span>
             </div>
 
-            <div className="space-y-2.5">
+            <div className="space-y-3">
               {PRIORITY_CLAIMS_QUEUE.map((item) => (
                 <div
                   key={item.id}
-                  className="p-3 bg-slate-50 hover:bg-slate-100/80 rounded-xl border border-slate-200 transition space-y-2"
+                  className="glass-strip glass-strip-rose p-3.5 sm:p-4 space-y-2.5"
                 >
-                  <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-1.5">
-                    <div className="flex items-center space-x-2">
-                      <span className="px-2 py-0.5 rounded text-[11px] font-bold bg-rose-100 text-rose-800 border border-rose-200">
-                        Score {item.anomalyScore}
-                      </span>
-                      <span className="font-bold text-slate-900 text-xs">
+                  <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-2">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <span className="badge-rose text-[10px] font-bold">Score {item.anomalyScore}</span>
+                      <span className="font-bold text-[#1C2B22] text-xs">
                         {item.plotId} • {item.claimantName}
                       </span>
-                      <span className="text-[10px] bg-slate-200 text-slate-700 px-1.5 py-0.5 rounded font-mono">
-                        {item.category}
-                      </span>
+                      <span className="glass-chip">{item.category}</span>
                     </div>
 
-                    <div className="flex items-center space-x-2">
+                    <div className="flex items-center gap-2">
                       <button
                         type="button"
                         onClick={() => handleFlagDirective(item.id)}
                         disabled={flaggedIds.includes(item.id)}
-                        className={`text-[11px] px-2.5 py-1 rounded font-medium transition cursor-pointer ${
-                          flaggedIds.includes(item.id)
-                            ? 'bg-slate-200 text-slate-500 cursor-not-allowed'
-                            : 'bg-rose-600 hover:bg-rose-700 text-white shadow-xs'
-                        }`}
+                        className="btn-directive"
                       >
                         {flaggedIds.includes(item.id) ? 'Directive Active ✓' : 'Issue Central Directive'}
                       </button>
                       <button
                         type="button"
                         onClick={() => onOpenDossier(item)}
-                        className="text-[11px] px-2.5 py-1 rounded bg-white hover:bg-slate-200 text-slate-700 border border-slate-300 font-medium transition cursor-pointer"
+                        className="btn-dossier"
                       >
                         Open Dossier
                       </button>
                     </div>
                   </div>
 
-                  <div className="text-[11px] text-slate-600 flex flex-wrap gap-x-3 gap-y-0.5">
-                    <span><strong>Location:</strong> {item.village}, {item.district}</span>
-                    <span>•</span>
-                    <span><strong>Extent:</strong> {item.landExtentHectares} Ha</span>
-                    <span>•</span>
-                    <span><strong>Unit:</strong> {item.assignedTeam}</span>
+                  <div className="text-xs text-slate-700 flex flex-wrap items-center gap-x-3 gap-y-1 font-medium">
+                    <span><strong className="text-slate-900">Location:</strong> {item.village}, {item.district}</span>
+                    <span className="text-slate-300">•</span>
+                    <span><strong className="text-slate-900">Extent:</strong> {item.landExtentHectares} Ha</span>
+                    <span className="text-slate-300">•</span>
+                    <span><strong className="text-slate-900">Unit:</strong> {item.assignedTeam}</span>
                   </div>
 
-                  <p className="text-[11px] text-slate-700">
-                    <strong className="text-rose-700">Field Anomaly:</strong> {item.anomalyReasons?.join('; ')}
+                  <p className="text-xs text-slate-800 leading-relaxed">
+                    <strong className="text-rose-700 font-bold">Field Anomaly:</strong> {item.anomalyReasons?.join('; ')}
                   </p>
 
                   {item.aiRecommendation && (
-                    <div className="p-2 bg-amber-50/80 rounded-md border border-amber-200 text-[11px] text-amber-900">
-                      <strong>AI Operational Recommendation:</strong> {item.aiRecommendation}
+                    <div className="p-2.5 rounded-lg text-xs leading-relaxed"
+                         style={{ background: 'rgba(251, 230, 194, 0.60)', border: '1px solid rgba(217, 119, 6, 0.25)', color: '#78350f' }}>
+                      <strong className="font-bold text-amber-950">AI Operational Recommendation:</strong> {item.aiRecommendation}
                     </div>
                   )}
                 </div>
@@ -360,54 +369,51 @@ export const CentralGovView: React.FC<CentralGovViewProps> = ({
 
           {/* Operational Field Health & Directives (5 cols) */}
           <div className="lg:col-span-5 space-y-3">
-            <span className="text-xs font-bold text-slate-800 uppercase tracking-wider block">
-              Ground-Truthing Technology Adoption
-            </span>
+            <span className="section-label block">Ground-Truthing Technology Adoption</span>
 
-            <div className="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-3.5 text-xs">
+            <div className="glass-card p-4 space-y-3.5 text-xs">
               <div>
                 <div className="flex justify-between text-[11px] mb-1">
                   <span className="font-semibold text-slate-700">Handheld RTK DGPS Penetration</span>
-                  <span className="font-bold text-emerald-700">68% (493 Sub-Divisions)</span>
+                  <span className="font-bold text-[#2A7C13]">68% (493 Sub-Divisions)</span>
                 </div>
-                <div className="w-full h-2 bg-slate-200 rounded-full overflow-hidden">
-                  <div className="bg-emerald-600 h-full rounded-full" style={{ width: '68%' }}></div>
+                <div className="w-full h-2 rounded-full overflow-hidden" style={{ background: 'rgba(251, 230, 194, 0.60)' }}>
+                  <div className="h-full rounded-full transition-all" style={{ width: '68%', background: '#2A7C13' }}></div>
                 </div>
               </div>
 
               <div>
                 <div className="flex justify-between text-[11px] mb-1">
                   <span className="font-semibold text-slate-700">Dense Canopy Drone LiDAR Surveys</span>
-                  <span className="font-bold text-amber-700">54% (392 Sub-Divisions)</span>
+                  <span className="font-bold text-amber-800">54% (392 Sub-Divisions)</span>
                 </div>
-                <div className="w-full h-2 bg-slate-200 rounded-full overflow-hidden">
-                  <div className="bg-amber-500 h-full rounded-full" style={{ width: '54%' }}></div>
+                <div className="w-full h-2 rounded-full overflow-hidden" style={{ background: 'rgba(251, 230, 194, 0.60)' }}>
+                  <div className="h-full rounded-full transition-all" style={{ width: '54%', background: '#76C457' }}></div>
                 </div>
               </div>
 
               <div>
                 <div className="flex justify-between text-[11px] mb-1">
                   <span className="font-semibold text-slate-700">Gram Sabha Digital Geo-Tagging Sync</span>
-                  <span className="font-bold text-gov-800">89% (646 Sub-Divisions)</span>
+                  <span className="font-bold text-[#2A7C13]">89% (646 Sub-Divisions)</span>
                 </div>
-                <div className="w-full h-2 bg-slate-200 rounded-full overflow-hidden">
-                  <div className="bg-gov-700 h-full rounded-full" style={{ width: '89%' }}></div>
+                <div className="w-full h-2 rounded-full overflow-hidden" style={{ background: 'rgba(251, 230, 194, 0.60)' }}>
+                  <div className="h-full rounded-full transition-all" style={{ width: '89%', background: '#2A7C13' }}></div>
                 </div>
               </div>
             </div>
 
             {/* Ministry Statutory Directive Card */}
-            <div className="p-3.5 bg-emerald-50 rounded-xl border border-emerald-200 space-y-2">
-              <div className="flex items-center space-x-2">
-                <Calendar className="w-4 h-4 text-emerald-700" />
-                <span className="font-bold text-xs text-gov-900">
-                  MoTA National Directive: 2026/04
-                </span>
+            <div className="glass-stat-cream p-3.5 space-y-2">
+              <div className="flex items-center gap-2">
+                <Calendar className="w-4 h-4 text-[#2A7C13]" />
+                <span className="font-bold text-xs text-[#1C2B22]">MoTA National Directive: 2026/04</span>
               </div>
-              <p className="text-[11px] text-gov-800 leading-relaxed">
+              <p className="text-[11px] text-slate-700 leading-relaxed">
                 All 75 high-anomaly claims across Madhya Pradesh (Bandhavgarh), Odisha (Kandhamal), and Maharashtra (Gadchiroli) are mandated for joint on-site DGPS re-verification prior to the next statutory DLC session.
               </p>
-              <div className="text-[10px] text-emerald-800 bg-white/70 p-2 rounded border border-emerald-300/80 font-mono">
+              <div className="text-[10px] text-[#2A7C13] rounded border font-mono p-2"
+                   style={{ background: 'rgba(255,248,207,0.70)', borderColor: 'rgba(118,196,87,0.25)' }}>
                 Mandated SLA: 15 days for Gram Sabha &amp; SDLC compliance across all 36 States/UTs.
               </div>
             </div>

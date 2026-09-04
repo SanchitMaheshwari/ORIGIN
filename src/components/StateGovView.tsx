@@ -43,24 +43,24 @@ export const StateGovView: React.FC<StateGovViewProps> = ({
   };
 
   return (
-    <section className="space-y-6 animate-in fade-in duration-200" id="view-state">
+    <section className="space-y-5 animate-fade-slide-up" id="view-state">
       {/* Title & Controls */}
-      <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-3 pb-2 border-b border-slate-200">
+      <div className="flex flex-col sm:flex-row justify-between sm:items-start gap-3">
         <div>
-          <div className="flex items-center space-x-2">
-            <h1 className="text-xl font-bold text-gov-900 flex items-center space-x-2">
-              <Mountain className="w-5 h-5 text-emerald-600" />
+          <div className="flex flex-wrap items-center gap-2">
+            <h1 className="text-lg font-bold text-[#1C2B22] flex items-center gap-2">
+              <Mountain className="w-4.5 h-4.5 text-[#2A7C13]" />
               <span>State Level Monitoring Committee (SLMC) – State Overview</span>
             </h1>
-            <div className="inline-flex rounded-lg border border-slate-300 p-0.5 bg-slate-100 text-xs">
+            <div className="glass-tabs flex text-xs">
               <button
                 type="button"
                 id="btn-state-karnataka"
                 onClick={() => handleSwitchState('karnataka')}
-                className={`px-2.5 py-1 rounded font-semibold transition cursor-pointer ${
+                className={`px-3 py-1.5 rounded-md font-semibold transition cursor-pointer text-xs ${
                   activeState === 'karnataka'
-                    ? 'bg-white text-gov-900 shadow-xs'
-                    : 'text-slate-600 hover:text-slate-900'
+                    ? 'glass-tab-active text-[#2A7C13]'
+                    : 'text-slate-500 hover:text-slate-800'
                 }`}
               >
                 Karnataka
@@ -69,10 +69,10 @@ export const StateGovView: React.FC<StateGovViewProps> = ({
                 type="button"
                 id="btn-state-telangana"
                 onClick={() => handleSwitchState('telangana')}
-                className={`px-2.5 py-1 rounded font-semibold transition cursor-pointer ${
+                className={`px-3 py-1.5 rounded-md font-semibold transition cursor-pointer text-xs ${
                   activeState === 'telangana'
-                    ? 'bg-white text-gov-900 shadow-xs'
-                    : 'text-slate-600 hover:text-slate-900'
+                    ? 'glass-tab-active text-[#2A7C13]'
+                    : 'text-slate-500 hover:text-slate-800'
                 }`}
               >
                 Telangana
@@ -81,7 +81,7 @@ export const StateGovView: React.FC<StateGovViewProps> = ({
           </div>
           <p className="text-xs text-slate-500 mt-0.5">
             Official Ministry of Tribal Affairs dataset &amp; AI bottleneck diagnosis for{' '}
-            <strong>
+            <strong className="text-[#1C2B22]">
               {activeState === 'karnataka'
                 ? 'Karnataka State Tribal Welfare & Forest Department'
                 : 'Telangana State Tribal Welfare & Forest Department'}
@@ -91,29 +91,29 @@ export const StateGovView: React.FC<StateGovViewProps> = ({
 
         <div className="flex flex-wrap items-center gap-2">
           {/* Sub-tab Switcher: Overview vs SDLC Field Operations */}
-          <div className="flex bg-slate-100 p-0.5 rounded-lg border border-slate-200 text-xs font-semibold">
+          <div className="glass-tabs flex text-xs font-semibold">
             <button
               type="button"
               onClick={() => setSubTab('overview')}
-              className={`px-3 py-1.5 rounded-md flex items-center space-x-1.5 transition cursor-pointer ${
+              className={`px-3 py-1.5 rounded-md flex items-center gap-1.5 transition cursor-pointer ${
                 subTab === 'overview'
-                  ? 'bg-white text-gov-900 shadow-xs'
-                  : 'text-slate-600 hover:text-slate-900'
+                  ? 'glass-tab-active text-[#2A7C13]'
+                  : 'text-slate-500 hover:text-slate-800'
               }`}
             >
-              <Mountain className="w-3.5 h-3.5 text-emerald-600" />
+              <Mountain className="w-3.5 h-3.5" />
               <span>1. State SLMC Overview</span>
             </button>
             <button
               type="button"
               onClick={() => setSubTab('sdlc')}
-              className={`px-3 py-1.5 rounded-md flex items-center space-x-1.5 transition cursor-pointer ${
+              className={`px-3 py-1.5 rounded-md flex items-center gap-1.5 transition cursor-pointer ${
                 subTab === 'sdlc'
-                  ? 'bg-white text-gov-900 shadow-xs'
-                  : 'text-slate-600 hover:text-slate-900'
+                  ? 'glass-tab-active text-[#2A7C13]'
+                  : 'text-slate-500 hover:text-slate-800'
               }`}
             >
-              <Satellite className="w-3.5 h-3.5 text-emerald-600" />
+              <Satellite className="w-3.5 h-3.5" />
               <span>2. SDLC Field Operations &amp; GIS</span>
             </button>
           </div>
@@ -121,7 +121,7 @@ export const StateGovView: React.FC<StateGovViewProps> = ({
           <button
             type="button"
             onClick={onExportReport}
-            className="text-xs font-bold px-3 py-1.5 bg-gov-800 text-white rounded-lg hover:bg-gov-900 shadow-xs flex items-center space-x-1.5 transition active:scale-95 cursor-pointer"
+            className="btn-primary"
           >
             <FileSpreadsheet className="w-3.5 h-3.5" />
             <span>Export Report</span>
@@ -143,86 +143,96 @@ export const StateGovView: React.FC<StateGovViewProps> = ({
       ) : (
         <>
           {/* State Level KPI Strip (6 items) */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
-            <div className="bg-white p-3.5 rounded-xl border border-slate-200 shadow-xs">
-              <span className="text-[10px] uppercase font-bold text-slate-400">Total State Claims</span>
-              <div className="text-2xl font-black text-slate-900 mt-1">
-                {activeState === 'karnataka' ? '295,176' : '655,249'}
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3.5">
+            <div className="glass-stat">
+              <span className="section-label">Total State Claims</span>
+              <div className="mt-2 flex flex-col justify-end">
+                <div className="text-2xl sm:text-[26px] font-black text-[#1C2B22] tracking-tight leading-none">
+                  {activeState === 'karnataka' ? '295,176' : '655,249'}
+                </div>
+                <span className="text-[11px] text-[#2A7C13] font-semibold mt-1.5 block leading-tight">
+                  {activeState === 'karnataka' ? '289k IFR • 5.9k CFR' : '651k IFR • 3.4k CFR'}
+                </span>
               </div>
-              <span className="text-[10px] text-emerald-600 font-medium">
-                {activeState === 'karnataka' ? '289k IFR • 5.9k CFR' : '651k IFR • 3.4k CFR'}
-              </span>
             </div>
 
-            <div className="bg-emerald-50 p-3.5 rounded-xl border border-emerald-200 shadow-xs">
-              <span className="text-[10px] uppercase font-bold text-emerald-800">Titles Conferred</span>
-              <div className="text-2xl font-black text-gov-900 mt-1">
-                {activeState === 'karnataka' ? '16,700' : '231,456'}
+            <div className="glass-stat-cream">
+              <span className="section-label text-[#2A7C13]">Titles Conferred</span>
+              <div className="mt-2 flex flex-col justify-end">
+                <div className="text-2xl sm:text-[26px] font-black text-[#2A7C13] tracking-tight leading-none">
+                  {activeState === 'karnataka' ? '16,700' : '231,456'}
+                </div>
+                <span className="text-[11px] text-[#2A7C13] font-semibold mt-1.5 block leading-tight">
+                  {activeState === 'karnataka' ? '5.7% title rate' : '35.3% title rate'}
+                </span>
               </div>
-              <span className="text-[10px] text-gov-700 font-medium">
-                {activeState === 'karnataka' ? '5.7% title rate' : '35.3% title rate'}
-              </span>
             </div>
 
-            <div className="bg-amber-50 p-3.5 rounded-xl border border-amber-200 shadow-xs">
-              <span className="text-[10px] uppercase font-bold text-amber-800">Pending Backlog</span>
-              <div className="text-2xl font-black text-amber-700 mt-1">
-                {activeState === 'karnataka' ? '15,850' : '329,367'}
+            <div className="glass-stat-beige">
+              <span className="section-label text-amber-800">Pending Backlog</span>
+              <div className="mt-2 flex flex-col justify-end">
+                <div className="text-2xl sm:text-[26px] font-black text-amber-900 tracking-tight leading-none">
+                  {activeState === 'karnataka' ? '15,850' : '329,367'}
+                </div>
+                <span className="text-[11px] text-amber-800 font-semibold mt-1.5 block leading-tight">
+                  {activeState === 'karnataka' ? 'Avg delay: 184 days' : '50.3% pending rate'}
+                </span>
               </div>
-              <span className="text-[10px] text-amber-600 font-medium">
-                {activeState === 'karnataka' ? 'Avg delay: 184 days' : '50.3% pending rate'}
-              </span>
             </div>
 
-            <div className="bg-white p-3.5 rounded-xl border border-slate-200 shadow-xs">
-              <span className="text-[10px] uppercase font-bold text-slate-400">Claims Rejected</span>
-              <div className="text-2xl font-black text-rose-600 mt-1">
-                {activeState === 'karnataka' ? '262,626' : '94,426'}
+            <div className="glass-stat-rose">
+              <span className="section-label text-rose-800">Claims Rejected</span>
+              <div className="mt-2 flex flex-col justify-end">
+                <div className="text-2xl sm:text-[26px] font-black text-rose-700 tracking-tight leading-none">
+                  {activeState === 'karnataka' ? '262,626' : '94,426'}
+                </div>
+                <span className="text-[11px] text-rose-700 font-semibold mt-1.5 block leading-tight">
+                  {activeState === 'karnataka' ? '89.0% Rejection Rate' : '14.4% rejection rate'}
+                </span>
               </div>
-              <span className="text-[10px] text-rose-700 font-medium">
-                {activeState === 'karnataka' ? '89.0% High Rejection Bottleneck' : '14.4% rejection rate'}
-              </span>
             </div>
 
-            <div className="bg-rose-50 p-3.5 rounded-xl border border-rose-200 shadow-xs">
-              <span className="text-[10px] uppercase font-bold text-rose-800">AI Anomaly Cases</span>
-              <div className="text-2xl font-black text-rose-600 mt-1">
-                {activeState === 'karnataka' ? '1,240' : '2,840'}
+            <div className="glass-stat-rose">
+              <span className="section-label text-rose-800">AI Anomaly Cases</span>
+              <div className="mt-2 flex flex-col justify-end">
+                <div className="text-2xl sm:text-[26px] font-black text-rose-700 tracking-tight leading-none">
+                  {activeState === 'karnataka' ? '1,240' : '2,840'}
+                </div>
+                <span className="text-[11px] text-rose-700 font-semibold mt-1.5 block leading-tight">
+                  {activeState === 'karnataka' ? 'Western Ghats Overlaps' : 'Podu Land Boundary Flags'}
+                </span>
               </div>
-              <span className="text-[10px] text-rose-700 font-medium">
-                {activeState === 'karnataka' ? 'Western Ghats Overlaps' : 'Podu Land Boundary Flags'}
-              </span>
             </div>
 
-            <div className="bg-white p-3.5 rounded-xl border border-slate-200 shadow-xs">
-              <span className="text-[10px] uppercase font-bold text-slate-400">Priority Districts</span>
-              <div className="text-2xl font-black text-gov-800 mt-1">
-                {activeState === 'karnataka' ? '6' : '7'}
+            <div className="glass-stat">
+              <span className="section-label text-[#2A7C13]">Priority Districts</span>
+              <div className="mt-2 flex flex-col justify-end">
+                <div className="text-2xl sm:text-[26px] font-black text-[#2A7C13] tracking-tight leading-none">
+                  {activeState === 'karnataka' ? '6' : '7'}
+                </div>
+                <span className="text-[11px] text-rose-700 font-semibold mt-1.5 block leading-tight">Special SDLC drive active</span>
               </div>
-              <span className="text-[10px] text-rose-600 font-medium">Special SDLC drive active</span>
             </div>
           </div>
 
           {/* State Graphic Split: Boundary Map + District Analytics */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
             {/* State WebGIS Map (7 cols) */}
-            <div className="lg:col-span-7 bg-white rounded-xl border border-slate-200 p-4 shadow-xs space-y-3 flex flex-col justify-between">
+            <div className="lg:col-span-7 glass-panel p-4 space-y-3 flex flex-col justify-between">
               <div>
-                <div className="flex items-center justify-between border-b border-slate-100 pb-2">
+                <div className="glass-card-header">
                   <div>
-                    <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wide">
+                    <h3 className="text-xs font-bold text-[#1C2B22]">
                       State Spatial Distribution:{' '}
                       {activeState === 'karnataka'
                         ? 'Karnataka Forest Divisions & Western Ghats'
                         : 'Telangana Forest Divisions & Agency Tracts'}
                     </h3>
-                    <p className="text-[11px] text-slate-400">
+                    <p className="text-[11px] text-slate-400 mt-0.5">
                       Choropleth WebGIS showing official district claims, pending backlogs, and AI anomaly clusters
                     </p>
                   </div>
-                  <span className="text-xs bg-emerald-100 text-gov-800 px-2.5 py-0.5 rounded-full font-bold">
-                    Official WebGIS
-                  </span>
+                  <span className="badge-green">Official WebGIS</span>
                 </div>
 
                 {/* SVG Choropleth Map for Selected State */}
@@ -503,7 +513,7 @@ export const StateGovView: React.FC<StateGovViewProps> = ({
                   )}
 
                   {/* Map Floating Mini Legend */}
-                  <div className="absolute bottom-2 left-2 bg-white/90 backdrop-blur px-2.5 py-1.5 rounded-lg border border-slate-200 text-[10px] space-y-1 shadow-xs">
+                  <div className="absolute bottom-2 left-2 bg-white/90 backdrop-blur-sm px-2.5 py-1.5 rounded-lg border border-[rgba(118,196,87,0.22)] text-[10px] space-y-1 shadow-sm">
                     <div className="flex items-center space-x-1.5">
                       <span className="w-3 h-2 bg-green-300 border border-green-600 inline-block rounded-xs"></span>
                       <span>Normal Clearance (&gt;50%)</span>
@@ -522,22 +532,23 @@ export const StateGovView: React.FC<StateGovViewProps> = ({
 
               {/* Selected District Info Bar */}
               {selectedDistrict && (
-                <div className="mt-2 p-2.5 bg-slate-50 border border-slate-200 rounded-lg flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 text-xs">
-                  <div className="flex items-center space-x-2">
-                    <MapPin className="w-4 h-4 text-emerald-600 shrink-0" />
-                    <span className="font-bold text-slate-800">{selectedDistrict.name}:</span>
+                <div className="mt-2 p-2.5 rounded-lg flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 text-xs"
+                     style={{ background: 'rgba(240,247,236,0.75)', border: '1px solid rgba(118,196,87,0.20)' }}>
+                  <div className="flex flex-wrap items-center gap-2">
+                    <MapPin className="w-3.5 h-3.5 text-[#2A7C13] shrink-0" />
+                    <span className="font-bold text-[#1C2B22]">{selectedDistrict.name}:</span>
                     <span className="text-slate-600">
                       {selectedDistrict.conferredClaims.toLocaleString()} conferred ({selectedDistrict.conferredRate}%),{' '}
                       {selectedDistrict.pendingClaims.toLocaleString()} pending,{' '}
                       {selectedDistrict.anomalyFlags} anomaly flags
                     </span>
                     <span
-                      className={`px-2 py-0.5 rounded text-[10px] font-bold ${
+                      className={`${
                         selectedDistrict.statusType === 'clearance'
-                          ? 'bg-emerald-100 text-emerald-800'
+                          ? 'badge-green'
                           : selectedDistrict.statusType === 'hotspot'
-                          ? 'bg-rose-100 text-rose-800'
-                          : 'bg-amber-100 text-amber-800'
+                          ? 'badge-rose'
+                          : 'badge-amber'
                       }`}
                     >
                       {selectedDistrict.statusType.toUpperCase()}
@@ -546,7 +557,7 @@ export const StateGovView: React.FC<StateGovViewProps> = ({
                   <button
                     type="button"
                     onClick={() => setSubTab('sdlc')}
-                    className="inline-flex items-center space-x-1 text-[11px] font-bold text-emerald-700 hover:text-emerald-900 bg-emerald-50 px-2.5 py-1 rounded border border-emerald-200 hover:bg-emerald-100 transition cursor-pointer shrink-0"
+                    className="btn-ghost shrink-0"
                   >
                     <span>Inspect SDLC Field GIS</span>
                     <ArrowRight className="w-3 h-3" />
@@ -562,12 +573,12 @@ export const StateGovView: React.FC<StateGovViewProps> = ({
             {/* District Statistics & Processing Bottlenecks (5 cols) */}
             <div className="lg:col-span-5 space-y-4">
               {/* District-wise Status Comparison Card */}
-              <div className="bg-white rounded-xl border border-slate-200 p-4 shadow-xs space-y-3">
-                <div className="flex items-center justify-between">
-                  <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wide">
+              <div className="glass-card p-4 space-y-3">
+                <div className="glass-card-header">
+                  <h3 className="text-xs font-bold text-[#1C2B22]">
                     {activeState === 'karnataka' ? 'Karnataka' : 'Telangana'} District Status Comparison
                   </h3>
-                  <span className="text-[10px] text-slate-400 font-mono">Official State Data</span>
+                  <span className="badge-green">Official State Data</span>
                 </div>
 
                 <div className="space-y-3 text-xs">
@@ -579,15 +590,15 @@ export const StateGovView: React.FC<StateGovViewProps> = ({
                     return (
                       <div key={dist.id} className="space-y-1">
                         <div className="flex justify-between text-[11px]">
-                          <span className="font-bold text-slate-800">{dist.name}</span>
+                          <span className="font-bold text-[#1C2B22]">{dist.name}</span>
                           <span className="text-slate-500 font-medium">
                             {dist.conferredRate}% Conferred ({dist.conferredClaims.toLocaleString()} / {dist.totalClaims.toLocaleString()})
                           </span>
                         </div>
-                        <div className="w-full h-2.5 bg-slate-100 rounded-full overflow-hidden flex">
+                        <div className="w-full h-2 rounded-full overflow-hidden flex" style={{ background: 'rgba(118,196,87,0.10)' }}>
                           <div
-                            className="bg-emerald-500 h-full"
-                            style={{ width: `${conferredPct}%` }}
+                            className="h-full"
+                            style={{ width: `${conferredPct}%`, background: '#76C457' }}
                             title={`Conferred: ${conferredPct}%`}
                           />
                           <div
@@ -612,9 +623,9 @@ export const StateGovView: React.FC<StateGovViewProps> = ({
               </div>
 
               {/* AI State Bottleneck Diagnosis */}
-              <div className="bg-white rounded-xl border border-slate-200 p-4 shadow-xs space-y-2">
-                <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wide flex items-center space-x-1.5">
-                  <Brain className="w-4 h-4 text-purple-600" />
+              <div className="glass-card p-4 space-y-2">
+                <h3 className="text-xs font-bold text-[#1C2B22] flex items-center gap-1.5 pb-2 border-b border-[rgba(118,196,87,0.14)]">
+                  <Brain className="w-4 h-4 text-[#2A7C13]" />
                   <span>
                     {activeState === 'karnataka' ? 'Karnataka' : 'Telangana'} Processing Bottlenecks &amp; AI Breakdown
                   </span>
@@ -623,21 +634,21 @@ export const StateGovView: React.FC<StateGovViewProps> = ({
                 {activeState === 'karnataka' ? (
                   <>
                     <div className="grid grid-cols-3 gap-2 text-center pt-1">
-                      <div className="p-2 bg-rose-50 rounded-lg border border-rose-200">
-                        <span className="text-[10px] font-bold text-rose-800 block">Rejection Rate</span>
+                      <div className="glass-stat-rose p-2">
+                        <span className="text-[10px] font-bold text-rose-700 block">Rejection Rate</span>
                         <span className="text-base font-extrabold text-rose-700">89%</span>
                       </div>
-                      <div className="p-2 bg-slate-50 rounded-lg border border-slate-200">
-                        <span className="text-[10px] font-bold text-slate-600 block">Delay &gt;180d</span>
-                        <span className="text-base font-extrabold text-slate-800">48%</span>
+                      <div className="glass-stat p-2">
+                        <span className="text-[10px] font-bold text-slate-500 block">Delay &gt;180d</span>
+                        <span className="text-base font-extrabold text-[#1C2B22]">48%</span>
                       </div>
-                      <div className="p-2 bg-amber-50 rounded-lg border border-amber-200">
-                        <span className="text-[10px] font-bold text-amber-800 block">Ghats Overlap</span>
+                      <div className="glass-stat-beige p-2">
+                        <span className="text-[10px] font-bold text-amber-700 block">Ghats Overlap</span>
                         <span className="text-base font-extrabold text-amber-700">34%</span>
                       </div>
                     </div>
 
-                    <div className="p-2.5 bg-emerald-50/80 rounded-lg border border-emerald-200 text-[11px] text-gov-900 mt-2 leading-relaxed">
+                    <div className="alert-banner-success mt-2 leading-relaxed">
                       <strong>Karnataka SLMC Recommendation:</strong> Convene Special Division Review for{' '}
                       <strong>Shimoga (Shivamogga)</strong> and <strong>Uttara Kannada</strong> to re-examine 162,370 rejected
                       IFR claims with DGPS satellite cadastral overlays before the State High Court statutory compliance deadline.
@@ -646,21 +657,21 @@ export const StateGovView: React.FC<StateGovViewProps> = ({
                 ) : (
                   <>
                     <div className="grid grid-cols-3 gap-2 text-center pt-1">
-                      <div className="p-2 bg-amber-50 rounded-lg border border-amber-200">
-                        <span className="text-[10px] font-bold text-amber-800 block">Pending Backlog</span>
+                      <div className="glass-stat-beige p-2">
+                        <span className="text-[10px] font-bold text-amber-700 block">Pending Backlog</span>
                         <span className="text-base font-extrabold text-amber-700">50.3%</span>
                       </div>
-                      <div className="p-2 bg-slate-50 rounded-lg border border-slate-200">
-                        <span className="text-[10px] font-bold text-slate-600 block">Delay &gt;180d</span>
-                        <span className="text-base font-extrabold text-slate-800">58%</span>
+                      <div className="glass-stat p-2">
+                        <span className="text-[10px] font-bold text-slate-500 block">Delay &gt;180d</span>
+                        <span className="text-base font-extrabold text-[#1C2B22]">58%</span>
                       </div>
-                      <div className="p-2 bg-rose-50 rounded-lg border border-rose-200">
-                        <span className="text-[10px] font-bold text-rose-800 block">Podu Land Overlap</span>
+                      <div className="glass-stat-rose p-2">
+                        <span className="text-[10px] font-bold text-rose-700 block">Podu Land Overlap</span>
                         <span className="text-base font-extrabold text-rose-700">27%</span>
                       </div>
                     </div>
 
-                    <div className="p-2.5 bg-emerald-50/80 rounded-lg border border-emerald-200 text-[11px] text-gov-900 mt-2 leading-relaxed">
+                    <div className="alert-banner-success mt-2 leading-relaxed">
                       <strong>Telangana SLMC Recommendation:</strong> Expedite RoFR digital title distribution for{' '}
                       <strong>46,244 pending files in Bhadradri Kothagudem</strong> and{' '}
                       <strong>29,472 in Adilabad</strong> through coordinated SDLC revenue camps and Gram Sabha quorum re-verification drives.
