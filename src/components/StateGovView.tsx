@@ -14,6 +14,8 @@ import {
   Landmark
 } from 'lucide-react';
 import { KARNATAKA_DISTRICTS, TELANGANA_DISTRICTS } from '../data/mockData';
+import { KARNATAKA_GEO_DISTRICTS, KARNATAKA_ALL_DISTRICTS } from '../data/karnatakaGeoData';
+import { TELANGANA_GEO_DISTRICTS, TELANGANA_ALL_DISTRICTS } from '../data/telanganaGeoData';
 import { DistrictMetric, ClaimRecord } from '../types';
 import { SdlcFieldGisConsole } from './SdlcFieldGisConsole';
 
@@ -36,11 +38,11 @@ export const StateGovView: React.FC<StateGovViewProps> = ({
   const [subTab, setSubTab] = useState<'overview' | 'sdlc'>('overview');
   const [hoveredDistrict, setHoveredDistrict] = useState<string | null>(null);
 
-  const currentDistricts = activeState === 'karnataka' ? KARNATAKA_DISTRICTS : TELANGANA_DISTRICTS;
+  const currentDistricts = activeState === 'karnataka' ? KARNATAKA_ALL_DISTRICTS : TELANGANA_ALL_DISTRICTS;
   const [selectedDistrict, setSelectedDistrict] = useState<DistrictMetric>(currentDistricts[0]);
 
   useEffect(() => {
-    const districts = activeState === 'karnataka' ? KARNATAKA_DISTRICTS : TELANGANA_DISTRICTS;
+    const districts = activeState === 'karnataka' ? KARNATAKA_ALL_DISTRICTS : TELANGANA_ALL_DISTRICTS;
     setSelectedDistrict(districts[0]);
   }, [activeState]);
 
@@ -220,277 +222,313 @@ export const StateGovView: React.FC<StateGovViewProps> = ({
                 {/* SVG Choropleth Map for Selected State */}
                 <div className="h-80 bg-emerald-50/40 rounded-lg relative overflow-hidden border border-emerald-100 flex items-center justify-center mt-3">
                   {activeState === 'karnataka' ? (
-                    /* KARNATAKA CHOROPLETH SVG */
-                    <svg className="w-full h-full" viewBox="0 0 500 360" xmlns="http://www.w3.org/2000/svg">
-                      {/* Belgaum (NW) - Orange Backlog */}
-                      <polygon
-                        points="110,25 220,30 200,95 100,90"
-                        fill={hoveredDistrict === 'belgaum' ? '#fdba74' : '#fed7aa'}
-                        stroke="#ea580c"
-                        strokeWidth="1.5"
-                        className="cursor-pointer transition-colors"
-                        onMouseEnter={() => setHoveredDistrict('belgaum')}
-                        onMouseLeave={() => setHoveredDistrict(null)}
-                        onClick={() => setSelectedDistrict(KARNATAKA_DISTRICTS[3])}
-                      >
-                        <title>Belgaum: 17,424 claims | 551 titles | 16,873 rejected</title>
-                      </polygon>
-                      <text x="125" y="65" fill="#9a3412" fontSize="9" fontWeight="bold">Belgaum (Belagavi)</text>
+                    /* KARNATAKA CHOROPLETH SVG GENERATED FROM karnataka.json */
+                    <svg className="w-full h-full select-none" viewBox="0 0 500 360" xmlns="http://www.w3.org/2000/svg">
+                      <defs>
+                        <filter id="glow-kar" x="-20%" y="-20%" width="140%" height="140%">
+                          <feDropShadow dx="0" dy="1" stdDeviation="1.5" floodColor="#1C2B22" floodOpacity="0.25" />
+                        </filter>
+                      </defs>
 
-                      {/* Bagalakote (North) - Orange */}
-                      <polygon
-                        points="220,30 330,35 310,105 200,95"
-                        fill={hoveredDistrict === 'bagalakote' ? '#fdba74' : '#fed7aa'}
-                        stroke="#ea580c"
-                        strokeWidth="1.5"
-                        className="cursor-pointer transition-colors"
-                        onMouseEnter={() => setHoveredDistrict('bagalakote')}
-                        onMouseLeave={() => setHoveredDistrict(null)}
-                        onClick={() => setSelectedDistrict(KARNATAKA_DISTRICTS[4])}
+                      {/* Arabian Sea coastline decoration & annotation */}
+                      <path
+                        d="M 145 70 Q 135 180 160 310"
+                        fill="none"
+                        stroke="#38bdf8"
+                        strokeWidth="2.5"
+                        strokeDasharray="4 3"
+                        opacity="0.85"
+                      />
+                      <text
+                        x="135"
+                        y="190"
+                        fill="#0284c7"
+                        fontSize="9"
+                        fontWeight="bold"
+                        letterSpacing="0.05em"
+                        opacity="0.8"
+                        textAnchor="middle"
+                        transform="rotate(-90 135 190)"
                       >
-                        <title>Bagalakote: 11,931 claims | 88 titles | 11,843 rejected</title>
-                      </polygon>
-                      <text x="235" y="70" fill="#9a3412" fontSize="9" fontWeight="bold">Bagalakote</text>
-
-                      {/* Uttara Kannada (Coastal Ghats) - Hotspot Red */}
-                      <polygon
-                        points="90,95 180,95 170,185 80,180"
-                        fill={hoveredDistrict === 'uttara_kannada' ? '#f87171' : '#fecaca'}
-                        stroke="#dc2626"
-                        strokeWidth="2.2"
-                        className="cursor-pointer transition-colors"
-                        onMouseEnter={() => setHoveredDistrict('uttara_kannada')}
-                        onMouseLeave={() => setHoveredDistrict(null)}
-                        onClick={() => setSelectedDistrict(KARNATAKA_DISTRICTS[1])}
-                      >
-                        <title>Uttara Kannada: Hotspot! 85,065 claims | 11,763 pending | 71,561 rejected</title>
-                      </polygon>
-                      <text x="88" y="145" fill="#991b1b" fontSize="9" fontWeight="bold">Uttara Kannada (Hotspot)</text>
-
-                      {/* Shimoga (Shivamogga) - Hotspot Red */}
-                      <polygon
-                        points="170,125 260,120 245,195 165,185"
-                        fill={hoveredDistrict === 'shimoga' ? '#f87171' : '#fecaca'}
-                        stroke="#dc2626"
-                        strokeWidth="2.2"
-                        className="cursor-pointer transition-colors"
-                        onMouseEnter={() => setHoveredDistrict('shimoga')}
-                        onMouseLeave={() => setHoveredDistrict(null)}
-                        onClick={() => setSelectedDistrict(KARNATAKA_DISTRICTS[0])}
-                      >
-                        <title>Shimoga: 95,431 claims | 2,409 titles | 90,809 rejected | 2,213 pending</title>
-                      </polygon>
-                      <text x="175" y="165" fill="#991b1b" fontSize="9" fontWeight="bold">Shimoga (Hotspot)</text>
-
-                      {/* Davanagere (Central) - Orange */}
-                      <polygon
-                        points="245,120 330,125 315,195 240,185"
-                        fill={hoveredDistrict === 'davanagere' ? '#fdba74' : '#fed7aa'}
-                        stroke="#ea580c"
-                        strokeWidth="1.5"
-                        className="cursor-pointer transition-colors"
-                        onMouseEnter={() => setHoveredDistrict('davanagere')}
-                        onMouseLeave={() => setHoveredDistrict(null)}
-                        onClick={() => setSelectedDistrict(KARNATAKA_DISTRICTS[5])}
-                      >
-                        <title>Davanagere: 11,034 claims | 616 titles</title>
-                      </polygon>
-                      <text x="250" y="160" fill="#9a3412" fontSize="8.5" fontWeight="bold">Davanagere</text>
-
-                      {/* Chickmagalur (Western Ghats) - Orange */}
-                      <polygon
-                        points="160,185 245,195 230,265 155,250"
-                        fill={hoveredDistrict === 'chickmagalur' ? '#fdba74' : '#fed7aa'}
-                        stroke="#ea580c"
-                        strokeWidth="1.5"
-                        className="cursor-pointer transition-colors"
-                        onMouseEnter={() => setHoveredDistrict('chickmagalur')}
-                        onMouseLeave={() => setHoveredDistrict(null)}
-                        onClick={() => setSelectedDistrict(KARNATAKA_DISTRICTS[2])}
-                      >
-                        <title>Chickmagalur: 21,213 claims | 1,910 titles | 19,303 rejected</title>
-                      </polygon>
-                      <text x="162" y="230" fill="#9a3412" fontSize="8.5" fontWeight="bold">Chickmagalur</text>
-
-                      {/* Kodagu (South Ghats) - Green Fast Clearance */}
-                      <polygon
-                        points="155,250 225,260 210,320 145,305"
-                        fill={hoveredDistrict === 'kodagu' ? '#86efac' : '#bbf7d0'}
-                        stroke="#16a34a"
-                        strokeWidth="1.8"
-                        className="cursor-pointer transition-colors"
-                        onMouseEnter={() => setHoveredDistrict('kodagu')}
-                        onMouseLeave={() => setHoveredDistrict(null)}
-                        onClick={() => setSelectedDistrict(KARNATAKA_DISTRICTS[7])}
-                      >
-                        <title>Kodagu: 56.5% Titles Conferred (2,385 / 4,220)</title>
-                      </polygon>
-                      <text x="155" y="290" fill="#166534" fontSize="9" fontWeight="bold">Kodagu (Clearance)</text>
-
-                      {/* Mysore (Mysuru) - Orange Backlog */}
-                      <polygon
-                        points="225,260 310,265 295,330 210,320"
-                        fill={hoveredDistrict === 'mysore' ? '#fdba74' : '#fed7aa'}
-                        stroke="#ea580c"
-                        strokeWidth="1.5"
-                        className="cursor-pointer transition-colors"
-                        onMouseEnter={() => setHoveredDistrict('mysore')}
-                        onMouseLeave={() => setHoveredDistrict(null)}
-                        onClick={() => setSelectedDistrict(KARNATAKA_DISTRICTS[6])}
-                      >
-                        <title>Mysore: 7,340 claims | 961 titles | 540 pending</title>
-                      </polygon>
-                      <text x="235" y="295" fill="#9a3412" fontSize="8.5" fontWeight="bold">Mysore</text>
-
-                      {/* Chamrajnagar (South Border) - Green Fast Clearance */}
-                      <polygon
-                        points="295,310 365,305 350,352 285,348"
-                        fill={hoveredDistrict === 'chamrajnagar' ? '#86efac' : '#bbf7d0'}
-                        stroke="#16a34a"
-                        strokeWidth="1.8"
-                        className="cursor-pointer transition-colors"
-                        onMouseEnter={() => setHoveredDistrict('chamrajnagar')}
-                        onMouseLeave={() => setHoveredDistrict(null)}
-                        onClick={() => setSelectedDistrict(KARNATAKA_DISTRICTS[8])}
-                      >
-                        <title>Chamrajnagar: 83.1% Conferred (2,060 / 2,480)</title>
-                      </polygon>
-                      <text x="290" y="335" fill="#166534" fontSize="8.5" fontWeight="bold">Chamrajnagar (83%)</text>
-
-                      {/* Arabian Sea coastline annotation */}
-                      <path d="M 60 40 Q 75 180 70 330" fill="none" stroke="#38bdf8" strokeWidth="2" strokeDasharray="3 3" />
-                      <text x="20" y="200" fill="#0284c7" fontSize="9" fontWeight="bold" opacity="0.7" transform="rotate(-90 20 200)">
                         Arabian Sea Coast
                       </text>
+
+                      {/* Western Ghats ecological boundary indicator */}
+                      <path
+                        d="M 175 140 Q 185 220 205 315"
+                        fill="none"
+                        stroke="#059669"
+                        strokeWidth="1.2"
+                        strokeDasharray="2 2"
+                        opacity="0.6"
+                      />
+
+                      {/* 30 Official District Boundaries from karnataka.json */}
+                      {KARNATAKA_GEO_DISTRICTS.map((d) => {
+                        const isHovered = hoveredDistrict === d.id;
+                        const isSelected = selectedDistrict?.id === d.id;
+
+                        let fill = '#fed7aa'; // Default backlog
+                        let stroke = '#ea580c';
+                        let strokeWidth = 0.9;
+
+                        if (d.metric.statusType === 'hotspot') {
+                          fill = isHovered ? '#f87171' : '#fecaca';
+                          stroke = '#dc2626';
+                          strokeWidth = 1.6;
+                        } else if (d.metric.statusType === 'clearance') {
+                          fill = isHovered ? '#86efac' : '#bbf7d0';
+                          stroke = '#16a34a';
+                          strokeWidth = 1.3;
+                        } else {
+                          fill = isHovered ? '#fdba74' : '#fed7aa';
+                          stroke = '#ea580c';
+                          strokeWidth = 1.0;
+                        }
+
+                        if (isSelected) {
+                          stroke = '#1C2B22';
+                          strokeWidth = 2.2;
+                        }
+
+                        return (
+                          <path
+                            key={d.id}
+                            id={`kar-district-${d.id}`}
+                            d={d.path}
+                            fill={fill}
+                            stroke={stroke}
+                            strokeWidth={strokeWidth}
+                            filter={isSelected || isHovered ? 'url(#glow-kar)' : undefined}
+                            className="cursor-pointer transition-colors duration-150"
+                            onMouseEnter={() => setHoveredDistrict(d.id)}
+                            onMouseLeave={() => setHoveredDistrict(null)}
+                            onClick={() => setSelectedDistrict(d.metric)}
+                          >
+                            <title>{`${d.displayName}: ${d.metric.totalClaims.toLocaleString()} claims | ${d.metric.conferredClaims.toLocaleString()} titles conferred (${d.metric.conferredRate}%) | ${d.metric.pendingClaims.toLocaleString()} pending | ${d.metric.anomalyFlags} anomaly flags`}</title>
+                          </path>
+                        );
+                      })}
+
+                      {/* Key District Labels at centroids */}
+                      {KARNATAKA_GEO_DISTRICTS.map((d) => {
+                        const isHovered = hoveredDistrict === d.id;
+                        const isSelected = selectedDistrict?.id === d.id;
+
+                        const isMajor = [
+                          'shimoga',
+                          'uttara_kannada',
+                          'belgaum',
+                          'bagalakote',
+                          'chickmagalur',
+                          'davanagere',
+                          'mysore',
+                          'kodagu',
+                          'chamrajnagar',
+                          'bidar',
+                          'ballari',
+                          'dakshina_kannada',
+                          'kalaburagi',
+                          'vijayapura'
+                        ].includes(d.id);
+
+                        if (!isMajor && !isHovered && !isSelected) return null;
+
+                        let textColor = '#9a3412';
+                        if (d.metric.statusType === 'hotspot') textColor = '#991b1b';
+                        if (d.metric.statusType === 'clearance') textColor = '#166534';
+
+                        const shortName =
+                          d.id === 'shimoga'
+                            ? 'Shimoga'
+                            : d.id === 'uttara_kannada'
+                            ? 'Uttara Kannada'
+                            : d.id === 'belgaum'
+                            ? 'Belagavi'
+                            : d.id === 'chickmagalur'
+                            ? 'Chikkamagaluru'
+                            : d.id === 'chamrajnagar'
+                            ? 'Chamarajnagar'
+                            : d.id === 'dakshina_kannada'
+                            ? 'D. Kannada'
+                            : d.id === 'bengaluru_urban'
+                            ? 'BLR Urban'
+                            : d.id === 'kalaburagi'
+                            ? 'Kalaburagi'
+                            : d.id === 'vijayapura'
+                            ? 'Vijayapura'
+                            : d.name;
+
+                        return (
+                          <text
+                            key={`lbl-${d.id}`}
+                            x={d.cx}
+                            y={d.cy + 3}
+                            textAnchor="middle"
+                            fill={textColor}
+                            fontSize={isHovered || isSelected ? '8.5' : '7.5'}
+                            fontWeight={isHovered || isSelected ? 'bold' : '600'}
+                            className="pointer-events-none select-none transition-all"
+                            style={{
+                              textShadow: '0 0 3px rgba(255,255,255,0.9), 0 0 1px #fff'
+                            }}
+                          >
+                            {shortName}
+                          </text>
+                        );
+                      })}
                     </svg>
                   ) : (
-                    /* TELANGANA CHOROPLETH SVG */
-                    <svg className="w-full h-full" viewBox="0 0 500 360" xmlns="http://www.w3.org/2000/svg">
-                      {/* Adilabad (North) - Red Hotspot */}
-                      <polygon
-                        points="130,25 240,20 225,90 120,85"
-                        fill={hoveredDistrict === 'adilabad' ? '#f87171' : '#fecaca'}
-                        stroke="#dc2626"
-                        strokeWidth="2.2"
-                        className="cursor-pointer transition-colors"
-                        onMouseEnter={() => setHoveredDistrict('adilabad')}
-                        onMouseLeave={() => setHoveredDistrict(null)}
-                        onClick={() => setSelectedDistrict(TELANGANA_DISTRICTS[2])}
-                      >
-                        <title>Adilabad: 64,680 claims | 26,779 titles | 29,472 pending | 125 flags</title>
-                      </polygon>
-                      <text x="140" y="60" fill="#991b1b" fontSize="9" fontWeight="bold">Adilabad (Hotspot)</text>
+                    /* TELANGANA CHOROPLETH SVG GENERATED FROM telangana.json */
+                    <svg className="w-full h-full select-none" viewBox="0 0 500 360" xmlns="http://www.w3.org/2000/svg">
+                      <defs>
+                        <filter id="glow-tg" x="-20%" y="-20%" width="140%" height="140%">
+                          <feDropShadow dx="0" dy="1" stdDeviation="1.5" floodColor="#1C2B22" floodOpacity="0.25" />
+                        </filter>
+                      </defs>
 
-                      {/* Komaram Bheem Asifabad (NE) - Orange */}
-                      <polygon
-                        points="240,20 340,30 315,100 225,90"
-                        fill={hoveredDistrict === 'asifabad' ? '#fdba74' : '#fed7aa'}
-                        stroke="#ea580c"
-                        strokeWidth="1.5"
-                        className="cursor-pointer transition-colors"
-                        onMouseEnter={() => setHoveredDistrict('asifabad')}
-                        onMouseLeave={() => setHoveredDistrict(null)}
-                        onClick={() => setSelectedDistrict(TELANGANA_DISTRICTS[3])}
-                      >
-                        <title>Asifabad: 60,280 claims | 26,461 titles | 28,964 pending</title>
-                      </polygon>
-                      <text x="235" y="65" fill="#9a3412" fontSize="9" fontWeight="bold">KB Asifabad</text>
-
-                      {/* Nirmal (NW Central) - Orange */}
-                      <polygon
-                        points="105,85 195,90 180,160 95,150"
-                        fill={hoveredDistrict === 'nirmal' ? '#fdba74' : '#fed7aa'}
-                        stroke="#ea580c"
-                        strokeWidth="1.5"
-                        className="cursor-pointer transition-colors"
-                        onMouseEnter={() => setHoveredDistrict('nirmal')}
-                        onMouseLeave={() => setHoveredDistrict(null)}
-                        onClick={() => setSelectedDistrict(TELANGANA_DISTRICTS[7])}
-                      >
-                        <title>Nirmal: 26,307 claims | 10,908 titles | 12,364 pending</title>
-                      </polygon>
-                      <text x="115" y="130" fill="#9a3412" fontSize="8.5" fontWeight="bold">Nirmal</text>
-
-                      {/* Mulugu (East Forest Division) - Red Hotspot */}
-                      <polygon
-                        points="260,110 350,115 335,190 250,180"
-                        fill={hoveredDistrict === 'mulugu' ? '#f87171' : '#fecaca'}
-                        stroke="#dc2626"
-                        strokeWidth="2.2"
-                        className="cursor-pointer transition-colors"
-                        onMouseEnter={() => setHoveredDistrict('mulugu')}
-                        onMouseLeave={() => setHoveredDistrict(null)}
-                        onClick={() => setSelectedDistrict(TELANGANA_DISTRICTS[4])}
-                      >
-                        <title>Mulugu: 47,994 claims | 12,350 titles | 28,162 pending | 140 flags</title>
-                      </polygon>
-                      <text x="265" y="155" fill="#991b1b" fontSize="9" fontWeight="bold">Mulugu (Hotspot)</text>
-
-                      {/* Bhadradri Kothagudem (East Agency) - Major Hotspot Red */}
-                      <polygon
-                        points="335,150 450,165 425,290 320,270"
-                        fill={hoveredDistrict === 'bhadradri_kothagudem' ? '#f87171' : '#fecaca'}
-                        stroke="#dc2626"
+                      {/* Godavari River Basin Path & Annotation */}
+                      <path
+                        d="M 170 70 Q 230 75 285 110 T 360 180 T 420 250"
+                        fill="none"
+                        stroke="#38bdf8"
                         strokeWidth="2.5"
-                        className="cursor-pointer transition-colors"
-                        onMouseEnter={() => setHoveredDistrict('bhadradri_kothagudem')}
-                        onMouseLeave={() => setHoveredDistrict(null)}
-                        onClick={() => setSelectedDistrict(TELANGANA_DISTRICTS[0])}
+                        strokeDasharray="4 3"
+                        opacity="0.85"
+                      />
+                      <text
+                        x="310"
+                        y="100"
+                        fill="#0284c7"
+                        fontSize="9"
+                        fontWeight="bold"
+                        letterSpacing="0.05em"
+                        opacity="0.8"
                       >
-                        <title>Bhadradri Kothagudem: 139,691 claims | 68,387 titles | 46,244 pending | 184 flags</title>
-                      </polygon>
-                      <text x="330" y="225" fill="#991b1b" fontSize="9.5" fontWeight="bold">Bhadradri Kothagudem</text>
-
-                      {/* Mahabubabad (Central East) - Orange */}
-                      <polygon
-                        points="230,180 325,185 305,255 220,240"
-                        fill={hoveredDistrict === 'mahabubabad' ? '#fdba74' : '#fed7aa'}
-                        stroke="#ea580c"
-                        strokeWidth="1.5"
-                        className="cursor-pointer transition-colors"
-                        onMouseEnter={() => setHoveredDistrict('mahabubabad')}
-                        onMouseLeave={() => setHoveredDistrict(null)}
-                        onClick={() => setSelectedDistrict(TELANGANA_DISTRICTS[1])}
-                      >
-                        <title>Mahabubabad: 65,874 claims | 30,220 titles | 22,338 pending</title>
-                      </polygon>
-                      <text x="235" y="220" fill="#9a3412" fontSize="8.5" fontWeight="bold">Mahabubabad</text>
-
-                      {/* Khammam (SE Border) - Orange */}
-                      <polygon
-                        points="295,255 385,265 360,335 280,325"
-                        fill={hoveredDistrict === 'khammam' ? '#fdba74' : '#fed7aa'}
-                        stroke="#ea580c"
-                        strokeWidth="1.5"
-                        className="cursor-pointer transition-colors"
-                        onMouseEnter={() => setHoveredDistrict('khammam')}
-                        onMouseLeave={() => setHoveredDistrict(null)}
-                        onClick={() => setSelectedDistrict(TELANGANA_DISTRICTS[6])}
-                      >
-                        <title>Khammam: 32,061 claims | 12,970 titles | 11,958 pending</title>
-                      </polygon>
-                      <text x="295" y="295" fill="#9a3412" fontSize="8.5" fontWeight="bold">Khammam</text>
-
-                      {/* Nalgonda (South) - Orange Backlog */}
-                      <polygon
-                        points="160,240 270,250 245,330 145,315"
-                        fill={hoveredDistrict === 'nalgonda' ? '#fdba74' : '#fed7aa'}
-                        stroke="#ea580c"
-                        strokeWidth="1.5"
-                        className="cursor-pointer transition-colors"
-                        onMouseEnter={() => setHoveredDistrict('nalgonda')}
-                        onMouseLeave={() => setHoveredDistrict(null)}
-                        onClick={() => setSelectedDistrict(TELANGANA_DISTRICTS[8])}
-                      >
-                        <title>Nalgonda: 28,742 claims | 6,701 titles | 18,072 pending</title>
-                      </polygon>
-                      <text x="170" y="290" fill="#9a3412" fontSize="8.5" fontWeight="bold">Nalgonda</text>
-
-                      {/* Godavari River line and label */}
-                      <path d="M 160 20 Q 280 80 380 150 T 460 260" fill="none" stroke="#38bdf8" strokeWidth="2.5" strokeDasharray="4 3" />
-                      <text x="330" y="110" fill="#0284c7" fontSize="9" fontWeight="bold" opacity="0.8">
                         Godavari River Basin
                       </text>
+
+                      {/* 33 Official District Boundaries from telangana.json */}
+                      {TELANGANA_GEO_DISTRICTS.map((d) => {
+                        const isHovered = hoveredDistrict === d.id;
+                        const isSelected = selectedDistrict?.id === d.id;
+
+                        let fill = '#fed7aa'; // Default backlog
+                        let stroke = '#ea580c';
+                        let strokeWidth = 0.9;
+
+                        if (d.metric.statusType === 'hotspot') {
+                          fill = isHovered ? '#f87171' : '#fecaca';
+                          stroke = '#dc2626';
+                          strokeWidth = 1.6;
+                        } else if (d.metric.statusType === 'clearance') {
+                          fill = isHovered ? '#86efac' : '#bbf7d0';
+                          stroke = '#16a34a';
+                          strokeWidth = 1.3;
+                        } else {
+                          fill = isHovered ? '#fdba74' : '#fed7aa';
+                          stroke = '#ea580c';
+                          strokeWidth = 1.0;
+                        }
+
+                        if (isSelected) {
+                          stroke = '#1C2B22';
+                          strokeWidth = 2.2;
+                        }
+
+                        return (
+                          <path
+                            key={d.id}
+                            id={`tg-district-${d.id}`}
+                            d={d.path}
+                            fill={fill}
+                            stroke={stroke}
+                            strokeWidth={strokeWidth}
+                            filter={isSelected || isHovered ? 'url(#glow-tg)' : undefined}
+                            className="cursor-pointer transition-colors duration-150"
+                            onMouseEnter={() => setHoveredDistrict(d.id)}
+                            onMouseLeave={() => setHoveredDistrict(null)}
+                            onClick={() => setSelectedDistrict(d.metric)}
+                          >
+                            <title>{`${d.displayName}: ${d.metric.totalClaims.toLocaleString()} claims | ${d.metric.conferredClaims.toLocaleString()} titles conferred (${d.metric.conferredRate}%) | ${d.metric.pendingClaims.toLocaleString()} pending | ${d.metric.anomalyFlags} anomaly flags`}</title>
+                          </path>
+                        );
+                      })}
+
+                      {/* Key District Labels at centroids */}
+                      {TELANGANA_GEO_DISTRICTS.map((d) => {
+                        const isHovered = hoveredDistrict === d.id;
+                        const isSelected = selectedDistrict?.id === d.id;
+
+                        const isMajor = [
+                          'bhadradri_kothagudem',
+                          'mahabubabad',
+                          'adilabad',
+                          'asifabad',
+                          'mulugu',
+                          'khammam',
+                          'nirmal',
+                          'nalgonda',
+                          'kamareddy',
+                          'mancherial',
+                          'nagarkurnool',
+                          'bhupalapally',
+                          'hyderabad'
+                        ].includes(d.id);
+
+                        if (!isMajor && !isHovered && !isSelected) return null;
+
+                        let textColor = '#9a3412';
+                        if (d.metric.statusType === 'hotspot') textColor = '#991b1b';
+                        if (d.metric.statusType === 'clearance') textColor = '#166534';
+
+                        const shortName =
+                          d.id === 'bhadradri_kothagudem'
+                            ? 'Bhadradri'
+                            : d.id === 'asifabad'
+                            ? 'KB Asifabad'
+                            : d.id === 'bhupalapally'
+                            ? 'Bhupalapally'
+                            : d.id === 'nagarkurnool'
+                            ? 'Nagarkurnool'
+                            : d.id === 'mahabubabad'
+                            ? 'Mahabubabad'
+                            : d.id === 'adilabad'
+                            ? 'Adilabad'
+                            : d.id === 'mulugu'
+                            ? 'Mulugu'
+                            : d.id === 'khammam'
+                            ? 'Khammam'
+                            : d.id === 'nirmal'
+                            ? 'Nirmal'
+                            : d.id === 'nalgonda'
+                            ? 'Nalgonda'
+                            : d.id === 'kamareddy'
+                            ? 'Kamareddy'
+                            : d.id === 'mancherial'
+                            ? 'Mancherial'
+                            : d.id === 'hyderabad'
+                            ? 'Hyderabad'
+                            : d.name;
+
+                        return (
+                          <text
+                            key={`lbl-tg-${d.id}`}
+                            x={d.cx}
+                            y={d.cy + 3}
+                            textAnchor="middle"
+                            fill={textColor}
+                            fontSize={isHovered || isSelected ? '8.5' : '7.5'}
+                            fontWeight={isHovered || isSelected ? 'bold' : '600'}
+                            className="pointer-events-none select-none transition-all"
+                            style={{
+                              textShadow: '0 0 3px rgba(255,255,255,0.9), 0 0 1px #fff'
+                            }}
+                          >
+                            {shortName}
+                          </text>
+                        );
+                      })}
                     </svg>
                   )}
 
