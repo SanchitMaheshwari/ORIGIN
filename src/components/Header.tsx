@@ -40,19 +40,19 @@ interface RoleProfile {
 
 const ROLE_PROFILES: Record<RoleKey, RoleProfile> = {
   claimant: {
-    name: 'Mangar Gond',
+    name: 'Somla Naik',
     designation: 'Citizen / Forest Dweller (IFR)',
-    subLocation: 'Rohaniya Village, Umaria (MP)',
+    subLocation: 'Allapalli Village, Bhadradri Kothagudem (Telangana)',
     avatarUrl: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&auto=format&fit=crop&q=80',
     badge: 'CITIZEN PORTAL',
     badgeClass: 'bg-emerald-800 text-emerald-200 border-emerald-600'
   },
   state: {
-    name: 'P.K. Mohapatra, IAS',
-    designation: 'Principal Secretary & State Nodal Officer',
-    subLocation: 'State SLMC • Odisha & Madhya Pradesh',
+    name: 'Dr. K. Manjunath, IAS',
+    designation: 'Principal Secretary & State SLMC Member Secretary',
+    subLocation: 'State SLMC • Karnataka & Telangana',
     avatarUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80',
-    badge: 'STATE GOVT PORTAL (SLMC)',
+    badge: 'STATE GOVT PORTAL (KARNATAKA & TELANGANA)',
     badgeClass: 'bg-blue-900 text-blue-200 border-blue-600'
   },
   central: {
@@ -252,7 +252,7 @@ export const Header: React.FC<HeaderProps> = ({
             <div className="flex items-center space-x-3">
               <div className="flex items-center space-x-1.5 px-3 py-1 bg-emerald-600 text-white rounded-md font-bold shadow-xs">
                 <User className="w-3.5 h-3.5" />
-                <span>My Forest Rights Claim: F-412 (Plot 84/2)</span>
+                <span>My Forest Rights Claim: F-412 (Plot 84/2, Gundala Range)</span>
               </div>
 
               {onOpenReceipt && (
@@ -286,7 +286,7 @@ export const Header: React.FC<HeaderProps> = ({
             <div className="flex items-center space-x-3">
               <div className="flex items-center space-x-1.5 px-3 py-1 bg-blue-700 text-white rounded-md font-bold shadow-xs">
                 <Landmark className="w-3.5 h-3.5" />
-                <span>State SLMC Monitoring &amp; SDLC WebGIS (Odisha &amp; MP)</span>
+                <span>State SLMC Monitoring &amp; SDLC WebGIS (Karnataka &amp; Telangana)</span>
               </div>
 
               {onExportReport && (

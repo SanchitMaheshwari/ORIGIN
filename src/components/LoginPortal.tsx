@@ -32,7 +32,7 @@ export const LoginPortal: React.FC<LoginPortalProps> = ({
   onOpenRegisterClaim
 }) => {
   const [activeTab, setActiveTab] = useState<LoginTab>('claimant');
-  const [selectedState, setSelectedState] = useState('Odisha');
+  const [selectedState, setSelectedState] = useState('Telangana');
   const [identifier, setIdentifier] = useState('9876543210');
   const [password, setPassword] = useState('••••••••••');
   const [showPassword, setShowPassword] = useState(false);
@@ -47,13 +47,13 @@ export const LoginPortal: React.FC<LoginPortalProps> = ({
   const handleTabChange = (tab: LoginTab) => {
     setActiveTab(tab);
     if (tab === 'claimant') {
-      setSelectedState('Odisha');
+      setSelectedState('Telangana');
       setIdentifier('9876543210');
       setPassword('OTP-2026');
     } else if (tab === 'state') {
-      setSelectedState('Madhya Pradesh');
-      setIdentifier('SDLC-UMR-2024-884');
-      setPassword('MPGov@2026');
+      setSelectedState('Karnataka');
+      setIdentifier('SDLC-KA-2026-884');
+      setPassword('KAGov@2026');
     } else if (tab === 'national') {
       setSelectedState('All States (National)');
       setIdentifier('MOTA-HQ-9901');
@@ -76,7 +76,7 @@ export const LoginPortal: React.FC<LoginPortalProps> = ({
       activeTab === 'claimant'
         ? 'Citizen Claimant Portal'
         : activeTab === 'state'
-        ? 'State Government Portal (MP/Odisha)'
+        ? 'State Government Portal (Karnataka & Telangana)'
         : 'National MoTA Central Portal';
 
     setLoginSuccessMessage(`Authenticated. Redirecting to ${roleLabel}...`);
@@ -323,7 +323,7 @@ export const LoginPortal: React.FC<LoginPortalProps> = ({
                     htmlFor="state-select"
                     className="block text-xs font-medium text-slate-700 mb-1.5"
                   >
-                    Select State (e.g., Madhya Pradesh, Odisha)
+                    Select State (e.g., Karnataka, Telangana)
                   </label>
                   <div className="relative">
                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-emerald-700">
@@ -335,6 +335,8 @@ export const LoginPortal: React.FC<LoginPortalProps> = ({
                       onChange={(e) => setSelectedState(e.target.value)}
                       className="w-full pl-9 pr-8 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs sm:text-sm text-slate-800 font-medium focus:outline-none focus:ring-2 focus:ring-emerald-600/30 focus:border-emerald-600 transition-all appearance-none cursor-pointer"
                     >
+                      <option value="Karnataka">Karnataka (District Shimoga, Uttara Kannada, Kodagu)</option>
+                      <option value="Telangana">Telangana (District Bhadradri Kothagudem, Adilabad)</option>
                       <option value="Odisha">Odisha (District Mayurbhanj, Kandhamal)</option>
                       <option value="Madhya Pradesh">Madhya Pradesh (District Umaria, Mandla)</option>
                       <option value="Chhattisgarh">Chhattisgarh (District Bastar, Kanker)</option>
