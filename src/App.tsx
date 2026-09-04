@@ -43,7 +43,7 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-full flex flex-col font-sans overflow-x-hidden antialiased selection:bg-emerald-500 selection:text-white bg-slate-50">
+    <div className="min-h-full flex flex-col font-sans overflow-x-hidden antialiased selection:bg-emerald-500 selection:text-white page-bg">
       {/* Top Header */}
       <Header
         currentRole={currentRole}
