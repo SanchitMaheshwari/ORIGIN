@@ -395,42 +395,42 @@ export const LoginPortal: React.FC<LoginPortalProps> = ({
                   </div>
                 )}
 
-                {/* 1. State Dropdown Field */}
-                <div>
-                  <label
-                    htmlFor="state-select"
-                    className="block text-xs font-medium text-slate-700 mb-1.5"
-                  >
-                    Select State (Karnataka / Telangana)
-                  </label>
-                  <div className="relative">
-                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-emerald-700">
-                      <Trees className="w-4 h-4" />
-                    </div>
-                    <select
-                      id="state-select"
-                      value={selectedState}
-                      onChange={(e) => {
-                        const val = e.target.value;
-                        setSelectedState(val);
-                        if (activeTab === 'state') {
+                {/* 1. State Dropdown Field (Only for State Official) */}
+                {activeTab === 'state' && (
+                  <div>
+                    <label
+                      htmlFor="state-select"
+                      className="block text-xs font-medium text-slate-700 mb-1.5"
+                    >
+                      Select State (Karnataka / Telangana)
+                    </label>
+                    <div className="relative">
+                      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-emerald-700">
+                        <Trees className="w-4 h-4" />
+                      </div>
+                      <select
+                        id="state-select"
+                        value={selectedState}
+                        onChange={(e) => {
+                          const val = e.target.value;
+                          setSelectedState(val);
                           if (val === 'Karnataka') {
                             handleStateOfficialChoice('karnataka');
                           } else if (val === 'Telangana') {
                             handleStateOfficialChoice('telangana');
                           }
-                        }
-                      }}
-                      className="w-full pl-9 pr-8 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs sm:text-sm text-slate-800 font-medium focus:outline-none focus:ring-2 focus:ring-emerald-600/30 focus:border-emerald-600 transition-all appearance-none cursor-pointer"
-                    >
-                      <option value="Karnataka">Karnataka (District Shimoga, Uttara Kannada, Kodagu)</option>
-                      <option value="Telangana">Telangana (District Bhadradri Kothagudem, Adilabad)</option>
-                    </select>
-                    <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none text-slate-400">
-                      <ChevronDown className="w-4 h-4" />
+                        }}
+                        className="w-full pl-9 pr-8 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs sm:text-sm text-slate-800 font-medium focus:outline-none focus:ring-2 focus:ring-emerald-600/30 focus:border-emerald-600 transition-all appearance-none cursor-pointer"
+                      >
+                        <option value="Karnataka">Karnataka (District Shimoga, Uttara Kannada, Kodagu)</option>
+                        <option value="Telangana">Telangana (District Bhadradri Kothagudem, Adilabad)</option>
+                      </select>
+                      <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none text-slate-400">
+                        <ChevronDown className="w-4 h-4" />
+                      </div>
                     </div>
                   </div>
-                </div>
+                )}
 
                 {/* 2. Identification Field */}
                 <div>
