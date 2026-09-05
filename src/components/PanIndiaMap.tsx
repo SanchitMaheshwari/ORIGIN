@@ -7,10 +7,7 @@ import {
   CheckCircle2,
   Clock,
   AlertTriangle,
-  Layers,
-  ArrowRight,
-  ExternalLink,
-  MapPin
+  Layers
 } from 'lucide-react';
 import { RoleKey } from '../types';
 import {
@@ -22,15 +19,21 @@ import {
 
 interface PanIndiaMapProps {
   onNavigateRole?: (role: RoleKey) => void;
+  onSelectState?: (state: StateGeoItem) => void;
+  selectedStateName?: string;
 }
 
 type MetricMode = 'conferment' | 'pending' | 'anomaly';
 type ViewGranularity = 'state' | 'district';
 
-export const PanIndiaMap: React.FC<PanIndiaMapProps> = () => {
+export const PanIndiaMap: React.FC<PanIndiaMapProps> = ({
+  onNavigateRole,
+  onSelectState,
+  selectedStateName
+}) => {
   const [viewMode, setViewMode] = useState<ViewGranularity>('state');
   const [metricMode, setMetricMode] = useState<MetricMode>('conferment');
-  const [selectedState, setSelectedState] = useState<string>('ALL');
+  const [selectedState, setSelectedState] = useState<string>(selectedStateName || 'ALL');
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [hoveredItem, setHoveredItem] = useState<{
     name: string;
@@ -44,26 +47,11 @@ export const PanIndiaMap: React.FC<PanIndiaMapProps> = () => {
     y: number;
   } | null>(null);
 
-  const [activeItem, setActiveItem] = useState<{
-    name: string;
-    subName?: string;
-    conferredRate: number;
-    pending: number;
-    total: number;
-    anomalies: number;
-    targetRole?: 'state' | 'central' | null;
-  } | null>(() => {
-    const mp = INDIA_STATES.find(s => s.state === 'Madhya Pradesh');
-    return mp ? {
-      name: mp.state,
-      subName: `${mp.districtCount} Districts`,
-      conferredRate: mp.conferredRate,
-      pending: mp.pendingClaims,
-      total: mp.totalClaims,
-      anomalies: mp.anomalyFlags,
-      targetRole: mp.targetRole
-    } : null;
-  });
+  React.useEffect(() => {
+    if (selectedStateName && selectedStateName !== 'ALL' && selectedStateName !== selectedState) {
+      setSelectedState(selectedStateName);
+    }
+  }, [selectedStateName]);
 
   const [zoom, setZoom] = useState<number>(1);
   const [pan, setPan] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
@@ -118,15 +106,7 @@ export const PanIndiaMap: React.FC<PanIndiaMapProps> = () => {
     }
     const stateObj = INDIA_STATES.find(s => s.state === stateName);
     if (stateObj) {
-      setActiveItem({
-        name: stateObj.state,
-        subName: `${stateObj.districtCount} Districts`,
-        conferredRate: stateObj.conferredRate,
-        pending: stateObj.pendingClaims,
-        total: stateObj.totalClaims,
-        anomalies: stateObj.anomalyFlags,
-        targetRole: stateObj.targetRole
-      });
+      onSelectState?.(stateObj);
       // Center and zoom into state
       const [minX, minY, maxX, maxY] = stateObj.bbox;
       const cx = (minX + maxX) / 2;
@@ -143,27 +123,15 @@ export const PanIndiaMap: React.FC<PanIndiaMapProps> = () => {
   };
 
   const handleDistrictClick = (d: DistrictGeoItem) => {
-    setActiveItem({
-      name: d.district,
-      subName: `${d.state} (District Code: ${d.dtCode})`,
-      conferredRate: d.conferredRate,
-      pending: d.pendingClaims,
-      total: d.totalClaims,
-      anomalies: d.anomalyFlags,
-      targetRole: d.targetRole
-    });
+    const s = INDIA_STATES.find(item => item.state === d.state);
+    if (s) {
+      onSelectState?.(s);
+    }
   };
 
   const handleStateClick = (s: StateGeoItem) => {
-    setActiveItem({
-      name: s.state,
-      subName: `${s.districtCount} Districts • Code: ${s.stCode}`,
-      conferredRate: s.conferredRate,
-      pending: s.pendingClaims,
-      total: s.totalClaims,
-      anomalies: s.anomalyFlags,
-      targetRole: s.targetRole
-    });
+    setSelectedState(s.state);
+    onSelectState?.(s);
   };
 
   return (
@@ -326,7 +294,7 @@ export const PanIndiaMap: React.FC<PanIndiaMapProps> = () => {
               <g id="states-layer">
                 {INDIA_STATES.map((s) => {
                   const fillColor = getColor(s.conferredRate, s.pendingClaims, s.anomalyFlags);
-                  const isSelected = activeItem?.name === s.state;
+                  const isSelected = selectedState === s.state || selectedStateName === s.state;
                   const isFiltered = selectedState !== 'ALL' && selectedState !== s.state;
 
                   return (
@@ -372,7 +340,7 @@ export const PanIndiaMap: React.FC<PanIndiaMapProps> = () => {
               <g id="districts-layer">
                 {filteredDistricts.map((d) => {
                   const fillColor = getColor(d.conferredRate, d.pendingClaims, d.anomalyFlags);
-                  const isSelected = activeItem?.name === d.district;
+                  const isSelected = selectedState === d.state;
 
                   return (
                     <path
@@ -514,53 +482,6 @@ export const PanIndiaMap: React.FC<PanIndiaMapProps> = () => {
           </div>
         </div>
       </div>
-
-      {/* Selected Territory Inspector Card */}
-      {activeItem && (
-        <div className="bg-slate-50 border border-slate-200 rounded-xl p-3 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs animate-in fade-in duration-200">
-          <div className="space-y-1">
-            <div className="flex items-center space-x-2">
-              <MapPin className="w-3.5 h-3.5 text-emerald-600" />
-              <span className="font-bold text-slate-800 text-sm">{activeItem.name}</span>
-              {activeItem.subName && (
-                <span className="text-[11px] text-slate-500 font-mono">({activeItem.subName})</span>
-              )}
-            </div>
-            <div className="flex flex-wrap items-center gap-3 text-[11px] text-slate-600">
-              <span>
-                <strong>Total Claims:</strong> {activeItem.total.toLocaleString()}
-              </span>
-              <span>•</span>
-              <span className="text-emerald-700 font-medium">
-                <strong>Conferred:</strong> {activeItem.conferredRate}%
-              </span>
-              <span>•</span>
-              <span className="text-amber-700 font-medium">
-                <strong>Pending:</strong> {activeItem.pending.toLocaleString()}
-              </span>
-              <span>•</span>
-              <span className="text-rose-700 font-medium">
-                <strong>Anomalies:</strong> {activeItem.anomalies.toLocaleString()}
-              </span>
-            </div>
-          </div>
-
-          {/* In-page district focus button */}
-          <button
-            type="button"
-            onClick={() => {
-              const targetState = activeItem.subName ? activeItem.subName : activeItem.name;
-              setSelectedState(targetState);
-              setViewMode('district');
-            }}
-            className="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-lg bg-gov-900 hover:bg-gov-800 text-white font-medium transition shadow-xs cursor-pointer text-xs shrink-0"
-            title={`Focus on ${activeItem.name} in Central WebGIS`}
-          >
-            <span>Focus on {activeItem.name}</span>
-            <ArrowRight className="w-3.5 h-3.5" />
-          </button>
-        </div>
-      )}
     </div>
   );
 };

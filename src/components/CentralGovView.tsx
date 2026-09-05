@@ -10,11 +10,17 @@ import {
   ArrowRight,
   ShieldAlert,
   Layers,
-  Calendar
+  Calendar,
+  MapPin,
+  Clock,
+  Send,
+  Building2
 } from 'lucide-react';
 import { RoleKey, ClaimRecord } from '../types';
 import { PanIndiaMap } from './PanIndiaMap';
+import { DossierPreview } from './DossierPreview';
 import { PRIORITY_CLAIMS_QUEUE } from '../data/mockData';
+import { INDIA_STATES, INDIA_DISTRICTS, StateGeoItem } from '../data/indiaGeoData';
 
 interface CentralGovViewProps {
   onOpenDossier: (claim: ClaimRecord) => void;
@@ -28,6 +34,10 @@ export const CentralGovView: React.FC<CentralGovViewProps> = ({
   const [activeBreadcrumb, setActiveBreadcrumb] = useState<'india' | 'state' | 'district' | 'claim' | 'anomaly'>('india');
   const [flaggedIds, setFlaggedIds] = useState<string[]>([]);
   const [bannerMsg, setBannerMsg] = useState<string | null>(null);
+  const [selectedClaim, setSelectedClaim] = useState<ClaimRecord | null>(null);
+  const [selectedMapState, setSelectedMapState] = useState<StateGeoItem>(() => {
+    return INDIA_STATES.find(s => s.state === 'Uttar Pradesh') || INDIA_STATES.find(s => s.state === 'Karnataka') || INDIA_STATES[0];
+  });
 
   const handleFlagDirective = (claimId: string) => {
     if (!flaggedIds.includes(claimId)) {
@@ -118,112 +128,322 @@ export const CentralGovView: React.FC<CentralGovViewProps> = ({
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* National Map of India (7 cols) */}
         <div className="lg:col-span-7">
-          <PanIndiaMap />
+          <PanIndiaMap
+            onSelectState={setSelectedMapState}
+            selectedStateName={selectedMapState?.state}
+          />
         </div>
 
-        {/* Comparative State Trends (5 cols) */}
-        <div className="lg:col-span-5 space-y-4">
-          {/* State Approval Rate Comparison Bar Chart */}
-          <div className="glass-card p-4 space-y-3">
-            <div className="glass-card-header">
-              <h3 className="text-xs font-bold text-[#1C2B22]">Top States Conferment Rate (%)</h3>
+        {/* Dedicated Interactive State Information Block (5 cols) */}
+        <div className="lg:col-span-5 flex flex-col space-y-4">
+          <div className="glass-card p-4 space-y-4 flex-1 flex flex-col justify-between" id="state-info-inspector">
+            <div>
+              {/* Header with State Name, Code, and Badges */}
+              <div className="flex items-start justify-between gap-2 pb-3 border-b border-slate-100">
+                <div className="flex items-center gap-2.5">
+                  <div className="w-9 h-9 rounded-xl flex items-center justify-center font-bold text-sm shadow-xs" style={{ background: 'rgba(118,196,87,0.18)', color: '#2A7C13' }}>
+                    <MapPin className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <h2 className="text-base font-extrabold text-[#1C2B22] leading-tight">
+                        {selectedMapState.state}
+                      </h2>
+                      <span className="text-[10px] font-mono font-semibold px-2 py-0.5 rounded bg-slate-100 text-slate-700 border border-slate-200">
+                        Code {selectedMapState.stCode}
+                      </span>
+                    </div>
+                    <p className="text-[11px] text-slate-500 font-medium mt-0.5">
+                      {selectedMapState.districtCount} Districts • MoTA Central Telemetry
+                    </p>
+                  </div>
+                </div>
+
+                {/* Dynamic Status Badge */}
+                <span className={`text-[10px] font-bold px-2.5 py-1 rounded-full border whitespace-nowrap ${
+                  selectedMapState.anomalyFlags > 300
+                    ? 'bg-rose-50 text-rose-700 border-rose-200'
+                    : selectedMapState.pendingClaims > 15000
+                      ? 'bg-amber-50 text-amber-700 border-amber-200'
+                      : 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                }`}>
+                  {selectedMapState.anomalyFlags > 300 ? 'High Anomaly' : selectedMapState.pendingClaims > 15000 ? 'Backlog Priority' : 'Active Compliance'}
+                </span>
+              </div>
+
+              {/* State Quick Switch Dropdown */}
+              <div className="mt-3">
+                <div className="flex items-center justify-between mb-1">
+                  <label htmlFor="state-select-dropdown" className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                    State Telemetry Focus (Click Map or Select)
+                  </label>
+                  <span className="text-[10px] text-emerald-700 font-semibold flex items-center gap-1">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                    Interactive Live GIS
+                  </span>
+                </div>
+                <select
+                  id="state-select-dropdown"
+                  value={selectedMapState.state}
+                  onChange={(e) => {
+                    const st = INDIA_STATES.find(s => s.state === e.target.value);
+                    if (st) setSelectedMapState(st);
+                  }}
+                  className="w-full text-xs font-semibold text-slate-800 bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1.5 focus:outline-none focus:ring-1 focus:ring-[#2A7C13] cursor-pointer"
+                >
+                  {INDIA_STATES.map((s) => (
+                    <option key={s.state} value={s.state}>
+                      {s.state} ({s.districtCount} Districts • {s.conferredRate}% Conferred)
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* 4 Core Metrics Grid */}
+              <div className="grid grid-cols-2 gap-2.5 mt-3.5">
+                <div className="p-3 rounded-xl border border-slate-100" style={{ background: 'rgba(240,247,236,0.6)' }}>
+                  <div className="flex items-center justify-between">
+                    <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Total Claims</span>
+                    <FileText className="w-3.5 h-3.5 text-slate-400" />
+                  </div>
+                  <div className="text-lg font-black text-slate-900 mt-1">
+                    {selectedMapState.totalClaims.toLocaleString()}
+                  </div>
+                  <span className="text-[10px] text-slate-500 font-medium">Individual &amp; CFR titles</span>
+                </div>
+
+                <div className="p-3 rounded-xl border border-emerald-100 bg-emerald-50/60">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[10px] font-bold text-emerald-800 uppercase tracking-wider">Conferred %</span>
+                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+                  </div>
+                  <div className="text-lg font-black text-emerald-700 mt-1">
+                    {selectedMapState.conferredRate}%
+                  </div>
+                  <span className="text-[10px] text-emerald-700 font-medium">
+                    {Math.round(selectedMapState.totalClaims * selectedMapState.conferredRate / 100).toLocaleString()} Titles Conferred
+                  </span>
+                </div>
+
+                <div className="p-3 rounded-xl border border-amber-100 bg-amber-50/60">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[10px] font-bold text-amber-800 uppercase tracking-wider">Pending Backlog</span>
+                    <Clock className="w-3.5 h-3.5 text-amber-600" />
+                  </div>
+                  <div className="text-lg font-black text-amber-700 mt-1">
+                    {selectedMapState.pendingClaims.toLocaleString()}
+                  </div>
+                  <span className="text-[10px] text-amber-700 font-medium">
+                    {((selectedMapState.pendingClaims / selectedMapState.totalClaims) * 100).toFixed(1)}% of total claims
+                  </span>
+                </div>
+
+                <div className="p-3 rounded-xl border border-rose-100 bg-rose-50/60">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[10px] font-bold text-rose-800 uppercase tracking-wider">AI Anomalies</span>
+                    <AlertTriangle className="w-3.5 h-3.5 text-rose-600" />
+                  </div>
+                  <div className="text-lg font-black text-rose-700 mt-1">
+                    {selectedMapState.anomalyFlags.toLocaleString()}
+                  </div>
+                  <span className="text-[10px] text-rose-700 font-medium">Satellite overlap flags</span>
+                </div>
+              </div>
+
+              {/* Progress Breakdown Bar */}
+              <div className="mt-3.5 p-3 rounded-xl border border-slate-100 bg-slate-50/70 space-y-2">
+                <div className="flex justify-between items-center text-[11px]">
+                  <span className="font-bold text-slate-700">Claim Resolution Breakdown</span>
+                  <span className="text-slate-500 font-mono text-[10px]">100% Total Universe</span>
+                </div>
+                
+                {/* Multi-segment bar */}
+                <div className="w-full h-2.5 rounded-full overflow-hidden flex bg-slate-200">
+                  <div
+                    className="h-full bg-emerald-500 transition-all duration-300"
+                    style={{ width: `${selectedMapState.conferredRate}%` }}
+                    title={`Conferred: ${selectedMapState.conferredRate}%`}
+                  />
+                  <div
+                    className="h-full bg-amber-400 transition-all duration-300"
+                    style={{ width: `${Math.min(100 - selectedMapState.conferredRate, Math.round((selectedMapState.pendingClaims / selectedMapState.totalClaims) * 100))}%` }}
+                    title={`Pending: ${Math.round((selectedMapState.pendingClaims / selectedMapState.totalClaims) * 100)}%`}
+                  />
+                  <div
+                    className="h-full bg-rose-400 transition-all duration-300"
+                    style={{ width: `${Math.max(0, 100 - selectedMapState.conferredRate - Math.round((selectedMapState.pendingClaims / selectedMapState.totalClaims) * 100))}%` }}
+                    title="Under Review / Rejected"
+                  />
+                </div>
+
+                <div className="flex items-center justify-between text-[10px] text-slate-600 pt-0.5">
+                  <span className="flex items-center gap-1">
+                    <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
+                    <span>Conferred ({selectedMapState.conferredRate}%)</span>
+                  </span>
+                  <span className="flex items-center gap-1">
+                    <span className="w-2 h-2 rounded-full bg-amber-400"></span>
+                    <span>Pending ({Math.round((selectedMapState.pendingClaims / selectedMapState.totalClaims) * 100)}%)</span>
+                  </span>
+                  <span className="flex items-center gap-1">
+                    <span className="w-2 h-2 rounded-full bg-rose-400"></span>
+                    <span>Review/Other ({Math.max(0, 100 - selectedMapState.conferredRate - Math.round((selectedMapState.pendingClaims / selectedMapState.totalClaims) * 100))}%)</span>
+                  </span>
+                </div>
+              </div>
+
+              {/* Leading Districts in State */}
+              <div className="mt-3.5 space-y-2">
+                <div className="flex justify-between items-center text-[11px]">
+                  <span className="font-bold text-slate-700">Top Districts by Claim Volume in {selectedMapState.state}</span>
+                  <span className="text-[10px] text-slate-400">Sample Telemetry</span>
+                </div>
+                <div className="space-y-1.5">
+                  {INDIA_DISTRICTS
+                    .filter(d => d.state === selectedMapState.state)
+                    .sort((a, b) => b.totalClaims - a.totalClaims)
+                    .slice(0, 3)
+                    .map((dt) => (
+                      <div key={dt.id} className="flex items-center justify-between text-xs bg-white border border-slate-100 rounded-lg px-2.5 py-1.5 shadow-2xs">
+                        <div>
+                          <span className="font-semibold text-slate-800">{dt.district}</span>
+                          <span className="text-[10px] text-slate-400 ml-1.5 font-mono">DT-{dt.dtCode}</span>
+                        </div>
+                        <div className="flex items-center gap-2.5 text-[11px]">
+                          <span className="text-slate-500">{dt.totalClaims.toLocaleString()} claims</span>
+                          <span className="font-bold text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded text-[10px]">
+                            {dt.conferredRate}%
+                          </span>
+                          <span className="font-medium text-amber-700 text-[10px]">
+                            {dt.pendingClaims.toLocaleString()} pend.
+                          </span>
+                        </div>
+                      </div>
+                    ))}
+                </div>
+              </div>
             </div>
 
-            <div className="space-y-2.5 text-xs">
-              <div>
-                <div className="flex justify-between text-[11px] mb-1">
-                  <span className="font-semibold text-[#1C2B22]">Tripura</span>
-                  <span className="font-bold text-[#2A7C13]">89%</span>
-                </div>
-                <div className="w-full h-2 rounded-full overflow-hidden" style={{ background: 'rgba(118,196,87,0.12)' }}>
-                  <div className="h-full rounded-full" style={{ width: '89%', background: '#76C457' }}></div>
-                </div>
-              </div>
+            {/* Central Directive Action Button */}
+            <div className="pt-2 border-t border-slate-100">
+              <button
+                type="button"
+                onClick={() => {
+                  setBannerMsg(`Central MoTA Statutory Directive dispatched to ${selectedMapState.state} State Level Committee (DLC/SDLC): Joint DGPS boundary validation mandated.`);
+                  setTimeout(() => setBannerMsg(null), 5000);
+                }}
+                className="w-full py-2 px-3 rounded-lg bg-gov-900 hover:bg-gov-800 text-white font-semibold text-xs transition flex items-center justify-center gap-2 shadow-xs cursor-pointer"
+              >
+                <Send className="w-3.5 h-3.5" />
+                <span>Issue MoTA Compliance Directive to {selectedMapState.state}</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
 
-              <div>
-                <div className="flex justify-between text-[11px] mb-1">
-                  <span className="font-semibold text-[#1C2B22]">Odisha</span>
-                  <span className="font-bold text-[#2A7C13]">68%</span>
-                </div>
-                <div className="w-full h-2 rounded-full overflow-hidden" style={{ background: 'rgba(118,196,87,0.12)' }}>
-                  <div className="h-full rounded-full" style={{ width: '68%', background: '#76C457' }}></div>
-                </div>
-              </div>
+      {/* Comparative State Trends & National Anomaly Velocity (Shifted Below Map) */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* State Approval Rate Comparison Bar Chart */}
+        <div className="glass-card p-4 space-y-3">
+          <div className="glass-card-header">
+            <h3 className="text-xs font-bold text-[#1C2B22]">Top States Conferment Rate (%)</h3>
+          </div>
 
-              <div>
-                <div className="flex justify-between text-[11px] mb-1">
-                  <span className="font-semibold text-slate-700">Madhya Pradesh</span>
-                  <span className="font-bold text-amber-600">51%</span>
-                </div>
-                <div className="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
-                  <div className="bg-amber-500 h-full rounded-full" style={{ width: '51%' }}></div>
-                </div>
+          <div className="space-y-2.5 text-xs">
+            <div>
+              <div className="flex justify-between text-[11px] mb-1">
+                <span className="font-semibold text-[#1C2B22]">Tripura</span>
+                <span className="font-bold text-[#2A7C13]">89%</span>
               </div>
-
-              <div>
-                <div className="flex justify-between text-[11px] mb-1">
-                  <span className="font-semibold text-slate-700">Maharashtra</span>
-                  <span className="font-bold text-amber-600">46%</span>
-                </div>
-                <div className="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
-                  <div className="bg-amber-500 h-full rounded-full" style={{ width: '46%' }}></div>
-                </div>
+              <div className="w-full h-2 rounded-full overflow-hidden" style={{ background: 'rgba(118,196,87,0.12)' }}>
+                <div className="h-full rounded-full" style={{ width: '89%', background: '#76C457' }}></div>
               </div>
+            </div>
 
-              <div>
-                <div className="flex justify-between text-[11px] mb-1">
-                  <span className="font-semibold text-slate-700">Kerala</span>
-                  <span className="font-bold text-rose-600">38%</span>
-                </div>
-                <div className="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
-                  <div className="bg-rose-500 h-full rounded-full" style={{ width: '38%' }}></div>
-                </div>
+            <div>
+              <div className="flex justify-between text-[11px] mb-1">
+                <span className="font-semibold text-[#1C2B22]">Odisha</span>
+                <span className="font-bold text-[#2A7C13]">68%</span>
+              </div>
+              <div className="w-full h-2 rounded-full overflow-hidden" style={{ background: 'rgba(118,196,87,0.12)' }}>
+                <div className="h-full rounded-full" style={{ width: '68%', background: '#76C457' }}></div>
+              </div>
+            </div>
+
+            <div>
+              <div className="flex justify-between text-[11px] mb-1">
+                <span className="font-semibold text-slate-700">Madhya Pradesh</span>
+                <span className="font-bold text-amber-600">51%</span>
+              </div>
+              <div className="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
+                <div className="bg-amber-500 h-full rounded-full" style={{ width: '51%' }}></div>
+              </div>
+            </div>
+
+            <div>
+              <div className="flex justify-between text-[11px] mb-1">
+                <span className="font-semibold text-slate-700">Maharashtra</span>
+                <span className="font-bold text-amber-600">46%</span>
+              </div>
+              <div className="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
+                <div className="bg-amber-500 h-full rounded-full" style={{ width: '46%' }}></div>
+              </div>
+            </div>
+
+            <div>
+              <div className="flex justify-between text-[11px] mb-1">
+                <span className="font-semibold text-slate-700">Kerala</span>
+                <span className="font-bold text-rose-600">38%</span>
+              </div>
+              <div className="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
+                <div className="bg-rose-500 h-full rounded-full" style={{ width: '38%' }}></div>
               </div>
             </div>
           </div>
+        </div>
 
-          {/* National Anomaly Trends Graphic */}
-          <div className="glass-card p-4 space-y-2">
-            <div className="glass-card-header">
-              <h3 className="text-xs font-bold text-[#1C2B22]">Monthly AI Anomaly Detection Velocity</h3>
-              <span className="badge-green flex items-center gap-1">
-                <TrendingDown className="w-3 h-3" />
-                <span>-14% vs Q1</span>
-              </span>
-            </div>
-
-            <div className="h-28 flex items-end justify-between gap-2 pt-4 pb-2 px-3 rounded-lg border" style={{ background: 'rgba(240,247,236,0.55)', borderColor: 'rgba(118,196,87,0.14)' }}>
-              {/* Bar representation Jan - Jun */}
-              <div className="flex-1 flex flex-col items-center gap-1">
-                <div className="w-full bg-slate-300 rounded-t transition-all hover:bg-slate-400" style={{ height: '60px' }}></div>
-                <span className="text-[9px] text-slate-400">Jan</span>
-              </div>
-              <div className="flex-1 flex flex-col items-center gap-1">
-                <div className="w-full bg-slate-300 rounded-t transition-all hover:bg-slate-400" style={{ height: '48px' }}></div>
-                <span className="text-[9px] text-slate-400">Feb</span>
-              </div>
-              <div className="flex-1 flex flex-col items-center gap-1">
-                <div className="w-full bg-amber-400 rounded-t transition-all hover:bg-amber-500" style={{ height: '75px' }}></div>
-                <span className="text-[9px] text-slate-400">Mar</span>
-              </div>
-              <div className="flex-1 flex flex-col items-center gap-1">
-                <div className="w-full bg-amber-400 rounded-t transition-all hover:bg-amber-500" style={{ height: '52px' }}></div>
-                <span className="text-[9px] text-slate-400">Apr</span>
-              </div>
-              <div className="flex-1 flex flex-col items-center gap-1">
-                <div className="w-full bg-rose-500 rounded-t transition-all hover:bg-rose-600" style={{ height: '85px' }}></div>
-                <span className="text-[9px] text-slate-400">May</span>
-              </div>
-              <div className="flex-1 flex flex-col items-center gap-1">
-                <div className="w-full bg-emerald-500 rounded-t transition-all hover:bg-emerald-600" style={{ height: '38px' }}></div>
-                <span className="text-[9px] text-emerald-700 font-bold">Jun</span>
-              </div>
-            </div>
-
-            <p className="text-[11px] text-slate-500 leading-snug">
-              Autonomous GIS satellite change detection resolved 410 false overlaps across June.
-            </p>
+        {/* National Anomaly Trends Graphic */}
+        <div className="glass-card p-4 space-y-2">
+          <div className="glass-card-header">
+            <h3 className="text-xs font-bold text-[#1C2B22]">Monthly AI Anomaly Detection Velocity</h3>
+            <span className="badge-green flex items-center gap-1">
+              <TrendingDown className="w-3 h-3" />
+              <span>-14% vs Q1</span>
+            </span>
           </div>
+
+          <div className="h-28 flex items-end justify-between gap-2 pt-4 pb-2 px-3 rounded-lg border" style={{ background: 'rgba(240,247,236,0.55)', borderColor: 'rgba(118,196,87,0.14)' }}>
+            {/* Bar representation Jan - Jun */}
+            <div className="flex-1 flex flex-col items-center gap-1">
+              <div className="w-full bg-slate-300 rounded-t transition-all hover:bg-slate-400" style={{ height: '60px' }}></div>
+              <span className="text-[9px] text-slate-400">Jan</span>
+            </div>
+            <div className="flex-1 flex flex-col items-center gap-1">
+              <div className="w-full bg-slate-300 rounded-t transition-all hover:bg-slate-400" style={{ height: '48px' }}></div>
+              <span className="text-[9px] text-slate-400">Feb</span>
+            </div>
+            <div className="flex-1 flex flex-col items-center gap-1">
+              <div className="w-full bg-amber-400 rounded-t transition-all hover:bg-amber-500" style={{ height: '75px' }}></div>
+              <span className="text-[9px] text-slate-400">Mar</span>
+            </div>
+            <div className="flex-1 flex flex-col items-center gap-1">
+              <div className="w-full bg-amber-400 rounded-t transition-all hover:bg-amber-500" style={{ height: '52px' }}></div>
+              <span className="text-[9px] text-slate-400">Apr</span>
+            </div>
+            <div className="flex-1 flex flex-col items-center gap-1">
+              <div className="w-full bg-rose-500 rounded-t transition-all hover:bg-rose-600" style={{ height: '85px' }}></div>
+              <span className="text-[9px] text-slate-400">May</span>
+            </div>
+            <div className="flex-1 flex flex-col items-center gap-1">
+              <div className="w-full bg-emerald-500 rounded-t transition-all hover:bg-emerald-600" style={{ height: '38px' }}></div>
+              <span className="text-[9px] text-emerald-700 font-bold">Jun</span>
+            </div>
+          </div>
+
+          <p className="text-[11px] text-slate-500 leading-snug">
+            Autonomous GIS satellite change detection resolved 410 false overlaps across June.
+          </p>
         </div>
       </div>
 
@@ -314,7 +534,12 @@ export const CentralGovView: React.FC<CentralGovViewProps> = ({
               {PRIORITY_CLAIMS_QUEUE.map((item) => (
                 <div
                   key={item.id}
-                  className="glass-strip glass-strip-rose p-3.5 sm:p-4 space-y-2.5"
+                  onClick={() => setSelectedClaim(item)}
+                  className={`glass-strip glass-strip-rose p-3.5 sm:p-4 space-y-2.5 transition-all duration-200 cursor-pointer ${
+                    selectedClaim?.id === item.id
+                      ? 'ring-2 ring-[#2A7C13] shadow-md bg-white border-[#2A7C13]/50'
+                      : 'hover:border-slate-300'
+                  }`}
                 >
                   <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-2">
                     <div className="flex flex-wrap items-center gap-2">
@@ -328,7 +553,10 @@ export const CentralGovView: React.FC<CentralGovViewProps> = ({
                     <div className="flex items-center gap-2">
                       <button
                         type="button"
-                        onClick={() => handleFlagDirective(item.id)}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleFlagDirective(item.id);
+                        }}
                         disabled={flaggedIds.includes(item.id)}
                         className="btn-directive"
                       >
@@ -336,10 +564,17 @@ export const CentralGovView: React.FC<CentralGovViewProps> = ({
                       </button>
                       <button
                         type="button"
-                        onClick={() => onOpenDossier(item)}
-                        className="btn-dossier"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setSelectedClaim(item);
+                        }}
+                        className={`btn-dossier transition-all ${
+                          selectedClaim?.id === item.id
+                            ? 'bg-emerald-700 text-white font-bold ring-2 ring-emerald-400'
+                            : ''
+                        }`}
                       >
-                        Open Dossier
+                        {selectedClaim?.id === item.id ? 'Viewing Dossier ✓' : 'Open Dossier'}
                       </button>
                     </div>
                   </div>
@@ -367,54 +602,59 @@ export const CentralGovView: React.FC<CentralGovViewProps> = ({
             </div>
           </div>
 
-          {/* Operational Field Health & Directives (5 cols) */}
-          <div className="lg:col-span-5 space-y-3">
-            <span className="section-label block">Ground-Truthing Technology Adoption</span>
+          {/* Right-Hand Dynamic Dossier Preview Pane (5 cols / ~40%) */}
+          <div className="lg:col-span-5 space-y-3 sticky top-4 self-start" id="dossier-preview-pane">
+            <DossierPreview
+              selectedClaim={selectedClaim}
+              onClose={() => setSelectedClaim(null)}
+              onExportPdf={(claim) => {
+                setBannerMsg(`Official Case Dossier PDF exported for ${claim.plotId} (${claim.claimantName}). Verification SHA256-${claim.id.slice(-6)} logged.`);
+                setTimeout(() => setBannerMsg(null), 5000);
+              }}
+              onIssueDirective={handleFlagDirective}
+              isDirectiveActive={selectedClaim ? flaggedIds.includes(selectedClaim.id) : false}
+              onOpenFullModal={onOpenDossier}
+            />
 
-            <div className="glass-card p-4 space-y-3.5 text-xs">
-              <div>
-                <div className="flex justify-between text-[11px] mb-1">
-                  <span className="font-semibold text-slate-700">Handheld RTK DGPS Penetration</span>
-                  <span className="font-bold text-[#2A7C13]">68% (493 Sub-Divisions)</span>
-                </div>
-                <div className="w-full h-2 rounded-full overflow-hidden" style={{ background: 'rgba(251, 230, 194, 0.60)' }}>
-                  <div className="h-full rounded-full transition-all" style={{ width: '68%', background: '#2A7C13' }}></div>
-                </div>
+            {/* Ground-Truthing Technology Adoption (Compact Telemetry Widget) */}
+            <div className="glass-card p-3.5 space-y-2.5 text-xs">
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">
+                  Ground-Truthing Technology Adoption
+                </span>
+                <span className="text-[10px] font-semibold text-[#2A7C13]">Sub-Divisional SLA</span>
               </div>
 
-              <div>
-                <div className="flex justify-between text-[11px] mb-1">
-                  <span className="font-semibold text-slate-700">Dense Canopy Drone LiDAR Surveys</span>
-                  <span className="font-bold text-amber-800">54% (392 Sub-Divisions)</span>
+              <div className="space-y-2">
+                <div>
+                  <div className="flex justify-between text-[11px] mb-1">
+                    <span className="font-semibold text-slate-700">Handheld RTK DGPS</span>
+                    <span className="font-bold text-[#2A7C13]">68% (493 Units)</span>
+                  </div>
+                  <div className="w-full h-1.5 rounded-full overflow-hidden bg-slate-100">
+                    <div className="h-full rounded-full bg-[#2A7C13]" style={{ width: '68%' }}></div>
+                  </div>
                 </div>
-                <div className="w-full h-2 rounded-full overflow-hidden" style={{ background: 'rgba(251, 230, 194, 0.60)' }}>
-                  <div className="h-full rounded-full transition-all" style={{ width: '54%', background: '#76C457' }}></div>
-                </div>
-              </div>
 
-              <div>
-                <div className="flex justify-between text-[11px] mb-1">
-                  <span className="font-semibold text-slate-700">Gram Sabha Digital Geo-Tagging Sync</span>
-                  <span className="font-bold text-[#2A7C13]">89% (646 Sub-Divisions)</span>
+                <div>
+                  <div className="flex justify-between text-[11px] mb-1">
+                    <span className="font-semibold text-slate-700">Canopy Drone LiDAR</span>
+                    <span className="font-bold text-amber-700">54% (392 Units)</span>
+                  </div>
+                  <div className="w-full h-1.5 rounded-full overflow-hidden bg-slate-100">
+                    <div className="h-full rounded-full bg-amber-500" style={{ width: '54%' }}></div>
+                  </div>
                 </div>
-                <div className="w-full h-2 rounded-full overflow-hidden" style={{ background: 'rgba(251, 230, 194, 0.60)' }}>
-                  <div className="h-full rounded-full transition-all" style={{ width: '89%', background: '#2A7C13' }}></div>
-                </div>
-              </div>
-            </div>
 
-            {/* Ministry Statutory Directive Card */}
-            <div className="glass-stat-cream p-3.5 space-y-2">
-              <div className="flex items-center gap-2">
-                <Calendar className="w-4 h-4 text-[#2A7C13]" />
-                <span className="font-bold text-xs text-[#1C2B22]">MoTA National Directive: 2026/04</span>
-              </div>
-              <p className="text-[11px] text-slate-700 leading-relaxed">
-                All 75 high-anomaly claims across Madhya Pradesh (Bandhavgarh), Odisha (Kandhamal), and Maharashtra (Gadchiroli) are mandated for joint on-site DGPS re-verification prior to the next statutory DLC session.
-              </p>
-              <div className="text-[10px] text-[#2A7C13] rounded border font-mono p-2"
-                   style={{ background: 'rgba(255,248,207,0.70)', borderColor: 'rgba(118,196,87,0.25)' }}>
-                Mandated SLA: 15 days for Gram Sabha &amp; SDLC compliance across all 28 States &amp; 8 Union Territories.
+                <div>
+                  <div className="flex justify-between text-[11px] mb-1">
+                    <span className="font-semibold text-slate-700">Gram Sabha Geo-Tag Sync</span>
+                    <span className="font-bold text-[#2A7C13]">89% (646 Units)</span>
+                  </div>
+                  <div className="w-full h-1.5 rounded-full overflow-hidden bg-slate-100">
+                    <div className="h-full rounded-full bg-[#2A7C13]" style={{ width: '89%' }}></div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
