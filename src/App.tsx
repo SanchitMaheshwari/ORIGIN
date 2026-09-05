@@ -81,7 +81,7 @@ export default function App() {
 
   return (
     <div className="app-bg min-h-full flex flex-col font-sans overflow-x-hidden antialiased selection:bg-[#76C457]/80 selection:text-[#1C2B22]">
-      {/* Top Header with Portal navigation and Logout button */}
+      {/* Top Header with Portal navigation, Logo branding, and Logout button */}
       <Header
         currentRole={currentRole}
         stateCode={stateCode}

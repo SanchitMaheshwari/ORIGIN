@@ -121,20 +121,22 @@ export const LoginPortal: React.FC<LoginPortalProps> = ({
       {/* 1. TOP HEADER & NAVIGATION BAR */}
       <header className="bg-[#0F382C] border-b border-emerald-950/80 px-4 sm:px-8 py-3.5 z-30 sticky top-0 shadow-md">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
-          {/* Left Brand: Emblem Logo + Subtitle */}
+          {/* Left Brand: Logo + Subtitle */}
           <div className="flex items-center space-x-3.5">
-            <div className="flex items-center space-x-2.5 bg-[#154638] px-3 py-1.5 rounded-lg border border-emerald-700/50 shadow-sm">
-              <div className="w-6 h-6 rounded-md bg-emerald-500/20 flex items-center justify-center text-emerald-400">
-                <Trees className="w-4 h-4" />
-              </div>
-              <div className="flex flex-col">
-                <span className="text-white font-extrabold text-sm tracking-wider leading-none">
-                  FRA-MITRA
-                </span>
-                <span className="text-[9px] text-emerald-300/80 font-medium leading-tight">
-                  AI-Powered WebGIS Decision Support
-                </span>
-              </div>
+            <div className="bg-white rounded-lg p-1 border border-emerald-700/40 shadow-sm flex items-center shrink-0">
+              <img
+                src="/logo.jpg"
+                alt="FRA-MITRA Logo"
+                className="h-9 w-auto object-contain rounded"
+              />
+            </div>
+            <div className="flex flex-col">
+              <span className="text-white font-extrabold text-sm tracking-wider leading-none">
+                FRA-MITRA
+              </span>
+              <span className="text-[9px] text-emerald-300/80 font-medium leading-tight mt-0.5">
+                AI-Powered WebGIS Decision Support
+              </span>
             </div>
 
             <div className="h-5 w-px bg-emerald-700/60 hidden sm:block" />
@@ -299,6 +301,23 @@ export const LoginPortal: React.FC<LoginPortalProps> = ({
           {/* RIGHT AUTHENTICATION CARD (5 Cols) */}
           <div className="lg:col-span-5 w-full max-w-md mx-auto">
             <div className="bg-white text-slate-800 rounded-[18px] shadow-2xl border border-slate-100 p-6 sm:p-7 relative overflow-hidden transition-all duration-200">
+              {/* Brand Logo Header */}
+              <div className="flex items-center justify-center space-x-3 mb-5 pb-4 border-b border-slate-100">
+                <img
+                  src="/logo.jpg"
+                  alt="FRA-MITRA"
+                  className="h-10 w-auto object-contain rounded"
+                />
+                <div>
+                  <h2 className="text-sm font-extrabold text-slate-900 tracking-tight leading-none">
+                    FRA-MITRA Portal
+                  </h2>
+                  <p className="text-[10px] text-slate-500 font-medium mt-1">
+                    National &amp; State Decision Support Login
+                  </p>
+                </div>
+              </div>
+
               {/* Top Segmented Role Selector (3 Tabs) */}
               <div className="bg-slate-100/90 p-1 rounded-xl flex items-center justify-between mb-5 border border-slate-200/70">
                 <button

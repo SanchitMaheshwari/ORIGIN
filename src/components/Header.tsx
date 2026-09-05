@@ -106,22 +106,25 @@ export const Header: React.FC<HeaderProps> = ({
         <div className="flex items-center justify-between h-16">
           {/* Logo & Title */}
           <div className="flex items-center space-x-3">
-            <div className="bg-white/10 p-1.5 rounded-lg border border-white/10 shadow-inner flex items-center">
-              <svg className="h-9 w-auto" fill="none" viewBox="0 0 240 60" xmlns="http://www.w3.org/2000/svg">
-                <g transform="translate(4, 6)">
-                  <rect fill="#064E3B" height="48" rx="10" width="48" x="0" y="0"></rect>
-                  <path d="M24 10L36 28H12L24 10Z" fill="#10B981" opacity="0.9"></path>
-                  <path d="M24 16L32 30H16L24 16Z" fill="#34D399"></path>
-                  <circle cx="24" cy="22" fill="#FBBF24" r="3.5"></circle>
-                  <rect fill="#F59E0B" height="12" rx="1.5" width="3" x="22.5" y="28"></rect>
-                  <circle cx="10" cy="18" fill="#6EE7B7" r="2"></circle>
-                  <line stroke="#6EE7B7" strokeDasharray="2 2" strokeWidth="1.5" x1="12" x2="16" y1="19" y2="24"></line>
-                  <circle cx="38" cy="18" fill="#6EE7B7" r="2"></circle>
-                  <line stroke="#6EE7B7" strokeDasharray="2 2" strokeWidth="1.5" x1="36" x2="32" y1="19" y2="24"></line>
-                </g>
-                <text fill="#FFFFFF" fontFamily="'Plus Jakarta Sans', sans-serif" fontSize="20" fontWeight="800" letterSpacing="0.5" x="62" y="29">FRA-MITRA</text>
-                <text fill="#34D399" fontFamily="'Plus Jakarta Sans', sans-serif" fontSize="9.5" fontWeight="600" letterSpacing="0.2" x="62" y="44">AI-Powered WebGIS Decision Support System</text>
-              </svg>
+            <div className="bg-white p-1 rounded-lg border border-white/20 shadow-md flex items-center shrink-0">
+              <img
+                src="/logo.jpg"
+                alt="FRA-MITRA Logo"
+                className="h-9.5 w-auto object-contain rounded select-none"
+              />
+            </div>
+            <div>
+              <div className="flex items-center space-x-2">
+                <span className="text-white font-extrabold text-base tracking-wider leading-none">
+                  FRA-MITRA
+                </span>
+                <span className="text-[10px] bg-emerald-800/80 text-emerald-200 font-semibold px-2 py-0.5 rounded-full border border-emerald-700/60 hidden sm:inline-block">
+                  WebGIS Decision Support
+                </span>
+              </div>
+              <p className="text-[10px] text-emerald-300/80 font-medium mt-0.5">
+                Scheduled Tribes &amp; Other Traditional Forest Dwellers Act, 2006
+              </p>
             </div>
             <div className="hidden xl:block border-l border-emerald-800 pl-3">
               <div className="flex items-center space-x-2">
@@ -132,7 +135,7 @@ export const Header: React.FC<HeaderProps> = ({
                   Authenticated
                 </span>
               </div>
-              <p className="text-[10px] text-emerald-300/80">Scheduled Tribes and Other Traditional Forest Dwellers Act, 2006</p>
+              <p className="text-[10px] text-emerald-300/80">MoTA Decision Support System</p>
             </div>
           </div>
 
