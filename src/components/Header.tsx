@@ -101,7 +101,7 @@ export const Header: React.FC<HeaderProps> = ({
 
   return (
     <header className="bg-gov-900 text-white shadow-lg sticky top-0 z-40 border-b border-emerald-950">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="w-full max-w-[1880px] mx-auto px-3 sm:px-5 lg:px-6">
         {/* Top Branding Row */}
         <div className="flex items-center justify-between h-16">
           {/* Logo & Title */}

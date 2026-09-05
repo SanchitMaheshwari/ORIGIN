@@ -119,24 +119,22 @@ export const LoginPortal: React.FC<LoginPortalProps> = ({
   return (
     <div className="min-h-screen flex flex-col font-sans bg-[#09261E] text-slate-100 relative selection:bg-emerald-500 selection:text-white">
       {/* 1. TOP HEADER & NAVIGATION BAR */}
-      <header className="bg-[#0F382C] border-b border-emerald-950/80 px-4 sm:px-8 py-3.5 z-30 sticky top-0 shadow-md">
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
-          {/* Left Brand: Logo + Subtitle */}
+      <header className="bg-[#0F382C] border-b border-emerald-950/80 px-3 sm:px-6 py-3.5 z-30 sticky top-0 shadow-md">
+        <div className="w-full max-w-[1880px] mx-auto flex items-center justify-between">
+          {/* Left Brand: Emblem Logo + Subtitle */}
           <div className="flex items-center space-x-3.5">
-            <div className="bg-white rounded-lg p-1 border border-emerald-700/40 shadow-sm flex items-center shrink-0">
-              <img
-                src="/logo.jpg"
-                alt="FRA-MITRA Logo"
-                className="h-9 w-auto object-contain rounded"
-              />
-            </div>
-            <div className="flex flex-col">
-              <span className="text-white font-extrabold text-sm tracking-wider leading-none">
-                FRA-MITRA
-              </span>
-              <span className="text-[9px] text-emerald-300/80 font-medium leading-tight mt-0.5">
-                AI-Powered WebGIS Decision Support
-              </span>
+            <div className="flex items-center space-x-2.5 bg-[#154638] px-3 py-1.5 rounded-lg border border-emerald-700/50 shadow-sm">
+              <div className="w-6 h-6 rounded-md bg-emerald-500/20 flex items-center justify-center text-emerald-400">
+                <Trees className="w-4 h-4" />
+              </div>
+              <div className="flex flex-col">
+                <span className="text-white font-extrabold text-sm tracking-wider leading-none">
+                  FRA-MITRA
+                </span>
+                <span className="text-[9px] text-emerald-300/80 font-medium leading-tight">
+                  AI-Powered WebGIS Decision Support
+                </span>
+              </div>
             </div>
 
             <div className="h-5 w-px bg-emerald-700/60 hidden sm:block" />
@@ -234,7 +232,7 @@ export const LoginPortal: React.FC<LoginPortalProps> = ({
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,_var(--tw-gradient-stops))] from-emerald-900/35 via-transparent to-black/50 z-0 pointer-events-none" />
 
         {/* Center Content Container */}
-        <div className="max-w-7xl w-full mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center relative z-10">
+        <div className="w-full max-w-[1880px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center relative z-10 px-3 sm:px-6">
           {/* LEFT HERO CONTENT (7 Cols) */}
           <div className="lg:col-span-7 space-y-6 sm:space-y-8 pr-0 lg:pr-6">
             <div className="space-y-4">
@@ -301,23 +299,6 @@ export const LoginPortal: React.FC<LoginPortalProps> = ({
           {/* RIGHT AUTHENTICATION CARD (5 Cols) */}
           <div className="lg:col-span-5 w-full max-w-md mx-auto">
             <div className="bg-white text-slate-800 rounded-[18px] shadow-2xl border border-slate-100 p-6 sm:p-7 relative overflow-hidden transition-all duration-200">
-              {/* Brand Logo Header */}
-              <div className="flex items-center justify-center space-x-3 mb-5 pb-4 border-b border-slate-100">
-                <img
-                  src="/logo.jpg"
-                  alt="FRA-MITRA"
-                  className="h-10 w-auto object-contain rounded"
-                />
-                <div>
-                  <h2 className="text-sm font-extrabold text-slate-900 tracking-tight leading-none">
-                    FRA-MITRA Portal
-                  </h2>
-                  <p className="text-[10px] text-slate-500 font-medium mt-1">
-                    National &amp; State Decision Support Login
-                  </p>
-                </div>
-              </div>
-
               {/* Top Segmented Role Selector (3 Tabs) */}
               <div className="bg-slate-100/90 p-1 rounded-xl flex items-center justify-between mb-5 border border-slate-200/70">
                 <button
@@ -599,8 +580,8 @@ export const LoginPortal: React.FC<LoginPortalProps> = ({
       </div>
 
       {/* 3. BOTTOM FOOTER BAR */}
-      <footer className="bg-[#0A261E] border-t border-emerald-950/70 py-2.5 px-4 z-20">
-        <div className="max-w-7xl mx-auto flex items-center justify-center relative">
+      <footer className="bg-[#0A261E] border-t border-emerald-950/70 py-2.5 px-3 sm:px-6 z-20">
+        <div className="w-full max-w-[1880px] mx-auto flex items-center justify-center relative">
           <p className="text-[11px] text-emerald-300/80 tracking-wide font-medium">
             FRA Act 2006 compliance mode
           </p>

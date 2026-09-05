@@ -97,7 +97,7 @@ export default function App() {
       <HumanInTheLoopBanner />
 
       {/* Main Dynamic View Content */}
-      <main className="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8 space-y-6">
+      <main className="flex-1 w-full max-w-[1880px] mx-auto px-3 sm:px-5 lg:px-6 py-4 sm:py-5 space-y-5">
         {currentRole === 'claimant' && (
           <ClaimantView
             claim={PRIMARY_CLAIM}

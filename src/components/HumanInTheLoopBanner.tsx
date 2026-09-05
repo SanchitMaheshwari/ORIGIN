@@ -5,9 +5,9 @@ export const HumanInTheLoopBanner: React.FC = () => {
   return (
     <div
       style={{ background: 'rgba(255,248,207,0.80)', borderBottom: '1px solid rgba(196,148,50,0.22)' }}
-      className="text-amber-900 text-xs px-4 py-1.5 flex items-center backdrop-blur-sm"
+      className="text-amber-900 text-xs px-3 sm:px-5 lg:px-6 py-1.5 flex items-center backdrop-blur-sm"
     >
-      <div className="max-w-7xl mx-auto w-full flex items-center justify-between gap-2">
+      <div className="w-full max-w-[1880px] mx-auto flex items-center justify-between gap-2">
         <div className="flex items-center space-x-2">
           <ShieldCheck className="w-3.5 h-3.5 text-[#2A7C13] shrink-0" />
           <span className="text-[11px]">

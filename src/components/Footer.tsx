@@ -3,16 +3,13 @@ import React from 'react';
 export const Footer: React.FC = () => {
   return (
     <footer className="bg-gov-dark text-slate-300 text-xs py-4 border-t border-emerald-950 mt-auto">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-2">
-        <div className="flex items-center space-x-3 text-center sm:text-left">
-          <img src="/logo.jpg" alt="FRA-MITRA" className="h-6 w-auto object-contain rounded bg-white p-0.5 border border-white/20" />
-          <div>
-            <span>© 2026 Ministry of Tribal Affairs (MoTA), Government of India.</span>
-            <span className="hidden md:inline text-slate-500 mx-2">|</span>
-            <span className="hidden md:inline text-slate-400">
-              AI-Powered Forest Rights Act Decision Support System
-            </span>
-          </div>
+      <div className="w-full max-w-[1880px] mx-auto px-3 sm:px-5 lg:px-6 flex flex-col sm:flex-row items-center justify-between gap-2">
+        <div className="flex items-center space-x-2 text-center sm:text-left">
+          <span>© 2026 Ministry of Tribal Affairs (MoTA), Government of India.</span>
+          <span className="hidden md:inline text-slate-500">|</span>
+          <span className="hidden md:inline text-slate-400">
+            AI-Powered Forest Rights Act Decision Support System
+          </span>
         </div>
         <div className="flex items-center space-x-4 text-[11px] text-emerald-400">
           <a
