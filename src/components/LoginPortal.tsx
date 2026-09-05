@@ -75,7 +75,7 @@ export const LoginPortal: React.FC<LoginPortalProps> = ({
         setPassword('KAGov@2026');
       }
     } else if (tab === 'national') {
-      setSelectedState('All States (National)');
+      setSelectedState('Karnataka');
       setIdentifier('MOTA-HQ-9901');
       setPassword('MoTA#India2026');
     }
@@ -401,7 +401,7 @@ export const LoginPortal: React.FC<LoginPortalProps> = ({
                     htmlFor="state-select"
                     className="block text-xs font-medium text-slate-700 mb-1.5"
                   >
-                    Select State (e.g., Karnataka, Telangana)
+                    Select State (Karnataka / Telangana)
                   </label>
                   <div className="relative">
                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-emerald-700">
@@ -425,15 +425,6 @@ export const LoginPortal: React.FC<LoginPortalProps> = ({
                     >
                       <option value="Karnataka">Karnataka (District Shimoga, Uttara Kannada, Kodagu)</option>
                       <option value="Telangana">Telangana (District Bhadradri Kothagudem, Adilabad)</option>
-                      <option value="Odisha">Odisha (District Mayurbhanj, Kandhamal)</option>
-                      <option value="Madhya Pradesh">Madhya Pradesh (District Umaria, Mandla)</option>
-                      <option value="Chhattisgarh">Chhattisgarh (District Bastar, Kanker)</option>
-                      <option value="Jharkhand">Jharkhand (District Ranchi, Simdega)</option>
-                      <option value="Maharashtra">Maharashtra (District Gadchiroli)</option>
-                      <option value="Tripura">Tripura (District Dhalai)</option>
-                      <option value="Rajasthan">Rajasthan (District Udaipur)</option>
-                      <option value="Gujarat">Gujarat (District Narmada)</option>
-                      <option value="All States (National)">All 18+ States (National MoTA HQ)</option>
                     </select>
                     <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none text-slate-400">
                       <ChevronDown className="w-4 h-4" />

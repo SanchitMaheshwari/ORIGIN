@@ -194,7 +194,7 @@ export const PanIndiaMap: React.FC<PanIndiaMapProps> = () => {
                 onClick={() => setViewMode('state')}
                 className={`px-2.5 py-1 rounded-md transition ${viewMode === 'state' ? 'bg-white text-gov-900 font-bold shadow-xs' : 'text-slate-600 hover:text-slate-900'}`}
               >
-                States (36)
+                28 States &amp; 8 Union Territories
               </button>
               <button
                 type="button"

@@ -128,7 +128,7 @@ export const NOTIFICATIONS: NotificationItem[] = [
   {
     id: 'notif-4',
     title: 'MoTA National Telemetry & Satellite Sync',
-    description: '726-District WebGIS multispectral land-use layer refreshed across all 36 States/UTs.',
+    description: '726-District WebGIS multispectral land-use layer refreshed across all 28 States & 8 Union Territories.',
     time: '4 hours ago',
     type: 'info',
     read: false,

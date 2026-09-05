@@ -57,7 +57,7 @@ export const CentralGovView: React.FC<CentralGovViewProps> = ({
           <span className="font-bold">National Registry Scope:</span>
           <span>Pan-India</span>
           <span className="opacity-50">›</span>
-          <span>36 States/UTs</span>
+          <span>28 States &amp; 8 UTs</span>
           <span className="opacity-50">›</span>
           <span>726 Districts</span>
         </div>
@@ -414,7 +414,7 @@ export const CentralGovView: React.FC<CentralGovViewProps> = ({
               </p>
               <div className="text-[10px] text-[#2A7C13] rounded border font-mono p-2"
                    style={{ background: 'rgba(255,248,207,0.70)', borderColor: 'rgba(118,196,87,0.25)' }}>
-                Mandated SLA: 15 days for Gram Sabha &amp; SDLC compliance across all 36 States/UTs.
+                Mandated SLA: 15 days for Gram Sabha &amp; SDLC compliance across all 28 States &amp; 8 Union Territories.
               </div>
             </div>
           </div>
