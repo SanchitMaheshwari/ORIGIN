@@ -119,8 +119,8 @@ export const LoginPortal: React.FC<LoginPortalProps> = ({
   return (
     <div className="min-h-screen flex flex-col font-sans bg-[#09261E] text-slate-100 relative selection:bg-emerald-500 selection:text-white">
       {/* 1. TOP HEADER & NAVIGATION BAR */}
-      <header className="bg-[#0F382C] border-b border-emerald-950/80 px-4 sm:px-8 py-3.5 z-30 sticky top-0 shadow-md">
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
+      <header className="bg-[#0F382C] border-b border-emerald-950/80 px-3 sm:px-6 py-3.5 z-30 sticky top-0 shadow-md">
+        <div className="w-full max-w-[1880px] mx-auto flex items-center justify-between">
           {/* Left Brand: Emblem Logo + Subtitle */}
           <div className="flex items-center space-x-3.5">
             <div className="flex items-center space-x-2.5 bg-[#154638] px-3 py-1.5 rounded-lg border border-emerald-700/50 shadow-sm">
@@ -232,7 +232,7 @@ export const LoginPortal: React.FC<LoginPortalProps> = ({
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,_var(--tw-gradient-stops))] from-emerald-900/35 via-transparent to-black/50 z-0 pointer-events-none" />
 
         {/* Center Content Container */}
-        <div className="max-w-7xl w-full mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center relative z-10">
+        <div className="w-full max-w-[1880px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center relative z-10 px-3 sm:px-6">
           {/* LEFT HERO CONTENT (7 Cols) */}
           <div className="lg:col-span-7 space-y-6 sm:space-y-8 pr-0 lg:pr-6">
             <div className="space-y-4">
@@ -580,8 +580,8 @@ export const LoginPortal: React.FC<LoginPortalProps> = ({
       </div>
 
       {/* 3. BOTTOM FOOTER BAR */}
-      <footer className="bg-[#0A261E] border-t border-emerald-950/70 py-2.5 px-4 z-20">
-        <div className="max-w-7xl mx-auto flex items-center justify-center relative">
+      <footer className="bg-[#0A261E] border-t border-emerald-950/70 py-2.5 px-3 sm:px-6 z-20">
+        <div className="w-full max-w-[1880px] mx-auto flex items-center justify-center relative">
           <p className="text-[11px] text-emerald-300/80 tracking-wide font-medium">
             FRA Act 2006 compliance mode
           </p>
